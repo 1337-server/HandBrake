@@ -17,7 +17,6 @@ namespace HandBrakeWPF.ViewModels
     using System.Windows.Navigation;
 
     using HandBrake.Interop.Interop;
-    using HandBrake.Interop.Interop.Model.Encoding;
     using HandBrake.Interop.Utilities;
 
     using HandBrakeWPF.Model.Audio;
@@ -560,7 +559,7 @@ namespace HandBrakeWPF.ViewModels
 
         public void LaunchHelp()
         {
-            Process.Start("https://handbrake.fr/docs/en/latest/advanced/audio-subtitle-defaults.html");
+            Process.Start("explorer.exe", "https://handbrake.fr/docs/en/latest/advanced/audio-subtitle-defaults.html");
         }
         
         #endregion

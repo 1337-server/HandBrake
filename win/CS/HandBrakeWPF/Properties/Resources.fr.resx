@@ -112,10 +112,10 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Video_EncoderExtraArgs" xml:space="preserve">
     <value>La liste complète des paramètres de l'encodeur :
@@ -184,11 +184,6 @@ avec ce programme; sinon écrivez à la Free Software Foundation, Inc.,
   </data>
   <data name="Error" xml:space="preserve">
     <value>Erreur</value>
-  </data>
-  <data name="Main_AutoAdd_AudioAndSubWarning" xml:space="preserve">
-    <value>Attention : Si vous souhaitez que des sous-titres soient ajoutés à chaque élément que vous êtes sur le point de mettre en file d'attente, vérifiez que les paramètres par défaut des sous-titres soient correctement configurés dans l'onglet Sous-titres.
-
-Souhaitez-vous continuer ?</value>
   </data>
   <data name="Main_TurnOnAutoFileNaming" xml:space="preserve">
     <value>Vous devez activer le nommage automatique des fichiers ET définir un chemin par défaut dans les préférences avant de pouvoir ajouter à la file.</value>
@@ -2171,7 +2166,7 @@ Là où pris en charge, tous les préréglages utilisateur auront été importé
     <value>Une nouvelle version d'HandBrake est disponible !</value>
   </data>
   <data name="About_Copyright" xml:space="preserve">
-    <value>Copyright (C) 2003-2020 The HandBrake Team</value>
+    <value>Copyright (C) 2003-2021 The HandBrake Team</value>
   </data>
   <data name="Options_LowBatteryLevel" xml:space="preserve">
     <value>Niveau de batterie faible :</value>
@@ -2361,10 +2356,7 @@ Les champs sont limités à :
 - Description longue</value>
   </data>
   <data name="String1" xml:space="preserve">
-    <value/>
-  </data>
-  <data name="PresetManagerView_DefaultPreset" xml:space="preserve">
-    <value>(Préréglage par défaut)</value>
+    <value />
   </data>
   <data name="PresetService_CategoryAlreadyExists" xml:space="preserve">
     <value>Le nom de catégorie que vous avez saisi existe déjà. Veuillez choisir un autre nom.</value>

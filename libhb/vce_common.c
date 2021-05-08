@@ -1,6 +1,6 @@
 /* vce_common.c
  *
- * Copyright (c) 2003-2020 HandBrake Team
+ * Copyright (c) 2003-2021 HandBrake Team
  * This file is part of the HandBrake source code.
  * Homepage: <http://handbrake.fr/>.
  * It may be used under the terms of the GNU General Public License v2.
@@ -144,12 +144,12 @@ int hb_vce_h265_available()
 
 int hb_vce_h264_available()
 {
-    return 0;
+    return -1;
 }
 
 int hb_vce_h265_available()
 {
-    return 0;
+    return -1; 
 }
 
 #endif // HB_PROJECT_FEATURE_VCE

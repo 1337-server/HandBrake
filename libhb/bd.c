@@ -1,6 +1,6 @@
-/* dvd.c
+/* bd.c
 
-   Copyright (c) 2003-2020 HandBrake Team
+   Copyright (c) 2003-2021 HandBrake Team
    This file is part of the HandBrake source code
    Homepage: <http://handbrake.fr/>.
    It may be used under the terms of the GNU General Public License v2.
@@ -919,6 +919,8 @@ hb_buffer_t * hb_bd_read( hb_bd_t * d )
             {
                 // A unit is 6144 bytes (32 TS packets).  Give up after we've
                 // seen > 6MB of invalid data.
+                hb_error("bd: Error, too many consecutive bad units.");
+                hb_set_work_error(d->h, HB_ERROR_READ);
                 return NULL;
             }
             continue;

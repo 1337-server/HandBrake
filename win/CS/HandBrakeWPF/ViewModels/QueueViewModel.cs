@@ -16,6 +16,8 @@ namespace HandBrakeWPF.ViewModels
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
     using System.Windows;
 
     using Caliburn.Micro;
@@ -60,14 +62,15 @@ namespace HandBrakeWPF.ViewModels
 
         public bool IsQueueRunning
         {
-            get
-            {
-                return this.isQueueRunning;
-            }
+            get => this.isQueueRunning;
 
             set
             {
-                if (value == this.isQueueRunning) return;
+                if (value == this.isQueueRunning)
+                {
+                    return;
+                }
+
                 this.isQueueRunning = value;
                 this.NotifyOfPropertyChange(() => this.IsQueueRunning);
             }
@@ -75,10 +78,7 @@ namespace HandBrakeWPF.ViewModels
 
         public string JobsPending
         {
-            get
-            {
-                return this.jobsPending;
-            }
+            get => this.jobsPending;
 
             set
             {
@@ -89,10 +89,7 @@ namespace HandBrakeWPF.ViewModels
 
         public WhenDone WhenDoneAction
         {
-            get
-            {
-                return this.whenDoneAction;
-            }
+            get => this.whenDoneAction;
 
             set
             {
@@ -101,26 +98,21 @@ namespace HandBrakeWPF.ViewModels
             }
         }
 
-        public ObservableCollection<QueueTask> QueueTasks
-        {
-            get
-            {
-                return this.queueProcessor.Queue;
-            }
-        }
+        public ObservableCollection<QueueTask> QueueTasks => this.queueProcessor.Queue;
 
         public BindingList<QueueTask> SelectedItems { get; }
 
         public QueueTask SelectedTask
         {
-            get
-            {
-                return this.selectedTask;
-            }
+            get => this.selectedTask;
 
             set
             {
-                if (Equals(value, this.selectedTask)) return;
+                if (Equals(value, this.selectedTask))
+                {
+                    return;
+                }
+
                 this.selectedTask = value;
                 this.NotifyOfPropertyChange(() => this.SelectedTask);
                 this.HandleLogData();
@@ -135,13 +127,7 @@ namespace HandBrakeWPF.ViewModels
             }
         }
 
-        public bool JobInfoVisible
-        {
-            get
-            {
-                return SelectedItems.Count == 1;
-            }
-        }
+        public bool JobInfoVisible => SelectedItems.Count == 1;
 
         public int SelectedTabIndex { get; set; }
 
@@ -208,7 +194,7 @@ namespace HandBrakeWPF.ViewModels
 
         public void Close()
         {
-            this.TryClose();
+            this.TryCloseAsync();
         }
 
         public override void OnLoad()
@@ -526,15 +512,15 @@ namespace HandBrakeWPF.ViewModels
 
         public void Activate()
         {
-           this.OnActivate();
+           this.OnActivateAsync(CancellationToken.None);
         }
 
         public void Deactivate()
         {
-           this.OnDeactivate(false);
+           this.OnDeactivateAsync(false, CancellationToken.None);
         }
 
-        protected override void OnActivate()
+        protected override Task OnActivateAsync(CancellationToken cancellationToken)
         {
             this.Load();
 
@@ -543,19 +529,20 @@ namespace HandBrakeWPF.ViewModels
             this.queueProcessor.JobProcessingStarted += this.QueueProcessorJobProcessingStarted;
             this.queueProcessor.QueuePaused += this.QueueProcessor_QueuePaused;
 
+            this.IsQueueRunning = this.queueProcessor.IsProcessing;
             this.JobsPending = string.Format(Resources.QueueViewModel_JobsPending, this.queueProcessor.Count);
-
-            base.OnActivate();
+            
+            return base.OnActivateAsync(cancellationToken);
         }
 
-        protected override void OnDeactivate(bool close)
+        protected override Task OnDeactivateAsync(bool close, CancellationToken cancellationToken)
         {
             this.queueProcessor.QueueCompleted -= this.QueueProcessor_QueueCompleted;
             this.queueProcessor.QueueChanged -= this.QueueManager_QueueChanged;
             this.queueProcessor.JobProcessingStarted -= this.QueueProcessorJobProcessingStarted;
             this.queueProcessor.QueuePaused -= this.QueueProcessor_QueuePaused;
 
-            base.OnDeactivate(close);
+            return base.OnDeactivateAsync(close, cancellationToken);
         }
 
         private void OpenDirectory(string directory)
@@ -579,7 +566,7 @@ namespace HandBrakeWPF.ViewModels
                     directory = Path.GetDirectoryName(directory);
                     if (directory != null && Directory.Exists(directory))
                     {
-                        Process.Start(directory);
+                        Process.Start("explorer.exe", directory);
                     }
                 }
             }

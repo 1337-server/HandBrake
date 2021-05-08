@@ -188,11 +188,9 @@ static void *HBControllerLogLevelContext = &HBControllerLogLevelContext;
 #else
         _destinationURL = [NSUserDefaults.standardUserDefaults URLForKey:HBLastDestinationDirectoryURL];
 #endif
-
         if (!_destinationURL || [NSFileManager.defaultManager fileExistsAtPath:_destinationURL.path isDirectory:nil] == NO)
         {
-            _destinationURL = [NSURL fileURLWithPath:[NSSearchPathForDirectoriesInDomains(NSMoviesDirectory, NSUserDomainMask, YES) firstObject]
-                                             isDirectory:YES];
+            _destinationURL = HBUtilities.defaultDestinationURL;
         }
 
 #ifdef __SANDBOX_ENABLED__
@@ -1537,6 +1535,7 @@ static void *HBControllerLogLevelContext = &HBControllerLogLevelContext;
         self.selectedPreset = preset;
         fPresetsView.selectedPreset = preset;
 
+        [presetManager savePresets];
         [self.window.undoManager removeAllActions];
     }
 }

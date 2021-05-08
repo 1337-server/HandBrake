@@ -15,17 +15,19 @@ namespace HandBrakeWPF.ViewModels
     using System.Globalization;
     using System.IO;
     using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Media;
 
     using Caliburn.Micro;
 
     using HandBrake.Interop.Interop;
-    using HandBrake.Interop.Model;
     using HandBrake.Interop.Utilities;
 
     using HandBrakeWPF.Model;
     using HandBrakeWPF.Model.Options;
+    using HandBrakeWPF.Model.Video;
     using HandBrakeWPF.Properties;
     using HandBrakeWPF.Services;
     using HandBrakeWPF.Services.Interfaces;
@@ -37,7 +39,6 @@ namespace HandBrakeWPF.ViewModels
     using Ookii.Dialogs.Wpf;
 
     using Execute = Caliburn.Micro.Execute;
-    using SystemInfo = HandBrake.Interop.Utilities.SystemInfo;
 
     public class OptionsViewModel : ViewModelBase, IOptionsViewModel
     {
@@ -102,7 +103,7 @@ namespace HandBrakeWPF.ViewModels
         private string prePostFilenameText;
         private bool showPrePostFilenameBox;
         private bool whenDonePerformActionImmediately;
-        private bool useDarkTheme;
+        private DarkThemeMode darkThemeMode;
         private bool alwaysUseDefaultPath;
         private bool pauseOnLowBattery;
         private int lowBatteryLevel;
@@ -139,9 +140,7 @@ namespace HandBrakeWPF.ViewModels
 
         public IAboutViewModel AboutViewModel { get; set; }
 
-        public bool IsUWP { get; } = UwpDetect.IsUWP();
-
-        public bool IsNightly { get; } = VersionHelper.IsNightly();
+        public bool IsNightly { get; } = HandBrakeVersionHelper.IsNightly();
 
         public bool IsWindows10 => HandBrakeWPF.Utilities.SystemInfo.IsWindows10();
 
@@ -344,14 +343,16 @@ namespace HandBrakeWPF.ViewModels
             }
         }
 
-        public bool UseDarkTheme
+        public BindingList<DarkThemeMode> DarkThemeModes { get; } = new BindingList<DarkThemeMode>(EnumHelper<DarkThemeMode>.GetEnumList().ToList());
+
+        public DarkThemeMode DarkThemeMode
         {
-            get => this.useDarkTheme;
+            get => this.darkThemeMode;
             set
             {
-                if (value == this.useDarkTheme) return;
-                this.useDarkTheme = value;
-                this.NotifyOfPropertyChange(() => this.UseDarkTheme);
+                if (value == this.darkThemeMode) return;
+                this.darkThemeMode = value;
+                this.NotifyOfPropertyChange(() => this.DarkThemeMode);
             }
         }
 
@@ -509,8 +510,6 @@ namespace HandBrakeWPF.ViewModels
                 this.NotifyOfPropertyChange(() => this.AlwaysUseDefaultPath);
             }
         }
-
-        public bool PassthruMetadata { get; set; }
 
         /* Preview */
 
@@ -853,11 +852,11 @@ namespace HandBrakeWPF.ViewModels
 
         public VideoScaler SelectedScalingMode { get; set; }
 
-        public bool IsQuickSyncAvailable { get; } = SystemInfo.IsQsvAvailable;
+        public bool IsQuickSyncAvailable { get; } = HandBrakeHardwareEncoderHelper.IsQsvAvailable;
 
-        public bool IsVceAvailable { get; } = SystemInfo.IsVceH264Available;
+        public bool IsVceAvailable { get; } = HandBrakeHardwareEncoderHelper.IsVceH264Available;
 
-        public bool IsNvencAvailable { get; } = SystemInfo.IsNVEncH264Available;
+        public bool IsNvencAvailable { get; } = HandBrakeHardwareEncoderHelper.IsNVEncH264Available;
 
         public bool IsUseQsvDecAvailable
         {
@@ -880,10 +879,14 @@ namespace HandBrakeWPF.ViewModels
 
         public bool IsHardwareFallbackMode => HandBrakeUtils.IsInitNoHardware();
 
+        public bool IsSafeMode => HandBrakeHardwareEncoderHelper.IsSafeMode;
+
+        public bool IsHardwareOptionsVisibile => !IsSafeMode && !IsHardwareFallbackMode;
+
 
         /* About HandBrake */
 
-        public string Version { get; } = string.Format("{0}", VersionHelper.GetVersion());
+        public string Version { get; } = string.Format("{0}", HandBrakeVersionHelper.GetVersion());
 
         public string UpdateMessage
         {
@@ -1104,7 +1107,7 @@ namespace HandBrakeWPF.ViewModels
             this.ShowPreviewOnSummaryTab = this.userSettingService.GetUserSetting<bool>(UserSettingConstants.ShowPreviewOnSummaryTab);
             this.ShowAddAllToQueue = this.userSettingService.GetUserSetting<bool>(UserSettingConstants.ShowAddAllToQueue);
             this.ShowAddSelectionToQueue = this.userSettingService.GetUserSetting<bool>(UserSettingConstants.ShowAddSelectionToQueue);
-            this.UseDarkTheme = this.userSettingService.GetUserSetting<bool>(UserSettingConstants.UseDarkTheme);
+            this.DarkThemeMode = (DarkThemeMode)this.userSettingService.GetUserSetting<int>(UserSettingConstants.DarkThemeMode);
 
             // #############################
             // When Done
@@ -1165,8 +1168,6 @@ namespace HandBrakeWPF.ViewModels
             this.PrePostFilenameText = this.userSettingService.GetUserSetting<string>(UserSettingConstants.AutonameFilePrePostString);
 
             this.AlwaysUseDefaultPath = this.userSettingService.GetUserSetting<bool>(UserSettingConstants.AlwaysUseDefaultPath);
-
-            this.PassthruMetadata = this.userSettingService.GetUserSetting<bool>(UserSettingConstants.MetadataPassthru);
 
             // #############################
             // Picture Tab
@@ -1288,10 +1289,10 @@ namespace HandBrakeWPF.ViewModels
             }
         }
 
-        protected override void OnActivate()
+        protected override Task OnActivateAsync(CancellationToken cancellationToken)
         {
             this.OnLoad();
-            base.OnActivate();
+            return base.OnActivateAsync(cancellationToken);
         }
 
         private void Save()
@@ -1304,7 +1305,7 @@ namespace HandBrakeWPF.ViewModels
             this.userSettingService.SetUserSetting(UserSettingConstants.SendFileToArgs, this.Arguments);
             this.userSettingService.SetUserSetting(UserSettingConstants.ShowStatusInTitleBar, this.ShowStatusInTitleBar);
             this.userSettingService.SetUserSetting(UserSettingConstants.ShowPreviewOnSummaryTab, this.ShowPreviewOnSummaryTab);
-            this.userSettingService.SetUserSetting(UserSettingConstants.UseDarkTheme, this.UseDarkTheme);
+            this.userSettingService.SetUserSetting(UserSettingConstants.DarkThemeMode, this.DarkThemeMode);
             this.userSettingService.SetUserSetting(UserSettingConstants.UiLanguage, this.SelectedLanguage?.Culture);
             this.userSettingService.SetUserSetting(UserSettingConstants.ShowAddAllToQueue, this.ShowAddAllToQueue);
             this.userSettingService.SetUserSetting(UserSettingConstants.ShowAddSelectionToQueue, this.ShowAddSelectionToQueue);
@@ -1329,7 +1330,6 @@ namespace HandBrakeWPF.ViewModels
             this.userSettingService.SetUserSetting(UserSettingConstants.AutonameFileCollisionBehaviour, this.SelectedCollisionBehaviour);
             this.userSettingService.SetUserSetting(UserSettingConstants.AutonameFilePrePostString, this.PrePostFilenameText);
             this.userSettingService.SetUserSetting(UserSettingConstants.AlwaysUseDefaultPath, this.AlwaysUseDefaultPath);
-            this.userSettingService.SetUserSetting(UserSettingConstants.MetadataPassthru, this.PassthruMetadata);
 
             /* Previews */
             this.userSettingService.SetUserSetting(UserSettingConstants.MediaPlayerPath, this.VLCPath);

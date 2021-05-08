@@ -112,10 +112,10 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Video_EncoderExtraArgs" xml:space="preserve">
     <value>인코더 파라미터의 전체 목록: 
@@ -183,11 +183,6 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA라고 적으�
   </data>
   <data name="Error" xml:space="preserve">
     <value>에러</value>
-  </data>
-  <data name="Main_AutoAdd_AudioAndSubWarning" xml:space="preserve">
-    <value>경고: 대기열에 있는 각각의 항목에 자막을 추가하고 싶다면 자막 탭에서 자막 기본 값이 올바르게 설정되었는지 확인하십시오.
-
-계속하시겠습니까?</value>
   </data>
   <data name="Main_TurnOnAutoFileNaming" xml:space="preserve">
     <value>대기열에 추가하려면 우선적으로 자동 파일 이름 설정을 켜고 기본 경로를 설정해야만 합니다.</value>
@@ -2170,7 +2165,7 @@ Non-Live 옵션: {date} {time} {creation-date} {creation-time} {quality} {bitrat
     <value>새로운 버전의 HandBrake를 이용하실 수 있습니다!</value>
   </data>
   <data name="About_Copyright" xml:space="preserve">
-    <value>Copyright (C) 2003-2020 The HandBrake Team</value>
+    <value>Copyright (C) 2003-2021 The HandBrake Team</value>
   </data>
   <data name="Options_LowBatteryLevel" xml:space="preserve">
     <value>저전력 단계:</value>
@@ -2360,10 +2355,7 @@ Fields are limited to:
 - Long Description</value>
   </data>
   <data name="String1" xml:space="preserve">
-    <value/>
-  </data>
-  <data name="PresetManagerView_DefaultPreset" xml:space="preserve">
-    <value>(Default Preset)</value>
+    <value />
   </data>
   <data name="PresetService_CategoryAlreadyExists" xml:space="preserve">
     <value>The category name you entered already exists. Please choose a different name.</value>

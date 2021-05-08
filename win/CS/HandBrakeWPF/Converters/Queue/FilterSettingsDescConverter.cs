@@ -10,8 +10,8 @@ namespace HandBrakeWPF.Converters.Queue
     using System.Collections.Generic;
     using System.Globalization;
     using System.Windows.Data;
-    using HandBrake.Interop.Interop.Model.Encoding;
 
+    using HandBrakeWPF.Model.Filters;
     using HandBrakeWPF.Properties;
     using HandBrakeWPF.Services.Encode.Model;
     using HandBrakeWPF.Utilities;
@@ -61,11 +61,16 @@ namespace HandBrakeWPF.Converters.Queue
                     filters.Add(Resources.SummaryView_Rotation);
                 }
 
+                if (task.Colourspace != null && task.Colourspace.Key != ColourSpaceFilter.Off)
+                {
+                    filters.Add(Resources.SummaryView_Colourspace);
+                }
+
                 if (filters.Count == 0)
                 {
                     return Resources.SummaryView_NoFilters;
                 }
-
+                
                 return string.Join(", ", filters).TrimEnd(',').Trim();
             }
 

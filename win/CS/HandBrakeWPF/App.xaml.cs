@@ -15,6 +15,7 @@ namespace HandBrakeWPF
     using System.IO;
     using System.Linq;
     using System.Threading;
+    using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Controls;
 
@@ -119,12 +120,47 @@ namespace HandBrakeWPF
                 }
             }
 
-            bool useDarkTheme = userSettingService.GetUserSetting<bool>(UserSettingConstants.UseDarkTheme);
-            if (useDarkTheme && SystemInfo.IsWindows10())
+            int oldOsWarningCount = userSettingService.GetUserSetting<int>(UserSettingConstants.OldOsWarning);
+            if (!SystemInfo.IsWindows10() && oldOsWarningCount < 2)
             {
-                ResourceDictionary darkTheme = new ResourceDictionary();
-                darkTheme.Source = new Uri("Themes/Dark.xaml", UriKind.Relative);
-                Application.Current.Resources.MergedDictionaries.Add(darkTheme);
+                MessageBox.Show(HandBrakeWPF.Properties.Resources.OldOperatingSystem, HandBrakeWPF.Properties.Resources.Warning, MessageBoxButton.OK, MessageBoxImage.Warning);
+                userSettingService.SetUserSetting(UserSettingConstants.OldOsWarning, oldOsWarningCount + 1); // Only display once.
+            }
+
+            DarkThemeMode useDarkTheme = (DarkThemeMode)userSettingService.GetUserSetting<int>(UserSettingConstants.DarkThemeMode);
+            if (SystemInfo.IsWindows10())
+            {
+                ResourceDictionary theme = new ResourceDictionary();
+                switch (useDarkTheme)
+                {
+                    case DarkThemeMode.System:
+                        if (SystemInfo.IsAppsUsingDarkTheme())
+                        {
+                            theme.Source = new Uri("Themes/Dark.xaml", UriKind.Relative);
+                            Application.Current.Resources.MergedDictionaries.Add(theme);
+                        }
+                        else if (!SystemParameters.HighContrast)
+                        {
+                            theme.Source = new Uri("Themes/Light.xaml", UriKind.Relative);
+                            Application.Current.Resources.MergedDictionaries.Add(theme);
+                        }
+                        break;
+                    case DarkThemeMode.Dark:
+                        theme.Source = new Uri("Themes/Dark.xaml", UriKind.Relative);
+                        Application.Current.Resources.MergedDictionaries.Add(theme);
+                        break;
+                    case DarkThemeMode.Light:
+                        if (!SystemParameters.HighContrast)
+                        {
+                            theme.Source = new Uri("Themes/Light.xaml", UriKind.Relative);
+                            Application.Current.Resources.MergedDictionaries.Add(theme);
+                        }
+
+                        break;
+
+                    default:
+                        break;
+                }
             }
 
             // NO-Hardware Mode
@@ -137,14 +173,14 @@ namespace HandBrakeWPF
             {
                 HandBrakeInstanceManager.Init(noHardware);
             }
-            catch (Exception exception)
+            catch (Exception)
             {
                 if (!noHardware)
                 {
                     MessageBox.Show(HandBrakeWPF.Properties.Resources.Startup_InitFailed, HandBrakeWPF.Properties.Resources.Error, MessageBoxButton.OK, MessageBoxImage.Error);
                 }
 
-                throw exception;
+                throw;
             }
 
             // Initialise the GUI
@@ -175,10 +211,15 @@ namespace HandBrakeWPF
         /// </param>
         private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            Caliburn.Micro.Execute.OnUIThreadAsync(() => {
+            Execute.BeginOnUIThread(
+                () => 
+            {
                 if (e.ExceptionObject.GetType() == typeof(FileNotFoundException))
                 {
-                    GeneralApplicationException exception = new GeneralApplicationException("A file appears to be missing.", "Try re-installing Microsoft .NET Framework 4.8", (Exception)e.ExceptionObject);
+                    GeneralApplicationException exception = new GeneralApplicationException(
+                        "A file appears to be missing.",
+                        "Try re-installing Microsoft .NET 5 Desktop Runtime",
+                        (Exception)e.ExceptionObject);
                     this.ShowError(exception);
                 }
                 else
@@ -202,7 +243,7 @@ namespace HandBrakeWPF
         {
             if (e.Exception.GetType() == typeof(FileNotFoundException))
             {
-                GeneralApplicationException exception = new GeneralApplicationException("A file appears to be missing.", "Try re-installing Microsoft .NET Framework 4.7.1", e.Exception);
+                GeneralApplicationException exception = new GeneralApplicationException("A file appears to be missing.", "Try re-installing Microsoft .NET 5 Desktop Runtime", e.Exception);
                 this.ShowError(exception);
             }
             else if (e.Exception.GetType() == typeof(GeneralApplicationException))
@@ -262,7 +303,7 @@ namespace HandBrakeWPF
 
                     try
                     {
-                        windowManager.ShowDialog(errorView);
+                        windowManager.ShowDialogAsync(errorView);
                     }
                     catch (Exception)
                     {
@@ -275,8 +316,7 @@ namespace HandBrakeWPF
             }
             catch (Exception)
             {
-                MessageBox.Show("An Unknown Error has occurred. \n\n Exception:" + exception, "Unhandled Exception",
-                     MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("An Unknown Error has occurred. \n\n Exception:" + exception, "Unhandled Exception", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

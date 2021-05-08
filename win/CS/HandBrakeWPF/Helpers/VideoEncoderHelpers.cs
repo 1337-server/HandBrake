@@ -9,15 +9,13 @@
 
 namespace HandBrakeWPF.Helpers
 {
-    using System.Configuration;
-
-    using HandBrake.Interop.Interop.Model.Encoding;
+    using VideoEncoder = Model.Video.VideoEncoder;
 
     public class VideoEncoderHelpers
     {
         public static bool IsH264(VideoEncoder encoder)
         {
-            if (encoder == VideoEncoder.X264 || encoder == VideoEncoder.X264_10 || encoder == VideoEncoder.QuickSync || encoder == VideoEncoder.NvencH264)
+            if (encoder == VideoEncoder.X264 || encoder == VideoEncoder.X264_10 || encoder == VideoEncoder.QuickSync || encoder == VideoEncoder.NvencH264 || encoder == VideoEncoder.MFH264) 
             {
                 return true;
             }

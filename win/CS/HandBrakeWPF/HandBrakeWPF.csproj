@@ -9,7 +9,7 @@
     <Authors>HandBrake Team</Authors>
     <Company>HandBrake Team</Company>
     <Product>HandBrake</Product>
-    <Copyright>Copyright © 2003-2020 HandBrake Team</Copyright>
+    <Copyright>Copyright © 2003-2021 HandBrake Team</Copyright>
     <Description>HandBrake is an open-source, GPL-licensed, multiplatform,video transcoder.</Description>
     <PackageProjectUrl>https://handbrake.fr</PackageProjectUrl>
     <RepositoryUrl>https://github.com/HandBrake/HandBrake</RepositoryUrl>
@@ -22,6 +22,7 @@
     <AssemblyName>HandBrake</AssemblyName>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -40,21 +41,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Caliburn.Micro" Version="3.2.0" />
+    <PackageReference Include="Caliburn.Micro" Version="4.0.136-rc" />
     <PackageReference Include="gong-wpf-dragdrop" Version="2.3.2" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="Ookii.Dialogs.Wpf" Version="3.1.0" />
     <PackageReference Include="System.Management" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\HandBrake.Interop\HandBrake.Interop.csproj" />
-    <ProjectReference Include="..\HandBrake.Worker\HandBrake.Worker.csproj">
-      <Private>true</Private>
-      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
-      <IncludeAssets>*.json</IncludeAssets>
-      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
-    </ProjectReference>
   </ItemGroup>
 
   <ItemGroup>
@@ -153,9 +147,27 @@
     <Page Update="Themes\Controls\GroupBoxDark.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="Themes\Controls\ToolbarLight.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Themes\Controls\ToolbarDark.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="Themes\Light.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Views\Standalone\CropPanelView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Properties\PublishProfiles\" />
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="copy ..\HandBrake.Worker\bin\$(ConfigurationName)\*.*  bin\$(ConfigurationName)" />
+  </Target>
+  
 </Project>

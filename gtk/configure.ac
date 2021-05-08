@@ -90,6 +90,10 @@ AC_ARG_ENABLE(qsv,
 	AS_HELP_STRING([--enable-qsv], [enable QSV encoder]),
 	use_qsv=yes, use_qsv=no)
 
+AC_ARG_ENABLE(mf,
+	AS_HELP_STRING([--enable-mf], [enable MediaFoundation encoder]),
+	use_mf=yes, use_mf=no)
+
 AC_ARG_ENABLE(gst,
 	AS_HELP_STRING([--disable-gst], [disable gstreamer (live preview)]),
 	gst_disable=yes, gst_disable=no)
@@ -199,7 +203,7 @@ AM_CONDITIONAL([GHB_GTK_3_16], [test "$HAVE_GTK_316" -eq 1])
 
 AM_CONDITIONAL([MINGW], [test "x$mingw_flag" = "xyes"])
 
-HB_LIBS="$HB_LIBS -lhandbrake -lavformat -lavfilter -lavcodec -lavutil -ldav1d -lswresample -lpostproc -ldvdnav -ldvdread -lmp3lame -lvorbis -lvorbisenc -logg -lswscale -ltheoraenc -ltheoradec -lvpx -lz -lbz2 -lbluray -lass -lfontconfig -lfreetype -lxml2 -ljansson -lopus -lspeex -lturbojpeg -llzma"
+HB_LIBS="$HB_LIBS -lhandbrake -lavformat -lavfilter -lavcodec -lavutil -ldav1d -lswresample -lpostproc -ldvdnav -ldvdread -lmp3lame -lvorbis -lvorbisenc -logg -lswscale -ltheoraenc -ltheoradec -lvpx -lz -lbz2 -lbluray -lass -lfontconfig -lfreetype -lxml2 -ljansson -lopus -lspeex -lturbojpeg -llzma -lzimg"
 HB_CPPFLAGS="$HB_CPPFLAGS $HBINC"
 
 PKG_CHECK_MODULES([x264], [x264], sys_x264=yes, sys_x264=no)
@@ -232,6 +236,9 @@ case $host in
 			HB_LIBS="$HB_LIBS -lpthread"
 		fi
 		HB_LIBS="$HB_LIBS -lbcrypt -lregex -luuid -lole32"
+		if test "x$use_mf" = "xyes" ; then
+			HB_LIBS="$HB_LIBS -lmfplat -lstrmiids"
+		fi
 		;;
 	*-*-freebsd*)
 		HB_LIBS="$HB_LIBS -lpthread"

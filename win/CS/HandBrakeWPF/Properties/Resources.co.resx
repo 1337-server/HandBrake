@@ -112,13 +112,13 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Video_EncoderExtraArgs" xml:space="preserve">
-    <value>A lista sana di i parametri di cudificatore : 
+    <value>A lista sana di i parametri di cudificatore : 
 {0}</value>
   </data>
   <data name="Video_x264FastDecode" xml:space="preserve">
@@ -127,7 +127,7 @@
 Attivate st’ozzione s’è u vostru apparechju ùn leghje micca bè u schedariu d’esciuta. (i.e. perdita di fiure)</value>
   </data>
   <data name="Video_LosslessWarning" xml:space="preserve">
-    <value>Fate casu : RF 0 vole dì senza perdita !</value>
+    <value>Fate casu : RF 0 vole dì senza perdita !</value>
   </data>
   <data name="Video_LosslessWarningTooltip" xml:space="preserve">
     <value>Un valore à 0 vole dì senza perdita è per què, u schedariu d’esciuta serà più maiò chì quellu di a fonte, for di s’è a fonte era dinù senza perdita. 
@@ -137,13 +137,13 @@ E scale di x264 è x265 sò logaritmiche, è valori più chjuchi currispondenu �
 Dunque, chjuchi aumenti di valore aumentanu prugressivamente a dimensione di u schedariu d’esciuta.</value>
   </data>
   <data name="AddPreset_PictureSizeMode" xml:space="preserve">
-    <value>Pudete eventualmente allucà preferenze di fiura cù sta prerigatura. Ci hè 3 modi :
+    <value>Pudete eventualmente allucà preferenze di fiura cù sta prerigatura. Ci hè 3 modi :
 
-Alcunu : E preferenze di fiurà ùn sò micca allucate cù sta prerigatura. À u caricamentu d’una fonte, e preferenze steranu tale quale in i cunfini di a risuluzione di a fonte. Quessa affetta dinù Anamorficu, mudullu, runzicatura, ecc.
+Alcunu : E preferenze di fiurà ùn sò micca allucate cù sta prerigatura. À u caricamentu d’una fonte, e preferenze steranu tale quale in i cunfini di a risuluzione di a fonte. fQuessa affetta dinù Anamorficu, mudullu, inquadratura, ecc.
 
-Persunalizatu : Pudete eventualmente definisce una larghezza è un’altezza massima. S’è vo fate què, a cudificazione serà inferiore o uguale à sti valori. L’ozzione « Cunservà e prupurzioni » serà autumaticamente attivata.
+Persunalizatu : Pudete eventualmente definisce una larghezza è un’altezza massima. S’è vo fate què, a cudificazione serà inferiore o uguale à sti valori. L’ozzione « Cunservà e prupurzioni » serà autumaticamente attivata.
 
-Fonte massima : Cudificà sempre à a risuluzione di a fonte quand’ella hè pussibule.</value>
+Fonte massima : Cudificà sempre à a risuluzione di a fonte quand’ella hè pussibule.</value>
   </data>
   <data name="About_GPL" xml:space="preserve">
     <value>Stu prugramma hè liberu ; pudete ridistribuiscellu è/o mudificallu
@@ -154,14 +154,14 @@ a licenza, o s’è voi preferite, una versione più recente.
 Stu prugramma hè distribuitu cù a sperenza d’esse ghjuvevule, ma SENZA NISUNA ASSICURANZA ; senza manc’una assicuranza di CUMMERCIALISAZIONE o di CURRISPUNDENZA À UN IMPIEGU PARTICULARE.  Fighjate a licenza GNU General Public License per sapene di più.
 
 Duveriate avè ricevutu una copia di a licenza GNU General Public License
-cù stu prugramma ; osinnò, ci vole à scrive à : Free Software Foundation,
+cù stu prugramma ; osinnò, ci vole à scrive à : Free Software Foundation,
 Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.</value>
   </data>
   <data name="QueueSelection_AutoNameWarning" xml:space="preserve">
-    <value>Avertimentu : U numinà autumaticu di i schedarii ùn hè micca attivu. Ci vole à attivallu in l’ozzioni.</value>
+    <value>Avertimentu : U numinà autumaticu di i schedarii ùn hè micca attivu. Ci vole à attivallu in l’ozzioni.</value>
   </data>
   <data name="QueueSelection_AutoTrackSelectionWarning" xml:space="preserve">
-    <value>Avertimentu : Ùn avete micca attivatu a cunfigurazione autumatica di a selezzione di e traccie audio è di i sottutituli. Pudete cunfigurà in l’ozzioni u cumpurtamentu predefinitu di a selezzione di e traccie.</value>
+    <value>Avertimentu : Ùn avete micca attivatu a cunfigurazione autumatica di a selezzione di e traccie audio è di i sottutituli. Pudete cunfigurà in l’ozzioni u cumpurtamentu predefinitu di a selezzione di e traccie.</value>
   </data>
   <data name="Presets_ResetComplete" xml:space="preserve">
     <value>E prerigature integrate sò state rimesse d’origine.</value>
@@ -181,11 +181,6 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.</value>
   <data name="Error" xml:space="preserve">
     <value>Sbagliu</value>
   </data>
-  <data name="Main_AutoAdd_AudioAndSubWarning" xml:space="preserve">
-    <value>Avertimentu : s’è vo vulete chì sottutituli sianu aghjunti à ogni elementu chì vo site prontu à mette in fila d’attesa, verificate chì i parametri predefiniti di i sottutituli sianu currettamente cunfigurati in l’unghjetta Sottutituli.
-    
-Vulete cuntinuà ?</value>
-  </data>
   <data name="Main_TurnOnAutoFileNaming" xml:space="preserve">
     <value>Ci vole à attivà u numinà autumaticu di i schedarii È sceglie un chjassu predefinitu in e preferenze nanzu di pudè aghjunghje à a fila d’attesa.</value>
   </data>
@@ -193,7 +188,7 @@ Vulete cuntinuà ?</value>
     <value>Avertimentu</value>
   </data>
   <data name="AreYouSure" xml:space="preserve">
-    <value>Site sicuru ?</value>
+    <value>Site sicuru ?</value>
   </data>
   <data name="HandBrake_Title" xml:space="preserve">
     <value>HandBrake</value>
@@ -208,7 +203,7 @@ Vulete cuntinuà ?</value>
     <value>   {0} Travaglii in attesa</value>
   </data>
   <data name="Main_NewDefaultPreset" xml:space="preserve">
-    <value>Nova prerigatura predefinita : {0}</value>
+    <value>Nova prerigatura predefinita : {0}</value>
   </data>
   <data name="Main_NewUpdate" xml:space="preserve">
     <value>Un rinnovu recente hè dispunibule. Andate à u listinu Attrezzi &gt; Ozzioni per installalu</value>
@@ -223,19 +218,19 @@ Vulete cuntinuà ?</value>
     <value>Ci vole à selezziunà un cartulare.</value>
   </data>
   <data name="Main_PreparingToEncode" xml:space="preserve">
-    <value>Preparazione à cudificà…</value>
+    <value>Approntu di a cudificazione…</value>
   </data>
   <data name="Main_PresetErrorBuiltInName" xml:space="preserve">
     <value>Ùn pudete micca impurtà una prerigatura cù u listessu nome ch’una prerigatura integrata.</value>
   </data>
   <data name="Main_PresetOverwriteWarning" xml:space="preserve">
-    <value>A prerigatura « {0} » esiste dighjà. Vulete rimpiazzalla ?</value>
+    <value>A prerigatura « {0} » esiste dighjà. Vulete rimpiazzalla ?</value>
   </data>
   <data name="Main_Presets" xml:space="preserve">
     <value>Prerigature</value>
   </data>
   <data name="Main_PresetUpdateConfrimation" xml:space="preserve">
-    <value>Site sicuru di vulè mudificà a prerigatura selezziunata ?</value>
+    <value>Site sicuru di vulè mudificà a prerigatura selezziunata ?</value>
   </data>
   <data name="Main_PresetUpdated" xml:space="preserve">
     <value>A prerigatura hè stata mudificata cù e vostre preferenze attuale.</value>
@@ -255,7 +250,7 @@ U schedariu precedente user_presets.xml hè statu accantatu.</value>
     <value>Analisa compia</value>
   </data>
   <data name="Main_ScanFailed_NoReason" xml:space="preserve">
-    <value>Fiascu di l’analisa : </value>
+    <value>Fiascu di l’analisa : </value>
   </data>
   <data name="Main_ScanFailled_CheckLog" xml:space="preserve">
     <value>Fiascu di l’analisa… Ci vole à fighjà u ghjurnale d’attività per sapene di più.</value>
@@ -285,7 +280,7 @@ U schedariu precedente user_presets.xml hè statu accantatu.</value>
     <value>Avertimentu</value>
   </data>
   <data name="Overwrite" xml:space="preserve">
-    <value>Rimpiazzallu ?</value>
+    <value>Rimpiazzallu ?</value>
   </data>
   <data name="Question" xml:space="preserve">
     <value>Dumanda</value>
@@ -303,10 +298,10 @@ U schedariu precedente user_presets.xml hè statu accantatu.</value>
     <value>A prerigatura chì vo circate à impurtà vene d’una versione sfarente d’HandBrake. 
  Forse ùn serà micca pussibule d’impurtà tutti i valori di sta prerigatura. 
 
-Vulete cuntinuà ?</value>
+Vulete cuntinuà ?</value>
   </data>
   <data name="Preset_UnableToImport_Header" xml:space="preserve">
-    <value>Impussibule d’impurtà a prerigatura !</value>
+    <value>Impussibule d’impurtà a prerigatura !</value>
   </data>
   <data name="Preset_UnableToImport_Message" xml:space="preserve">
     <value>Impussibule d’impurtà a prerigatura chì pare esse alterata o vene d’una vechja versione d’HandBrake.</value>
@@ -318,22 +313,22 @@ Vulete cuntinuà ?</value>
     <value>U chjassu di destinazione pruvistu cuntene caratteri inaccettevule è ùn serà micca  mudificatu.</value>
   </data>
   <data name="Preview" xml:space="preserve">
-    <value>Previsualizazione {0}</value>
+    <value>Apprezzazione {0}</value>
   </data>
   <data name="Preview_Scaled" xml:space="preserve">
-    <value>Previsualizazione (à a scala)</value>
+    <value>Apprezzazione (à a scala)</value>
   </data>
   <data name="PictureSettings_OutputResolution" xml:space="preserve">
-    <value>Esciuta : {0}</value>
+    <value>Esciuta : {0}</value>
   </data>
   <data name="Options_AdditionalFormatOptions" xml:space="preserve">
-    <value>U furmatu di u schedariu d’esciuta. In più di i caratteri pigliati in carica da u sistema di schedariu, pudete impiegà i campi di sustituzione seguente chì seranu rimpiazzati quandu vo cambiate di titulu o analizate una fonte.
+    <value>U furmatu di u schedariu d’esciuta. In più di i caratteri accettati da u sistema di schedariu, pudete impiegà i campi di sustituzione seguente chì seranu rimpiazzati quandu vo cambiate di titulu o analizate una fonte.
 
-Ozzioni mudificate direttamente : {source} {title} {chapters} 
-Ozzioni tramandate : {date} {time} {creation-date} {creation-time} {quality} {bitrate} (Quesse cambianu solu quandu voi analizate una nova fonte, cambiate di titulu o di capitulu)</value>
+Ozzioni mudificate direttamente : {source} {title} {chapters} 
+Ozzioni tramandate : {date} {time} {creation-date} {creation-time} {quality} {bitrate} (Quesse cambianu solu quandu voi analizate una nova fonte, cambiate di titulu o di capitulu)</value>
   </data>
   <data name="Options_DefaultPathAdditionalParams" xml:space="preserve">
-    <value>Ozzioni cumplementarie dispunibule : {source_path} o {source_folder_name} o {source}</value>
+    <value>Ozzioni cumplementarie dispunibule : {source_path} o {source_folder_name} o {source}</value>
   </data>
   <data name="Main_MatchingFileOverwriteWarning" xml:space="preserve">
     <value>Ùn pudete micca cudificà ver di un schedariu cù u listessu chjassu è u listessu nome chì u schedariu di a fonte. Ci vole à mudificà u nome di schedariu di destinazione per ch’ellu ùn currispondi più à u schedariu di a fonte. </value>
@@ -342,7 +337,7 @@ Ozzioni tramandate : {date} {time} {creation-date} {creation-time} {quality} {bi
     <value>U vostru sistema hà impeditu à HandBrake di lancià un navigatore web.</value>
   </data>
   <data name="Main_UnableToLoadHelpSolution" xml:space="preserve">
-    <value>Pudete sempre accede à e pagine d’aiutu direttamente da u situ web : https://handbrake.fr</value>
+    <value>Pudete sempre accede à e pagine d’aiutu direttamente da u situ web : https://handbrake.fr</value>
   </data>
   <data name="Main_PresetImportFailed" xml:space="preserve">
     <value>Impussibule d’impurtà a prerigatura selezziunata.</value>
@@ -375,7 +370,7 @@ S’è vo cuntinuate, i vostri sottutituli micca intarsiati seranu persi.</value
   </data>
   <data name="Main_ScanNoTitlesFoundMessage" xml:space="preserve">
     <value>HandBrake ùn puderà micca cudificà a fonte selezziunata perchè ùn hà micca trovu di fonte accettevule cù tituli à cudificà. 
-E cagioni pussibule sò :
+E cagioni pussibule sò :
 - A durata d’ogni titulu di a fonte hè più corta chì l’ozzione di sogliu « Durata minima » in « Ozzioni &gt; Espertu ». 
 - U schedariu di fonte ùn hè micca un schedariu video accettevule o si trova in un furmatu scunnisciutu da HandBrake.
 - U schedariu di fonte pò esse prutettu contr’à a copia o cuntene un dirittu DRM. Ci vole à sapè ch’HandBrake ùn permette micca di squassà e prutezzioni contr’à a copia.
@@ -395,16 +390,16 @@ U ghjurnale d’attività puderia cuntene infurmazioni addiziunale.</value>
     <value>Ùn pudete micca squassà a prerigatura predefinita. Prima, ci vole à sceglie un’altra prerigatura predefinita.</value>
   </data>
   <data name="MainViewModel_PresetRemove_AreYouSure" xml:space="preserve">
-    <value>Site sicuru di vulè squassà a prerigatura : </value>
+    <value>Site sicuru di vulè squassà a prerigatura : </value>
   </data>
   <data name="MainViewModel_EncodeStatusChanged_StatusLabel" xml:space="preserve">
-    <value>Cudificazione : Passu {0} nant’à {1},  {2:00.00}%, FPS : {3:000.0},  FPS mediana : {4:000.0},  Tempu rimanente : {5}, Trascorsu : {6} {7}</value>
+    <value>Cudificazione : Passu {0} nant’à {1},  {2:00.00}%, FPS : {3:000.0},  FPS mediana : {4:000.0},  Tempu rimanente : {5}, Trascorsu : {6} {7}</value>
   </data>
   <data name="AddPresetViewModel_PresetMustProvideName" xml:space="preserve">
     <value>Una prerigatura deve avè un nome. Ci vole à riempie u campu di u nome di prerigatura.</value>
   </data>
   <data name="AddPresetViewModel_PresetWithSameNameOverwriteWarning" xml:space="preserve">
-    <value>Una prerigatura cù stu nome esiste dighjà. Vulete rimpiazzalla ?</value>
+    <value>Una prerigatura cù stu nome esiste dighjà. Vulete rimpiazzalla ?</value>
   </data>
   <data name="AddPresetViewModel_YouMustFirstScanSource" xml:space="preserve">
     <value>Prima, ci vole à analizà una fonte per impiegà l’ozzione « Fonte massima ».</value>
@@ -431,7 +426,7 @@ U ghjurnale d’attività puderia cuntene infurmazioni addiziunale.</value>
     <value>Rivene à e traccie</value>
   </data>
   <data name="ChaptersViewModel_UnableToExportChaptersWarning" xml:space="preserve">
-    <value>Impussibule d’arregistrà u schedariu di marcatori di capitulu ! </value>
+    <value>Impussibule d’arregistrà u schedariu di marcatori di capitulu ! </value>
   </data>
   <data name="ChaptersViewModel_UnableToExportChaptersMsg" xml:space="preserve">
     <value>I nomi di marcatore di capitulu ùn seranu micca arregistrati in a vostra cudificazione.</value>
@@ -449,10 +444,10 @@ U ghjurnale d’attività puderia cuntene infurmazioni addiziunale.</value>
     <value>Un sbagliu scunnisciutu hè accadutu.</value>
   </data>
   <data name="OptionsViewModel_NewUpdate" xml:space="preserve">
-    <value>Un rinnovu recente hè dispunibule ! Ci vole à cunsultà u situ web per fighjà e note di versione.</value>
+    <value>Un rinnovu recente hè dispunibule ! Ci vole à cunsultà u situ web per fighjà e note di versione.</value>
   </data>
   <data name="OptionsViewModel_64bitAvailable" xml:space="preserve">
-    <value>U vostru sistema accetta a versione 64bit d’HandBrake ! Sta versione permette capacità è stabilità più belle chì a versione 32bit.
+    <value>U vostru sistema accetta a versione 64bit d’HandBrake ! Sta versione permette capacità è stabilità più belle chì a versione 32bit.
     Ci vole à cunsultà u situ web per fighjà e note di versione.</value>
   </data>
   <data name="OptionsViewModel_NoNewUpdates" xml:space="preserve">
@@ -468,7 +463,7 @@ U ghjurnale d’attività puderia cuntene infurmazioni addiziunale.</value>
     <value>Rinnovu fiascu. Pudete pruvà di scaricà u rinnovu da u situ https://handbrake.fr</value>
   </data>
   <data name="PictureSettingsViewModel_StorageDisplayLabel" xml:space="preserve">
-    <value>Dimensione di u screnu : {0}x{1},  PAR {2}x{3}</value>
+    <value>Dimensione di u screnu : {0}x{1},  PAR {2}x{3}</value>
   </data>
   <data name="QueueSelectionViewModel_AddToQueue" xml:space="preserve">
     <value>Aghjunghje à a fila d’attesa</value>
@@ -483,7 +478,7 @@ U ghjurnale d’attività puderia cuntene infurmazioni addiziunale.</value>
     <value>Fila d’attesa</value>
   </data>
   <data name="QueueViewModel_ClearQueueConfrimation" xml:space="preserve">
-    <value>Site sicuru di vulè viutà a fila d’attesa ?</value>
+    <value>Site sicuru di vulè viutà a fila d’attesa ?</value>
   </data>
   <data name="Confirm" xml:space="preserve">
     <value>Cunfirmà</value>
@@ -495,16 +490,16 @@ U ghjurnale d’attività puderia cuntene infurmazioni addiziunale.</value>
     <value>Fila d’attesa interrotta</value>
   </data>
   <data name="QueueViewModel_DelSelectedJobConfirmation" xml:space="preserve">
-    <value>Site sicuru di vulè squassà i travaglii selezziunati ?</value>
+    <value>Site sicuru di vulè squassà i travaglii selezziunati ?</value>
   </data>
   <data name="QueueViewModel_JobCurrentlyRunningWarning" xml:space="preserve">
-    <value>Sta cudificazione hè in corsu. S’è vo a squassate, a cudificazione serà piantata. Site sicuru di vulè fà què ?</value>
+    <value>Sta cudificazione hè in corsu. S’è vo a squassate, a cudificazione serà piantata. Site sicuru di vulè fà què ?</value>
   </data>
   <data name="QueueViewModel_NoPendingJobs" xml:space="preserve">
     <value>Ùn ci hè alcunu travagliu in attesa.</value>
   </data>
   <data name="QueueViewModel_EditConfrimation" xml:space="preserve">
-    <value>Site sicuru di vulè mudificà stu travagliu ? Serà cacciatu da a fila d’attesa è mandatu ver di a finestra principale.</value>
+    <value>Site sicuru di vulè mudificà stu travagliu ? Serà cacciatu da a fila d’attesa è mandatu ver di a finestra principale.</value>
   </data>
   <data name="QueueViewModel_QueueReady" xml:space="preserve">
     <value>Fila d’attesa pronta</value>
@@ -522,26 +517,26 @@ U ghjurnale d’attività puderia cuntene infurmazioni addiziunale.</value>
     <value>Fila d’attesa principiata</value>
   </data>
   <data name="QueueViewModel_QueueStatusDisplay" xml:space="preserve">
-    <value>Cudificazione : Passu {0} nant’à {1},  {2:00.00}%, FPS : {3:000.0},  FPS mediana : {4:000.0},  Tempu rimanente : {5}, Trascorsu : {6:g\:oo\:mm\:ss}</value>
+    <value>Cudificazione : Passu {0} nant’à {1},  {2:00.00}%, FPS : {3:000.0},  FPS mediana : {4:000.0},  Tempu rimanente : {5}, Trascorsu : {6:g\:oo\:mm\:ss}</value>
   </data>
   <data name="ShellViewModel_CanClose" xml:space="preserve">
     <value>Una cudificazione hè in corsu d’esecuzione. L’esce d’HandBrake pianterà sta cudificazione.
-Site sicuru di vulè esce d’HandBrake ?</value>
+Site sicuru di vulè esce d’HandBrake ?</value>
   </data>
   <data name="StaticPreviewViewModel_Title" xml:space="preserve">
-    <value>Previsualizazione di a fiura</value>
+    <value>Apprezzazione di a fiura</value>
   </data>
   <data name="StaticPreview_UnableToDeletePreview" xml:space="preserve">
-    <value>Impussibule di squassà u schedariu di previsualizazione precedente. Forse, avete un schedariu di previsualizazione sempre apertu in u vostru lettore multimedia. Ci vole à chjodelu.</value>
+    <value>Impussibule di squassà u schedariu d’apprezzazione precedente. Forse, avete un schedariu d’apprezzazione sempre apertu in u vostru lettore multimedia. Ci vole à chjodelu.</value>
   </data>
   <data name="StaticPreviewViewModel_ScanFirst" xml:space="preserve">
-    <value>Prima, ci vole à analizà una fonte è definisce a vostra cudificazione nanzu di creà una previsualizazione.</value>
+    <value>Da prima, ci vole à analizà una fonte è definisce a vostra cudificazione nanzu di creà un’apprezzazione.</value>
   </data>
   <data name="StaticPreviewViewModel_UnableToPlayFile" xml:space="preserve">
-    <value>Impussibule di truvà u schedariu di previsualizazione. U schedariu hè statu squassatu o a cudificazione hè fiasca. Fighjate u ghjurnale d’attività per sapene di più.</value>
+    <value>Impussibule di truvà u schedariu d’apprezzazione. U schedariu hè statu squassatu o a cudificazione hè fiasca. Fighjate u ghjurnale d’attività per sapene di più.</value>
   </data>
   <data name="StaticPreviewViewModel_AlreadyEncoding" xml:space="preserve">
-    <value>Ci hè dighjà una cudificazione video in corsu ! HandBrake pò cudificà una sola video in una volta.</value>
+    <value>Ci hè dighjà una cudificazione video in corsu ! HandBrake pò cudificà una sola video in una volta.</value>
   </data>
   <data name="SubtitlesViewModel_SubDefaults" xml:space="preserve">
     <value>Sottutituli predefiniti</value>
@@ -556,7 +551,7 @@ Site sicuru di vulè esce d’HandBrake ?</value>
     <value>Selezzione di cumpurtamentu</value>
   </data>
   <data name="PresetService_ArchiveFile" xml:space="preserve">
-    <value>Schedariu archiviatu :</value>
+    <value>Schedariu archiviatu :</value>
   </data>
   <data name="PresetService_UnableToLoad" xml:space="preserve">
     <value>Impussibule di caricà e prerigature.</value>
@@ -564,7 +559,7 @@ Site sicuru di vulè esce d’HandBrake ?</value>
   <data name="PresetService_UnableToLoadPresets" xml:space="preserve">
     <value>HandBrake ùn hà micca pussutu caricà u schedariu di prerigature. Forse, hè statu creatu da una vechja versione oramai più accettata d’HandBrake o ancu alteratu. 
 
-U vostru vechju schedariu di prerigature hè statu archiviatu :</value>
+U vostru vechju schedariu di prerigature hè statu archiviatu :</value>
   </data>
   <data name="Main_QueueFinishedErrors" xml:space="preserve">
     <value> cù {0} sbaglii o abbandoni abbentati.</value>
@@ -573,7 +568,7 @@ U vostru vechju schedariu di prerigature hè statu archiviatu :</value>
     <value>Spaziu discu debule</value>
   </data>
   <data name="MainViewModel_LowDiskSpaceWarning" xml:space="preserve">
-    <value>Avertimentu : ùn ci hè abbastanza spaziu di discu. HandBrake ùn puderà compie sta cudificazione s’ellu ùn ci hè abbastanza spaziu di discu. </value>
+    <value>Avertimentu : ùn ci hè abbastanza spaziu di discu. HandBrake ùn puderà compie sta cudificazione s’ellu ùn ci hè abbastanza spaziu di discu. </value>
   </data>
   <data name="ChaptersViewModel_UnableToImportChaptersMalformedLineMsg" xml:space="preserve">
     <value>A linea {0} hè inaccetevule. Ùn ci serà nunda d’impurtatu.</value>
@@ -600,13 +595,13 @@ U vostru vechju schedariu di prerigature hè statu archiviatu :</value>
     <value>U numeru di capituli nant’à u media di fonte
 è quellu in u schedariu d’entrata ùn currispundenu micca ({0} vs {1}).
 
-Vulete impurtà i nomi di capitulu quantunque ?</value>
+Vulete impurtà i nomi di capitulu quantunque ?</value>
   </data>
   <data name="ChaptersViewModel_ValidateImportedChapters_ChapterCountMismatchMsg" xml:space="preserve">
     <value>U numeru di capituli nant’à u media di fonte
 è quellu in u schedariu d’entrata ùn currispundenu micca ({0} vs {1}).
 
-Vulete impurtà i nomi di capitulu quantunque ?</value>
+Vulete impurtà i nomi di capitulu quantunque ?</value>
   </data>
   <data name="ChaptersViewModel_ValidateImportedChapters_ChapterCountMismatchWarning" xml:space="preserve">
     <value>U numeru di capituli ùn currispunde micca trà u schedariu di fonte è quellu d’entrata</value>
@@ -617,7 +612,7 @@ Vulete impurtà i nomi di capitulu quantunque ?</value>
 
 Ghjè sicuramente chì stu schedariu di capitulu fussi creatu da un media di fonte sfarente.
 
-Site sicuru di vulè impurtà i nomi di capitulu ?</value>
+Site sicuru di vulè impurtà i nomi di capitulu ?</value>
   </data>
   <data name="ChaptersViewModel_ValidateImportedChapters_ChapterDurationMismatchWarning" xml:space="preserve">
     <value>U numeru di capituli ùn currispunde micca trà u schedariu di fonte è quellu d’entrata</value>
@@ -636,13 +631,13 @@ U vostru schedariu di prerigatura hà da esse archiviatu è un novu hà da esse 
     <value>Un sbagliu hè accadutu pruvendu d’arregistrà e vostre preferenze.</value>
   </data>
   <data name="UserSettings_YourSettingsHaveBeenReset" xml:space="preserve">
-    <value>Avertimentu : e vostre preferenze sò state rimesse d’origine !</value>
+    <value>Avertimentu : e vostre preferenze sò state rimesse d’origine !</value>
   </data>
   <data name="UserSettings_YourSettingsAreCorrupt" xml:space="preserve">
     <value>U vostru schedariu di preferenze persunalizate era inaccessibile o alteratu. E preferenze sò state rimesse à i so valori d’origine.</value>
   </data>
   <data name="UserSettings_UnableToLoad" xml:space="preserve">
-    <value>Impussibule di caricà u schedariu di e preferenze persunalizate : {0}</value>
+    <value>Impussibule di caricà u schedariu di e preferenze persunalizate : {0}</value>
   </data>
   <data name="UserSettings_UnableToLoadSolution" xml:space="preserve">
     <value>U vostru schedariu di preferenze persunalizate pare esse inaccessibile o alteratu. Forse, duverete squassà u schedariu è lascià HandBrake creane un novu.</value>
@@ -651,10 +646,10 @@ U vostru schedariu di prerigatura hà da esse archiviatu è un novu hà da esse 
     <value>U cartulare d’esciuta chì vo avete sceltu ùn esiste micca, o ùn avete micca u permessu di scriveci schedarii.</value>
   </data>
   <data name="DirectoryUtils_CreateFolder" xml:space="preserve">
-    <value>Creà u cartulare ?</value>
+    <value>Creà u cartulare ?</value>
   </data>
   <data name="DirectoryUtils_CreateFolderMsg" xml:space="preserve">
-    <value>U cartulare, in quellu circate à scrive, ùn esiste micca. Vulete chì HandBrake crei quellu cartulare ?
+    <value>U cartulare, in quellu circate à scrive, ùn esiste micca. Vulete chì HandBrake crei quellu cartulare ?
 {0}</value>
   </data>
   <data name="MainViewModel_UnableToLaunchDestDir" xml:space="preserve">
@@ -664,7 +659,7 @@ U vostru schedariu di prerigatura hà da esse archiviatu è un novu hà da esse 
     <value>Ci vole à verificà chì vo avete un cartulare di destinazione accettevule.</value>
   </data>
   <data name="MainViewModel_EncodeStatusChanged_SubScan_StatusLabel" xml:space="preserve">
-    <value>Passu di trattamentu {0} nant’à {1}, (Analisa di i sottutituli)  {2:00.00}%, Tempu d’analisa rimanente : {3}, Trascorsu : {4}</value>
+    <value>Passu di trattamentu {0} nant’à {1}, (Analisa di i sottutituli)  {2:00.00}%, Tempu d’analisa rimanente : {3}, Trascorsu : {4}</value>
   </data>
   <data name="NoAdditionalInformation" xml:space="preserve">
     <value>Alcuna infurmazione cumplementaria</value>
@@ -674,10 +669,10 @@ U vostru schedariu di prerigatura hà da esse archiviatu è un novu hà da esse 
   </data>
   <data name="TaskTrayStatusTitle" xml:space="preserve">
     <value>{1}%, Passu {2} nant’à {3}
-Tempu rimanente : {4}</value>
+Tempu rimanente : {4}</value>
   </data>
   <data name="PauseOnLowDiskspace" xml:space="preserve">
-    <value>Fila d’attesa interrotta.  Avertimentu : ùn ci hè abbastanza spaziu di discu nant’à u lettore per fà a cudificazione. Ci vole à liberà qualchì spaziu è appughjate nant’à Principià per cuntinuà. Pudete ancu adattà u livellu minimu di spaziu in e preferenze.</value>
+    <value>Fila d’attesa interrotta.  Avertimentu : ùn ci hè abbastanza spaziu di discu nant’à u lettore per fà a cudificazione. Ci vole à liberà qualchì spaziu è appughjate nant’à Principià per cuntinuà. Pudete ancu adattà u livellu minimu di spaziu in e preferenze.</value>
   </data>
   <data name="Main_QueuePaused" xml:space="preserve">
     <value>Fila d’attesa interrotta</value>
@@ -690,7 +685,7 @@ Tempu rimanente : {4}</value>
 
 Pudete cunfigurà in e preferenze à chì livellu st’alerta deve accade. 
 
-Vulete cuntinuà ? </value>
+Vulete cuntinuà ? </value>
   </data>
   <data name="Queue_UnableToResetJob" xml:space="preserve">
     <value>Impussibule di reinizià u statu di u travagliu perchè ùn hè micca in un statu « Sbagliu » o « Compiu ».</value>
@@ -708,7 +703,7 @@ Vulete cuntinuà ? </value>
     <value>Ci vole à piantà a cudificazione attuale. S’è stu penseru ùn smarisce micca, ci vole à rilancià HandBrake.</value>
   </data>
   <data name="StaticPreviewView_Title" xml:space="preserve">
-    <value>Previsualizazione ({0}% di a dimensione attuale)</value>
+    <value>Apprezzazione ({0}% di a dimensione attuale)</value>
   </data>
   <data name="OsBitnessWarning" xml:space="preserve">
     <value>HandBrake richiede una versione 64bit di Windows 7 o più recente per funziunà.</value>
@@ -717,11 +712,11 @@ Vulete cuntinuà ? </value>
     <value>HandBrake richiede Windows 7 o più recente per funziunà. E versioni 0.9.9 (XP) è 0.10.5 (Vista) sò l’ultime à piglià in carica sti sistemi.</value>
   </data>
   <data name="Main_ContinueAddingToQueue" xml:space="preserve">
-    <value>Vulete cuntinuà pruvendu d’aghjunghje u restu ?</value>
+    <value>Vulete cuntinuà pruvendu d’aghjunghje u restu ?</value>
   </data>
   <data name="Main_QueueOverwritePrompt" xml:space="preserve">
-    <value>U schedariu « {0} » esiste dighjà !
-Vulete rimpiazzallu ?</value>
+    <value>U schedariu « {0} » esiste dighjà !
+Vulete rimpiazzallu ?</value>
   </data>
   <data name="Clipboard_Unavailable" xml:space="preserve">
     <value>U preme’papei di u sistema  ùn hè micca dispunibule attualmente.</value>
@@ -730,10 +725,10 @@ Vulete rimpiazzallu ?</value>
     <value>Forse ci hè un’altra appiecazione chì cuttighjeghja o ammarchjuneghja u preme’papei per u so propriu adopru. Ùn puderete micca impiegalu finch’ellu sia spalancatu?</value>
   </data>
   <data name="AboutView_License" xml:space="preserve">
-    <value>Licenza : </value>
+    <value>Licenza : </value>
   </data>
   <data name="AboutView_Version" xml:space="preserve">
-    <value>Versione : </value>
+    <value>Versione : </value>
   </data>
   <data name="AddPresetView_AddNewCategory" xml:space="preserve">
     <value>-- Aghjunghje una nova categuria --</value>
@@ -742,28 +737,28 @@ Vulete rimpiazzallu ?</value>
     <value>Aghjunghje una prerigatura</value>
   </data>
   <data name="AddPresetView_Category" xml:space="preserve">
-    <value>Categuria :</value>
+    <value>Categuria :</value>
   </data>
   <data name="AddPresetView_Description" xml:space="preserve">
-    <value>Discrizzione :</value>
+    <value>Discrizzione :</value>
   </data>
   <data name="AddPresetView_Name" xml:space="preserve">
-    <value>Nome :</value>
+    <value>Nome :</value>
   </data>
   <data name="AddPresetView_SavePictureSize" xml:space="preserve">
-    <value>Dimensioni :</value>
+    <value>Dimensioni :</value>
   </data>
   <data name="AudioDefaultView_Behaviours" xml:space="preserve">
     <value>Selezzione di a traccia di fonte</value>
   </data>
   <data name="AudioView_AllowPassThruOf" xml:space="preserve">
-    <value>Permette u passthru di :</value>
+    <value>Permette u passthru di :</value>
   </data>
   <data name="AudioView_AudioDefaultsDescription" xml:space="preserve">
     <value>Cunfigurate cumu e traccie audio sò autumaticamente selezziunate è cunfigurate quandu vo selezziunate un novu titulu o una nova fonte video.</value>
   </data>
   <data name="AudioView_AutoPassthruBehaviour" xml:space="preserve">
-    <value>Cumpurtamentu di l’« Auto Passthru » :</value>
+    <value>Cumpurtamentu di l’« Auto Passthru » :</value>
   </data>
   <data name="AudioView_Bitrate" xml:space="preserve">
     <value>Ghjettu</value>
@@ -784,7 +779,7 @@ Vulete rimpiazzallu ?</value>
     <value>Mischiera</value>
   </data>
   <data name="AudioView_OtherwiseFallbackEncoder" xml:space="preserve">
-    <value>Cudificatore di sustituzione :</value>
+    <value>Cudificatore di sustituzione :</value>
   </data>
   <data name="AudioView_ReloadDefaults" xml:space="preserve">
     <value>Ricaricà</value>
@@ -799,10 +794,10 @@ Vulete rimpiazzallu ?</value>
     <value>Nome di a traccia</value>
   </data>
   <data name="AudioView_TrackSelectionBehaviour" xml:space="preserve">
-    <value>Cumpurtamentu di a selezzione di traccia :</value>
+    <value>Cumpurtamentu di a selezzione di traccia :</value>
   </data>
   <data name="AudioView_TrackSettingDefaultBehaviour" xml:space="preserve">
-    <value>Mudellu per e traccie addiziunale :</value>
+    <value>Per e traccie addiziunale :</value>
   </data>
   <data name="AudioView_WhenAutoPassthru" xml:space="preserve">
     <value>Quandu l’« Auto Passthru » hè selezziunatu cum’è cudecu audio.</value>
@@ -847,28 +842,28 @@ Vulete rimpiazzallu ?</value>
     <value>Qaundu l’azzione hè compia</value>
   </data>
   <data name="ErrorView_ErrorDetails" xml:space="preserve">
-    <value>Detaglii di sbagliu :</value>
+    <value>Detaglii di sbagliu :</value>
   </data>
   <data name="FiltersView_Custom" xml:space="preserve">
-    <value>Persunalizatu :</value>
+    <value>Persunalizatu :</value>
   </data>
   <data name="FiltersView_Deblock" xml:space="preserve">
-    <value>Sblucchime</value>
+    <value>Sblucchime :</value>
   </data>
   <data name="FiltersView_Decomb" xml:space="preserve">
     <value>Decomb</value>
   </data>
   <data name="FiltersView_Deinterlace" xml:space="preserve">
-    <value>Disintricciamentu :</value>
+    <value>Disintricciamentu :</value>
   </data>
   <data name="FiltersView_DeinterlacePreset" xml:space="preserve">
-    <value>Prerigatura :</value>
+    <value>Prerigatura :</value>
   </data>
   <data name="FiltersView_DeinterlacePresetAuto" xml:space="preserve">
     <value>Prerigatura di disintricciamentu</value>
   </data>
   <data name="FiltersView_Denoise" xml:space="preserve">
-    <value>Denoise :</value>
+    <value>Denoise :</value>
   </data>
   <data name="FiltersView_DenoisePresetAuto" xml:space="preserve">
     <value>Prerigatura « Denoise »</value>
@@ -877,7 +872,7 @@ Vulete rimpiazzallu ?</value>
     <value>Rigatura « Denoise »</value>
   </data>
   <data name="FiltersView_Detelecine" xml:space="preserve">
-    <value>Detelesinema :</value>
+    <value>Detelesinema :</value>
   </data>
   <data name="FiltersView_Filters" xml:space="preserve">
     <value>Filtri</value>
@@ -889,16 +884,16 @@ Vulete rimpiazzallu ?</value>
     <value>Scala di grisgiu</value>
   </data>
   <data name="FiltersView_InterlaceDetection" xml:space="preserve">
-    <value>Abbentata d’intricciamentu :</value>
+    <value>Abbentata d’intricciamentu :</value>
   </data>
   <data name="FiltersView_Preset" xml:space="preserve">
-    <value>Prerigatura :</value>
+    <value>Prerigatura :</value>
   </data>
   <data name="FiltersView_Rotate" xml:space="preserve">
-    <value>Girà :</value>
+    <value>Girà :</value>
   </data>
   <data name="FiltersView_Sharpen" xml:space="preserve">
-    <value>Arrutà</value>
+    <value>Arrutà :</value>
   </data>
   <data name="FiltersView_SharpenPresetAuto" xml:space="preserve">
     <value>Prerigatura d’arrutata</value>
@@ -907,7 +902,7 @@ Vulete rimpiazzallu ?</value>
     <value>Rigatura d’arrutata</value>
   </data>
   <data name="FiltersView_Tune" xml:space="preserve">
-    <value>Rigatura :</value>
+    <value>Rigatura :</value>
   </data>
   <data name="Generic_Add" xml:space="preserve">
     <value>Aghjunghje</value>
@@ -967,7 +962,7 @@ Vulete rimpiazzallu ?</value>
     <value>Alineà u principiu di l’audio/video</value>
   </data>
   <data name="MainView_Angle" xml:space="preserve">
-    <value>Angulu : </value>
+    <value>Angulu : </value>
   </data>
   <data name="MainView_AudioTab" xml:space="preserve">
     <value>Audio</value>
@@ -988,16 +983,16 @@ Vulete rimpiazzallu ?</value>
     <value>Destinazione</value>
   </data>
   <data name="MainView_Duration" xml:space="preserve">
-    <value>Durata : </value>
+    <value>Durata : </value>
   </data>
   <data name="MainView_File" xml:space="preserve">
-    <value>Arregistrà cù u nome :</value>
+    <value>Arregistrà cù u nome :</value>
   </data>
   <data name="MainView_FiltersTab" xml:space="preserve">
     <value>Filtri</value>
   </data>
   <data name="MainView_Format" xml:space="preserve">
-    <value>Furmatu :</value>
+    <value>Furmatu :</value>
   </data>
   <data name="MainView_Help" xml:space="preserve">
     <value>Aiutu</value>
@@ -1012,7 +1007,7 @@ Vulete rimpiazzallu ?</value>
     <value>(mudificatu)</value>
   </data>
   <data name="MainView_Muxing" xml:space="preserve">
-    <value>Muxing : Què pò piglià qualchì tempu…</value>
+    <value>Muxing : Què pò piglià qualchì tempu…</value>
   </data>
   <data name="MainView_Options" xml:space="preserve">
     <value>Ozzioni</value>
@@ -1039,13 +1034,13 @@ Vulete rimpiazzallu ?</value>
     <value>Prerigature</value>
   </data>
   <data name="MainView_Preview" xml:space="preserve">
-    <value>Previsualizazione</value>
+    <value>Apprezzazione</value>
   </data>
   <data name="MainView_ProgressStatusWithTask" xml:space="preserve">
-    <value>Cudificazione : {0}, {1:00.00}%, Tempu rimanente : {2}, {3}</value>
+    <value>Cudificazione : {0}, {1:00.00}%, Tempu rimanente : {2}, {3}</value>
   </data>
   <data name="MainView_Range" xml:space="preserve">
-    <value>Stesa :</value>
+    <value>Stesa :</value>
   </data>
   <data name="MainView_Reload" xml:space="preserve">
     <value>Ricaricà</value>
@@ -1066,16 +1061,16 @@ Vulete rimpiazzallu ?</value>
     <value>Sceglie u valore predefinitu</value>
   </data>
   <data name="MainView_ShowPreview" xml:space="preserve">
-    <value>Previsualizazione</value>
+    <value>Apprezzazione</value>
   </data>
   <data name="MainView_ShowQueue" xml:space="preserve">
     <value>Fila d’attesa</value>
   </data>
   <data name="MainView_Source" xml:space="preserve">
-    <value>Fonte :</value>
+    <value>Fonte :</value>
   </data>
   <data name="MainView_SourceOpen" xml:space="preserve">
-    <value>Apre a fonte</value>
+    <value>Fonte aperta</value>
   </data>
   <data name="MainView_StartEncode" xml:space="preserve">
     <value>Principià a cudificazione</value>
@@ -1090,7 +1085,7 @@ Vulete rimpiazzallu ?</value>
     <value>Piantà a cudificazione</value>
   </data>
   <data name="MainView_StopEncodeConfirm" xml:space="preserve">
-    <value>Site sicuru di vulè piantà sta cudificazione ?</value>
+    <value>Site sicuru di vulè piantà sta cudificazione ?</value>
   </data>
   <data name="MainView_SubtitleBeforeScanError" xml:space="preserve">
     <value>Ci vole à sceglie una fonte à cudificà nanzu di pruvà d’impurtà un schedariu di sottutitulu.</value>
@@ -1108,7 +1103,7 @@ Vulete rimpiazzallu ?</value>
     <value> - </value>
   </data>
   <data name="MainView_Title" xml:space="preserve">
-    <value>Titulu : </value>
+    <value>Titulu : </value>
   </data>
   <data name="MainView_UpdateSelectedPreset" xml:space="preserve">
     <value>Mudificà a prerigatura selezziunata</value>
@@ -1144,7 +1139,7 @@ Vulete rimpiazzallu ?</value>
     <value>Sente un sonu quandu a fila d’attesa si compia</value>
   </data>
   <data name="OptionsView_ShowPreviewOnSummaryTab" xml:space="preserve">
-    <value>Affissà e previsualizazioni nant’à l’unghjetta Riassuntu.</value>
+    <value>Affissà l’apprezzazioni nant’à l’unghjetta Riassuntu.</value>
   </data>
   <data name="OptionsView_ShowStatusInTitleBar" xml:space="preserve">
     <value>Affissà u statu di a cudificazione in a barra di titulu di l’appiecazione.</value>
@@ -1162,7 +1157,7 @@ Vulete rimpiazzallu ?</value>
     <value>Ozzioni d’espertu</value>
   </data>
   <data name="Options_Arguments" xml:space="preserve">
-    <value>Argumenti :</value>
+    <value>Argumenti :</value>
   </data>
   <data name="Options_AutomaticFileNaming" xml:space="preserve">
     <value>Numinà autumaticu di i schedarii</value>
@@ -1180,7 +1175,7 @@ Vulete rimpiazzallu ?</value>
     <value>Viutà a crunulogia di u ghjurnale</value>
   </data>
   <data name="Options_CopyLogToDir" xml:space="preserve">
-    <value>Piazzà una copia individuale di i ghjurnali di cudificazione in un locu specificu :</value>
+    <value>Piazzà una copia individuale di i ghjurnali di cudificazione in un locu specificu :</value>
   </data>
   <data name="Options_CopyLogToEncDir" xml:space="preserve">
     <value>Piazzà una copia individuale di i ghjurnali di cudificazione in u listessu locu chì a video cudificata</value>
@@ -1192,7 +1187,7 @@ Vulete rimpiazzallu ?</value>
     <value>Discudificazione</value>
   </data>
   <data name="Options_DefaultPath" xml:space="preserve">
-    <value>Chjassu predefinitu :</value>
+    <value>Chjassu predefinitu :</value>
   </data>
   <data name="Options_DownloadUpdates" xml:space="preserve">
     <value>Scaricà u rinnovu</value>
@@ -1207,7 +1202,7 @@ Vulete rimpiazzallu ?</value>
     <value>Cudificazione</value>
   </data>
   <data name="Options_Format" xml:space="preserve">
-    <value>Furmatu di schedariu :</value>
+    <value>Furmatu di schedariu :</value>
   </data>
   <data name="Options_General" xml:space="preserve">
     <value>Generale</value>
@@ -1216,22 +1211,22 @@ Vulete rimpiazzallu ?</value>
     <value>Arregistramentu di i messaghji</value>
   </data>
   <data name="Options_LogLevel" xml:space="preserve">
-    <value>Livellu di verbusità di u ghjurnale :</value>
+    <value>Livellu di verbusità di u ghjurnale :</value>
   </data>
   <data name="Options_LogPath" xml:space="preserve">
-    <value>Chjassu d’accessu à i ghjurnali :</value>
+    <value>Chjassu d’accessu à i ghjurnali :</value>
   </data>
   <data name="Options_LowDiskspaceSize" xml:space="preserve">
-    <value>Interrompe fila d’attesa s’è spaziu discu hè debule</value>
+    <value>Interrompe a fila d’attesa s’ella ùn basta u spaziu discu</value>
   </data>
   <data name="Options_MinimiseTray" xml:space="preserve">
     <value>Impuculì in lu spaziu di nutificazione di u sistema (Richiede un rilanciu)</value>
   </data>
   <data name="Options_MinTitleScanLength" xml:space="preserve">
-    <value>Durata minima in seconde di i tituli DVD è Blu-ray. I tituli più corti seranu tralasciati :</value>
+    <value>Durata minima in seconde di i tituli DVD è Blu-ray. I tituli più corti seranu tralasciati :</value>
   </data>
   <data name="Options_MP4FileExtension" xml:space="preserve">
-    <value>Estensione di schedariu MP4 :</value>
+    <value>Estensione di schedariu MP4 :</value>
   </data>
   <data name="Options_OnStartup" xml:space="preserve">
     <value>À u lanciu</value>
@@ -1240,7 +1235,7 @@ Vulete rimpiazzallu ?</value>
     <value>Schedarii d’esciuta</value>
   </data>
   <data name="Options_Path" xml:space="preserve">
-    <value>Chjassu d’accessu : </value>
+    <value>Chjassu d’accessu : </value>
   </data>
   <data name="Options_PathToMediaPlayer" xml:space="preserve">
     <value>Chjassu ver di u lettore media</value>
@@ -1249,10 +1244,10 @@ Vulete rimpiazzallu ?</value>
     <value>Impedisce u sistema di mettesi in veghja durante a cudificazione</value>
   </data>
   <data name="Options_PreviewScanCount" xml:space="preserve">
-    <value>Numeru di previsualizazione di fiure à analizà :</value>
+    <value>Numeru d’apprezzazioni di fiure à analizà :</value>
   </data>
   <data name="Options_PriorityLevel" xml:space="preserve">
-    <value>Livellu di priurità :</value>
+    <value>Livellu di priurità :</value>
   </data>
   <data name="Options_QsvDecode" xml:space="preserve">
     <value>Preferisce l’adopru d’Intel QuickSync, quand’ellu hè dispunibule, per a discudificazione video. </value>
@@ -1270,13 +1265,13 @@ Vulete rimpiazzallu ?</value>
     <value>Reinizià cù « Ùn fà nunda » quandu l’appiecazione hè rilanciata.</value>
   </data>
   <data name="Options_Scaler" xml:space="preserve">
-    <value>Sceglie a scala :</value>
+    <value>Sceglie a scala :</value>
   </data>
   <data name="Options_Scaling" xml:space="preserve">
     <value>Messa à a scala</value>
   </data>
   <data name="Options_SendFileTo" xml:space="preserve">
-    <value>Mandà u schedariu à :</value>
+    <value>Mandà u schedariu à :</value>
   </data>
   <data name="Options_TitleCase" xml:space="preserve">
     <value>Maiuscula per ogni Parolla Impurtante</value>
@@ -1288,13 +1283,14 @@ Vulete rimpiazzallu ?</value>
     <value>Interfaccia d’utilizatore</value>
   </data>
   <data name="Options_Version" xml:space="preserve">
-    <value>Versione :</value>
+    <value>Versione :</value>
   </data>
   <data name="Options_Video" xml:space="preserve">
     <value>Video</value>
   </data>
   <data name="Options_VideoPreviewPath" xml:space="preserve">
-    <value>Stu chjassu hè impiegatu solu per a funzione di previsualizazione di video.</value>
+    <value>Stu chjassu hè impiegatu solu per a funzione d’apprezzazione di video.
+VLC è MPC-HC sò accettati. D’altri lettori ponu dinù funziunà ma ùn sò micca verificati.</value>
   </data>
   <data name="Options_ViewLogDirectory" xml:space="preserve">
     <value>Fighjà u cartulare di u ghjurnale</value>
@@ -1306,10 +1302,10 @@ Vulete rimpiazzallu ?</value>
     <value>Preferenze x264/5</value>
   </data>
   <data name="Options_x264Granularity" xml:space="preserve">
-    <value>Granularità frazziunale di qualità custente :</value>
+    <value>Granularità frazziunale di qualità custente :</value>
   </data>
   <data name="PictureSettingsView_Anamorphic" xml:space="preserve">
-    <value>Anamorficu :</value>
+    <value>Anamorficu :</value>
   </data>
   <data name="PictureSettingsView_Automatic" xml:space="preserve">
     <value>Autumaticu</value>
@@ -1318,16 +1314,16 @@ Vulete rimpiazzallu ?</value>
     <value>Inghjò</value>
   </data>
   <data name="PictureSettingsView_Cropping" xml:space="preserve">
-    <value>Riquadramentu :</value>
+    <value>Inquadratura :</value>
   </data>
   <data name="PictureSettingsView_Custom" xml:space="preserve">
     <value>Persunalizatu</value>
   </data>
   <data name="PictureSettingsView_DisplayWitdh" xml:space="preserve">
-    <value>Larghezza d’affissera :</value>
+    <value>Larghezza d’affissera :</value>
   </data>
   <data name="PictureSettingsView_Height" xml:space="preserve">
-    <value>Altezza :</value>
+    <value>Altezza :</value>
   </data>
   <data name="PictureSettingsView_KeepAR" xml:space="preserve">
     <value>Cunservà e prupurzioni</value>
@@ -1336,13 +1332,13 @@ Vulete rimpiazzallu ?</value>
     <value>Manca</value>
   </data>
   <data name="PictureSettingsView_Modulus" xml:space="preserve">
-    <value>Mudullu :</value>
+    <value>Mudullu :</value>
   </data>
   <data name="PictureSettingsView_Output" xml:space="preserve">
-    <value>Esciuta</value>
+    <value>Esciuta :</value>
   </data>
   <data name="PictureSettingsView_PAR" xml:space="preserve">
-    <value>PAR :</value>
+    <value>PAR :</value>
   </data>
   <data name="PictureSettingsView_Right" xml:space="preserve">
     <value>Diritta</value>
@@ -1351,13 +1347,13 @@ Vulete rimpiazzallu ?</value>
     <value>Dimensione</value>
   </data>
   <data name="PictureSettingsView_Source" xml:space="preserve">
-    <value>Fonte :</value>
+    <value>Fonte :</value>
   </data>
   <data name="PictureSettingsView_Top" xml:space="preserve">
     <value>Insù</value>
   </data>
   <data name="PictureSettingsView_Width" xml:space="preserve">
-    <value>Larghezza :</value>
+    <value>Larghezza :</value>
   </data>
   <data name="Preset_Custom" xml:space="preserve">
     <value>Persunalizatu</value>
@@ -1372,7 +1368,7 @@ Vulete rimpiazzallu ?</value>
     <value>Officiale</value>
   </data>
   <data name="QueueSelectionView_ChooseTitles" xml:space="preserve">
-    <value>Sciglite i tituli :</value>
+    <value>Sciglite i tituli :</value>
   </data>
   <data name="QueueSelectionView_Title" xml:space="preserve">
     <value>Aghjunghje à a fila d’attesa</value>
@@ -1381,10 +1377,10 @@ Vulete rimpiazzallu ?</value>
     <value>I tituli selezziunati seranu aghjunti impieghendu a prerigatura « {0} ».</value>
   </data>
   <data name="QueueView_Advanced" xml:space="preserve">
-    <value>Espertu :</value>
+    <value>Ozzioni video :</value>
   </data>
   <data name="QueueView_Audio" xml:space="preserve">
-    <value>Audio :</value>
+    <value>Audio :</value>
   </data>
   <data name="QueueView_ClearAll" xml:space="preserve">
     <value>Tuttu viutà</value>
@@ -1402,25 +1398,25 @@ Vulete rimpiazzallu ?</value>
     <value>Squassà</value>
   </data>
   <data name="QueueView_Destination" xml:space="preserve">
-    <value>Destinazione :</value>
+    <value>Destinazione :</value>
   </data>
   <data name="WhenDone_DoNothing" xml:space="preserve">
     <value>Ùn fà nunda</value>
   </data>
   <data name="QueueView_Duration" xml:space="preserve">
-    <value>Durata di cudificazione :</value>
+    <value>Durata di cudificazione :</value>
   </data>
   <data name="QueueView_Edit" xml:space="preserve">
     <value>Mudificà</value>
   </data>
   <data name="QueueView_EndTime" xml:space="preserve">
-    <value>Ora di fine :</value>
+    <value>Ora di fine :</value>
   </data>
   <data name="QueueView_Export" xml:space="preserve">
     <value>Espurtà a fila d’attesa</value>
   </data>
   <data name="QueueView_FileSize" xml:space="preserve">
-    <value>Dimensione di u schedariu : </value>
+    <value>Dimensione di u schedariu : </value>
   </data>
   <data name="WhenDone_Hibernate" xml:space="preserve">
     <value>Veghja prulungata</value>
@@ -1444,13 +1440,13 @@ Vulete rimpiazzallu ?</value>
     <value>Ozzioni</value>
   </data>
   <data name="QueueView_Pause" xml:space="preserve">
-    <value>Interrompe a fila d’attesa</value>
+    <value>Pausa</value>
   </data>
   <data name="QueueView_PausedDuration" xml:space="preserve">
-    <value>Durata di l’interruzzione :</value>
+    <value>Durata di l’interruzzione :</value>
   </data>
   <data name="QueueView_PictureSettings" xml:space="preserve">
-    <value>Preferenze di fiura :</value>
+    <value>Preferenze di fiura :</value>
   </data>
   <data name="WhenDone_QuitHandBrake" xml:space="preserve">
     <value>Piantà Handbrake</value>
@@ -1471,13 +1467,13 @@ Vulete rimpiazzallu ?</value>
     <value>Spenghje l’urdinatore</value>
   </data>
   <data name="QueueView_Source" xml:space="preserve">
-    <value>Fonte :</value>
+    <value>Fonte :</value>
   </data>
   <data name="QueueView_Start" xml:space="preserve">
     <value>Principià a fila d’attesa</value>
   </data>
   <data name="QueueView_StartTime" xml:space="preserve">
-    <value>Ora di principiu :</value>
+    <value>Ora di principiu :</value>
   </data>
   <data name="QueueView_Statistics" xml:space="preserve">
     <value>Statistiche</value>
@@ -1486,7 +1482,7 @@ Vulete rimpiazzallu ?</value>
     <value>E statistiche seranu dispunibule quandu una cudificazione si compia.</value>
   </data>
   <data name="QueueView_Subtitles" xml:space="preserve">
-    <value>Sottutituli :</value>
+    <value>Sottutituli :</value>
   </data>
   <data name="QueueView_Summary" xml:space="preserve">
     <value>Riassuntu</value>
@@ -1495,10 +1491,10 @@ Vulete rimpiazzallu ?</value>
     <value>Veghja</value>
   </data>
   <data name="QueueView_Video" xml:space="preserve">
-    <value>Video :</value>
+    <value>Video :</value>
   </data>
   <data name="QueueView_WhenDone" xml:space="preserve">
-    <value>Quandu hè compiu :</value>
+    <value>Quandu hè compiu :</value>
   </data>
   <data name="Shared_AddAllForSelected" xml:space="preserve">
     <value>Aghjunghje tutte e lingue selezziunate chì fermanu</value>
@@ -1510,16 +1506,16 @@ Vulete rimpiazzallu ?</value>
     <value>Aghjunghje una nova traccia</value>
   </data>
   <data name="Shared_AddTrack" xml:space="preserve">
-    <value>Aghjunghje una traccia</value>
+    <value>Traccie</value>
   </data>
   <data name="Shared_AvailableLanguages" xml:space="preserve">
-    <value>Lingue dispunibule :</value>
+    <value>Lingue dispunibule :</value>
   </data>
   <data name="Shared_ChooseLanguages" xml:space="preserve">
-    <value>Sceglie e lingue :</value>
+    <value>Sceglie e lingue :</value>
   </data>
   <data name="Shared_ChosenLangages" xml:space="preserve">
-    <value>Lingue selezziunate :</value>
+    <value>Lingue selezziunate :</value>
   </data>
   <data name="Shared_ConfigureDefaultBehaviours" xml:space="preserve">
     <value>Sceglie i cumpurtamenti predefiniti</value>
@@ -1537,10 +1533,10 @@ Vulete rimpiazzallu ?</value>
     <value>Sceglie un cartulare à analizà</value>
   </data>
   <data name="SourceSelection_ChooseSpecificTitle" xml:space="preserve">
-    <value>Sceglie eventualmente un titulu specificu : </value>
+    <value>Sceglie eventualmente un titulu specificu : </value>
   </data>
   <data name="SourceSelection_ChooseVideo" xml:space="preserve">
-    <value>Tandu, sciglite a - o e - video qu’ellu ci vole à cudificà : </value>
+    <value>Tandu, sciglite a - o e - video qu’ellu ci vole à cudificà : </value>
   </data>
   <data name="SourceSelection_File" xml:space="preserve">
     <value>Schedariu</value>
@@ -1567,16 +1563,16 @@ Vulete rimpiazzallu ?</value>
     <value>Selezzione di a fonte</value>
   </data>
   <data name="StaticPreviewView_Duration" xml:space="preserve">
-    <value>Durata :</value>
+    <value>Durata :</value>
   </data>
   <data name="StaticPreviewView_LivePreview" xml:space="preserve">
-    <value>Previsualizazione diretta</value>
+    <value>Apprezzazione diretta</value>
   </data>
   <data name="StaticPreviewView_SelectPreviewImage" xml:space="preserve">
-    <value>Selezziunà una previsualizazione di fiura</value>
+    <value>Selezziunà un’apprezzazione di fiura</value>
   </data>
   <data name="StaticPreviewView_UseSystemDefault" xml:space="preserve">
-    <value>Impiegà u lettore video predefinitu di u sistema</value>
+    <value>Preferisce u lettore video predefinitu di u sistema</value>
   </data>
   <data name="SubtitlesView_AddCC" xml:space="preserve">
     <value>Aghjunghje i sottutituli ditagliati s’elli sò dispunibule</value>
@@ -1585,13 +1581,13 @@ Vulete rimpiazzallu ?</value>
     <value>Aghjunghje un « Analisa audio straniera »</value>
   </data>
   <data name="SubtitlesView_BurnInBehaviour" xml:space="preserve">
-    <value>Cumpurtamentu d’intarsiatura :</value>
+    <value>Cumpurtamentu d’intarsiatura :</value>
   </data>
   <data name="SubtitlesView_ImportSubtitle" xml:space="preserve">
     <value>Impurtà un sottutitulu</value>
   </data>
   <data name="SubtitlesView_TrackSelectionBehaviour" xml:space="preserve">
-    <value>Cumpurtamentu di a selezzione di traccia :</value>
+    <value>Cumpurtamentu di a selezzione di traccia :</value>
   </data>
   <data name="SubtitleView_AddAllCC" xml:space="preserve">
     <value>Aghjunghje tutti i sottutituli ditagliati chì fermanu</value>
@@ -1642,7 +1638,7 @@ Vulete rimpiazzallu ?</value>
     <value>Alcuna traccia</value>
   </data>
   <data name="SummaryView_PreviewInfo" xml:space="preserve">
-    <value>Previsualizazione {0} nant’à {1}</value>
+    <value>Apprezzazione {0} nant’à {1}</value>
   </data>
   <data name="SummaryView_Rotation" xml:space="preserve">
     <value>Rotazione</value>
@@ -1654,46 +1650,46 @@ Vulete rimpiazzallu ?</value>
     <value>Cudificazione à 2 passi</value>
   </data>
   <data name="VideoView_AverageBitrate" xml:space="preserve">
-    <value>Ghjettu medianu (kbps) :</value>
+    <value>Ghjettu medianu (kbps) :</value>
   </data>
   <data name="VideoView_Codec" xml:space="preserve">
-    <value>Cudecu video :</value>
+    <value>Cudificatore video :</value>
   </data>
   <data name="VideoView_ConstantFramerate" xml:space="preserve">
     <value>Frequenza di fiure custente</value>
   </data>
   <data name="VideoView_ConstantQuality" xml:space="preserve">
-    <value>Qualità custente :</value>
+    <value>Qualità custente :</value>
   </data>
   <data name="VideoView_EncoderLevel" xml:space="preserve">
-    <value>Livellu di u cudificatore :</value>
+    <value>Livellu di u cudificatore :</value>
   </data>
   <data name="VideoView_EncoderPreset" xml:space="preserve">
-    <value>Prerigatura di u cudificatore :</value>
+    <value>Prerigatura di u cudificatore :</value>
   </data>
   <data name="VideoView_EncoderProfile" xml:space="preserve">
-    <value>Prufilu di u cudificatore :</value>
+    <value>Prufilu di u cudificatore :</value>
   </data>
   <data name="VideoView_EncodeTune" xml:space="preserve">
-    <value>Rigatura di u cudificatore :</value>
+    <value>Rigatura di u cudificatore :</value>
   </data>
   <data name="VideoView_ExtraOptions" xml:space="preserve">
-    <value>Ozzioni d’espertu :</value>
+    <value>Ozzioni d’espertu :</value>
   </data>
   <data name="VideoView_FastDecode" xml:space="preserve">
     <value>Discudificazione rapida</value>
   </data>
   <data name="VideoView_Framerate" xml:space="preserve">
-    <value>Frequenza di fiure (FPS) :</value>
+    <value>Frequenza di fiure (FPS) :</value>
   </data>
   <data name="VideoView_OptimiseVideo" xml:space="preserve">
-    <value>Migliurà a video :</value>
+    <value>Ozzioni di cudificatore :</value>
   </data>
   <data name="VideoView_PeakFramerate" xml:space="preserve">
     <value>Frequenza di fiure di cresta</value>
   </data>
   <data name="VideoView_Quality" xml:space="preserve">
-    <value>Qualità</value>
+    <value>Qualità :</value>
   </data>
   <data name="VideoView_TurboFirstPass" xml:space="preserve">
     <value>Primu passagiu in modu Turbo</value>
@@ -1702,10 +1698,10 @@ Vulete rimpiazzallu ?</value>
     <value>Frequenza di fiure variabile</value>
   </data>
   <data name="VideoView_Video" xml:space="preserve">
-    <value>Video</value>
+    <value>Video :</value>
   </data>
   <data name="OptionsView_Language" xml:space="preserve">
-    <value>Lingua :</value>
+    <value>Lingua :</value>
   </data>
   <data name="Language_UseSystem" xml:space="preserve">
     <value>Impiegà a lingua di u sistema</value>
@@ -1726,10 +1722,10 @@ Vulete rimpiazzallu ?</value>
     <value>Aghjunghje una traccia</value>
   </data>
   <data name="AudioDefaultsView_AutoAddTracks" xml:space="preserve">
-    <value>Preferenze di u cudificatore audio per ogni traccia scelta :</value>
+    <value>Preferenze di u cudificatore audio per ogni traccia scelta :</value>
   </data>
   <data name="AudioDefaultsView_Clear" xml:space="preserve">
-    <value>Nettà</value>
+    <value>Squassà</value>
   </data>
   <data name="SubtitlesView_BurnIn" xml:space="preserve">
     <value>Intarsiatu</value>
@@ -1795,7 +1791,7 @@ Vulete rimpiazzallu ?</value>
     <value>Cuntrollu di e nove versioni…</value>
   </data>
   <data name="OptionsView_ClearLogDirConfirm" xml:space="preserve">
-    <value>Site sicuru di vulè viutà u cartulare di i ghjurnali ?</value>
+    <value>Site sicuru di vulè viutà u cartulare di i ghjurnali ?</value>
   </data>
   <data name="OptionsView_ClearLogs" xml:space="preserve">
     <value>Viutà i ghjurnali</value>
@@ -1804,7 +1800,7 @@ Vulete rimpiazzallu ?</value>
     <value>Scaricamentu…</value>
   </data>
   <data name="OptionsView_LogsCleared" xml:space="preserve">
-    <value>U cartulare di i ghjurnali hè statu viotu !</value>
+    <value>U cartulare di i ghjurnali hè statu viotu !</value>
   </data>
   <data name="OptionsView_Notice" xml:space="preserve">
     <value>Avertimentu</value>
@@ -1843,7 +1839,7 @@ Vulete rimpiazzallu ?</value>
     <value>Affissà « Aghjunghje a selezzione » (à a fila d’attesa) nant’à a barra d’attrezzi</value>
   </data>
   <data name="OptionsView_HardwareDetectFailed" xml:space="preserve">
-    <value>L’adopru di a cudificazione materiale hè attualmente disattivatu. Assicuratevvi chì voi impiegate l’ultimi piloti per tutte e carte grafiche di stu sistema.
+    <value>L’adopru di a cudificazione materiale hè attualmente disattivatu. S’è ùn avete micca lanciatu HandBrake cù l’ozzione « --no-hardware », assicuratevvi chì voi impiegate l’ultimi piloti per tutte e carte grafiche di stu sistema.
 
 Què ùn affetterà micca i cudificatori d’appiecazione.</value>
   </data>
@@ -1851,7 +1847,7 @@ Què ùn affetterà micca i cudificatori d’appiecazione.</value>
     <value>Ci vole à currege e vostre preferenze nanzu di cuntinuà. </value>
   </data>
   <data name="Generic_Apply" xml:space="preserve">
-    <value>Appiecà</value>
+    <value>Affettà</value>
   </data>
   <data name="Main_ResumeEncode" xml:space="preserve">
     <value>Ripiglià a cudificazione</value>
@@ -1863,49 +1859,49 @@ Què ùn affetterà micca i cudificatori d’appiecazione.</value>
     <value>Impurtà una fila d’attesa</value>
   </data>
   <data name="QueueViewModel_EncodeStatusChanged_StatusLabel" xml:space="preserve">
-    <value>Cudificazione : Passu {0} nant’à {1},  {2:00.00}%, FPS : {3:000.0},  FPS mediana : {4:000.0}
-Tempu rimanente : {5}, Trascorsu : {6} {7}</value>
+    <value>Cudificazione : Passu {0} nant’à {1},  {2:00.00}%, FPS : {3:000.0},  FPS mediana : {4:000.0}
+Tempu rimanente : {5}, Trascorsu : {6} {7}</value>
   </data>
   <data name="QueueView_DeleteSelected" xml:space="preserve">
     <value>Squassà a selezzione</value>
   </data>
   <data name="Portable_TmpNotWritable" xml:space="preserve">
-    <value>Modu purtabile : Impussibule di creà u cartulare timpurariu. Ci vole à verificà chì u chjassu hè currettu è accessibile in scrittura.
+    <value>Modu purtabile : Impussibule di creà u cartulare timpurariu. Ci vole à verificà chì u chjassu hè currettu è accessibile in scrittura.
 
     {0}</value>
   </data>
   <data name="Portable_StorageNotWritable" xml:space="preserve">
-    <value>Modu purtabile : Impussibule di creà u cartulare d’allucamentu. Ci vole à verificà chì u chjassu hè currettu è accessibile in scrittura.
+    <value>Modu purtabile : Impussibule di creà u cartulare d’allucamentu. Ci vole à verificà chì u chjassu hè currettu è accessibile in scrittura.
 
     {0}</value>
   </data>
   <data name="Portable_IniFileError" xml:space="preserve">
-    <value>Modu purtabile : Impussibule di leghje portable.ini. Forse ci hè qualchì sbagliu in stu schedariu. Ci vole à pruvà torna impieghendu portable.ini.template cum’è esempiu.</value>
+    <value>Modu purtabile : Impussibule di leghje portable.ini. Forse ci hè qualchì sbagliu in stu schedariu. Ci vole à pruvà torna impieghendu portable.ini.template cum’è esempiu.</value>
   </data>
   <data name="Startup_InitFailed" xml:space="preserve">
     <value>U mutore d’HandBrake ùn hà micca pussutu inizziasi. Ghjè aspessu cagiunatu da piloti GPU troppu anziani.\nCi vole à rinnovà sti piloti per tutte e carte grafiche integrate è specificate di u vostru sistema.</value>
   </data>
   <data name="OptionsView_FormatOptions" xml:space="preserve">
-    <value>Ozzioni mudificate direttamente : {source} {title} {chapters} 
-Ozzioni tramandate : {date} {time} {creation-date} {creation-time} {quality} {bitrate} (Quesse cambianu solu quandu voi analizate una nova fonte, cambiate di titulu o di capitulu)</value>
+    <value>Ozzioni mudificate direttamente : {source} {title} {chapters} 
+Ozzioni tramandate : {date} {time} {creation-date} {creation-time} {quality} {bitrate} (Quesse cambianu solu quandu voi analizate una nova fonte, cambiate di titulu o di capitulu)</value>
   </data>
   <data name="OptionsView_PathOptions" xml:space="preserve">
-    <value>Ozzioni dispunibule : {source_path} {source_folder_name} {source}</value>
+    <value>Ozzioni dispunibule : {source_path} {source_folder_name} {source}</value>
   </data>
   <data name="FileOverwriteBehaviours_Ask" xml:space="preserve">
-    <value>Dumandà nanzu di rimpiazzà</value>
+    <value>Dumandà per rimpiazzà u schedariu</value>
   </data>
   <data name="FileOverwriteBehaviours_Autoname" xml:space="preserve">
     <value>Pruvà di rinuminà autumaticamente u schedariu</value>
   </data>
   <data name="FileOverwriteBehaviours_Overwrite" xml:space="preserve">
-    <value>Rimpiazzà senza dumandà</value>
+    <value>Rimpiazzà u schedariu</value>
   </data>
   <data name="Options_UIBehaviour" xml:space="preserve">
     <value>Cumpurtamentu di l’interfaccia d’utilizatore</value>
   </data>
   <data name="OptionsView_FileOverwriteBehaviour" xml:space="preserve">
-    <value>Cosa fà in casu di rimpiazzamentu di schedariu :</value>
+    <value>Cosa fà in casu di rimpiazzamentu di schedariu :</value>
   </data>
   <data name="Options_EncodeCompleted" xml:space="preserve">
     <value>Cudificazione compia</value>
@@ -1917,10 +1913,10 @@ Ozzioni tramandate : {date} {time} {creation-date} {creation-time} {quality} {bi
     <value>Fila d’attesa compia</value>
   </data>
   <data name="Options_WhenDoneColon" xml:space="preserve">
-    <value>Quandu hè compiu :</value>
+    <value>Quandu hè compiu :</value>
   </data>
   <data name="OptionsView_FileCollisionBehaviour" xml:space="preserve">
-    <value>Cosa aghjunghje in casu di cunflittu di nome di schedariu :</value>
+    <value>Cosa aghjunghje in casu di cunflittu di nome di schedariu :</value>
   </data>
   <data name="CollisionBehaviour_Post" xml:space="preserve">
     <value>Suffissu</value>
@@ -1929,10 +1925,10 @@ Ozzioni tramandate : {date} {time} {creation-date} {creation-time} {quality} {bi
     <value>Prefissu</value>
   </data>
   <data name="CollisionBehaviour_AppendNumber" xml:space="preserve">
-    <value>Numeru à a fine</value>
+    <value>Aghjunghje un numeru à a fine</value>
   </data>
   <data name="FiltersViewAuto_DeblockPreset" xml:space="preserve">
-    <value>FiltersView_DeblockPreset</value>
+    <value>VistaFiltri_PrerigaturaSblucchime</value>
   </data>
   <data name="FiltersViewAuto_DeblockTune" xml:space="preserve">
     <value>Rigatura di sblucchime</value>
@@ -1941,10 +1937,10 @@ Ozzioni tramandate : {date} {time} {creation-date} {creation-time} {quality} {bi
     <value>A scelta di u cudificatore serà dispunibule in l’unghjetta « Video ».</value>
   </data>
   <data name="Queue_RecoverQueueQuestionPlural" xml:space="preserve">
-    <value>HandBrake hà trovu parechji schedarii di fila d’attesa micca compii. Quelli venenu da parechje instanze d’HandBrake. Vulete ricuperà tutti sti travaglii micca compii ?</value>
+    <value>HandBrake hà trovu parechji schedarii di fila d’attesa micca compii. Quelli venenu da parechje instanze d’HandBrake. Vulete ricuperà tutti sti travaglii micca compii ?</value>
   </data>
   <data name="Queue_RecoverQueueQuestionSingular" xml:space="preserve">
-    <value>HandBrake hà trovu elementi micca compii in a fila d’attesa di l’ultima sessione di l’appiecazione. Vulete ricuperalli ?</value>
+    <value>HandBrake hà trovu elementi micca compii in a fila d’attesa di l’ultima sessione di l’appiecazione. Vulete ricuperalli ?</value>
   </data>
   <data name="Queue_RecoveryPossible" xml:space="preserve">
     <value>Ricuperazione pussibule di fila d’attesa</value>
@@ -1982,10 +1978,10 @@ Induve hè accettatu, tutte e prerigature persunalizate seranu state impurtate.<
     <value>Alimentazione settore abbentata. Ripigliu di a cudificazione… ({0} %)</value>
   </data>
   <data name="SystemService_CriticalBattery" xml:space="preserve">
-    <value>Livellu d’energia di batteria criticu ! ({0} %)</value>
+    <value>Livellu d’energia di batteria criticu ! ({0} %)</value>
   </data>
   <data name="SystemService_LowBatteryLog" xml:space="preserve">
-    <value>Livellu d’energia di batteria debule ! ({0} %). A vostra cudificazione hè stata interrotta.</value>
+    <value>Livellu d’energia di batteria debule ! ({0} %). A vostra cudificazione hè stata interrotta.</value>
   </data>
   <data name="SystemService_LowDiskSpaceLog" xml:space="preserve">
     <value>A capacità d’allucamentu hè falata sottu {0} Go nant’à u lettore di destinazione. Interruzzione di a cudificazione…</value>
@@ -2000,46 +1996,46 @@ Induve hè accettatu, tutte e prerigature persunalizate seranu state impurtate.<
     <value>Sistema</value>
   </data>
   <data name="MetadataView_Actors" xml:space="preserve">
-    <value>Attori :</value>
+    <value>Attori :</value>
   </data>
   <data name="MetadataView_Comments" xml:space="preserve">
-    <value>Cummenti :</value>
+    <value>Cummenti :</value>
   </data>
   <data name="MetadataView_Description" xml:space="preserve">
-    <value>Discrizzione :</value>
+    <value>Discrizzione :</value>
   </data>
   <data name="MetadataView_Director" xml:space="preserve">
-    <value>Direttore :</value>
+    <value>Direttore :</value>
   </data>
   <data name="MetadataView_Genre" xml:space="preserve">
-    <value>Generu :</value>
+    <value>Generu :</value>
   </data>
   <data name="MetadataView_Plot" xml:space="preserve">
-    <value>Intricu :</value>
+    <value>Intricu :</value>
   </data>
   <data name="MetadataView_ReleaseDate" xml:space="preserve">
-    <value>Data d’esciuta :</value>
+    <value>Data d’esciuta :</value>
   </data>
   <data name="MetadataView_TitleTag" xml:space="preserve">
-    <value>Titulu :</value>
+    <value>Titulu :</value>
   </data>
   <data name="StaticPreviewView_PreviewRotationFlip" xml:space="preserve">
-    <value>Previsualizazione di a rotazione è di u rivoltamentu</value>
+    <value>Apprezzazione di a rotazione è di u rivoltamentu</value>
   </data>
   <data name="LogViewModel_Title" xml:space="preserve">
     <value>Fighjata di u ghjurnale</value>
   </data>
   <data name="MainView_Aspect" xml:space="preserve">
-    <value>Furmatu :</value>
+    <value>Furmatu :</value>
   </data>
   <data name="MainView_Filters" xml:space="preserve">
-    <value>Filtri :</value>
+    <value>Filtri :</value>
   </data>
   <data name="MainView_Size" xml:space="preserve">
-    <value>Dimensione :</value>
+    <value>Dimensione :</value>
   </data>
   <data name="MainView_Tracks" xml:space="preserve">
-    <value>Traccie :</value>
+    <value>Traccie :</value>
   </data>
   <data name="OptionsTab_General" xml:space="preserve">
     <value>Generale</value>
@@ -2063,7 +2059,7 @@ Induve hè accettatu, tutte e prerigature persunalizate seranu state impurtate.<
     <value>Fiure</value>
   </data>
   <data name="PointToPointMode_Preview" xml:space="preserve">
-    <value>Previsualizazione</value>
+    <value>Apprezzazione</value>
   </data>
   <data name="PointToPointMode_Seconds" xml:space="preserve">
     <value>Seconde</value>
@@ -2099,13 +2095,13 @@ Induve hè accettatu, tutte e prerigature persunalizate seranu state impurtate.<
     <value>Tutte e lingue chì currispundenu</value>
   </data>
   <data name="AudioBehaviourModes_AllTracks" xml:space="preserve">
-    <value>Impiegà tutte e traccie</value>
+    <value>Impiegà tutte e traccie cum’è mudellu</value>
   </data>
   <data name="AudioBehaviourModes_FirstMatch" xml:space="preserve">
     <value>Prima lingua chì currispunde</value>
   </data>
   <data name="AudioBehaviourModes_FirstTrack" xml:space="preserve">
-    <value>Impiegà a prima traccia</value>
+    <value>Impiegà a prima traccia cum’è mudellu</value>
   </data>
   <data name="AudioBehaviourModes_None" xml:space="preserve">
     <value>Alcuna traccia audio</value>
@@ -2132,22 +2128,22 @@ Induve hè accettatu, tutte e prerigature persunalizate seranu state impurtate.<
     <value>Sempre impiegà a risuluzione di a video di a fonte</value>
   </data>
   <data name="ProcessPriority_AboveNormal" xml:space="preserve">
-    <value>Altu</value>
+    <value>Più altu chì a nurmale</value>
   </data>
   <data name="ProcessPriority_BelowNormal" xml:space="preserve">
-    <value>Bassu</value>
+    <value>Più bassu chì a nurmale</value>
   </data>
   <data name="ProcessPriority_High" xml:space="preserve">
-    <value>U più altu</value>
+    <value>Altu</value>
   </data>
   <data name="ProcessPriority_Low" xml:space="preserve">
-    <value>U più bassu</value>
+    <value>Bassu</value>
   </data>
   <data name="ProcessPriority_Normal" xml:space="preserve">
     <value>Nurmale</value>
   </data>
   <data name="UpdateCheck_Monthly" xml:space="preserve">
-    <value>Misinca</value>
+    <value>Misincu</value>
   </data>
   <data name="UpdateCheck_Weekly" xml:space="preserve">
     <value>Settimanale</value>
@@ -2159,17 +2155,17 @@ Induve hè accettatu, tutte e prerigature persunalizate seranu state impurtate.<
     <value>A stesa di porti deve esse scelta trà 5000 è 32767</value>
   </data>
   <data name="OptionsView_SendFileToArgPlaceholders" xml:space="preserve">
-    <value>Campi di sustituzione : {source} {destination}</value>
+    <value>Campi di sustituzione : {source} {destination}</value>
     <comment>Note: {source} and {destination} are not translatable. </comment>
   </data>
   <data name="SourceSelection_UpdateAvailable" xml:space="preserve">
-    <value>Una nova versione d’HandBrake hè dispunibule !</value>
+    <value>Una nova versione d’HandBrake hè dispunibule !</value>
   </data>
   <data name="About_Copyright" xml:space="preserve">
-    <value>Diritti di copia (C) 2003-2020 The HandBrake Team</value>
+    <value>Diritti di copia (C) 2003-2021 The HandBrake Team</value>
   </data>
   <data name="Options_LowBatteryLevel" xml:space="preserve">
-    <value>Livellu di batteria debule :</value>
+    <value>Livellu di batteria debule :</value>
   </data>
   <data name="Options_PauseOnLowBattery" xml:space="preserve">
     <value>Interrompe tuttu travagliu in corsu quandu u livellu di batteria hè debule.</value>
@@ -2178,23 +2174,23 @@ Induve hè accettatu, tutte e prerigature persunalizate seranu state impurtate.<
     <value>Aghjunghje tutti i sottutituli ditagliati chì fermanu</value>
   </data>
   <data name="QueueService_DuplicatesQuestion" xml:space="preserve">
-    <value>Travaglii in doppiu sò stati trovi in u schedariu di fila d’attesa chì voi pruvate d’impurtà. Vulete rimpiazzà l’arregistramenti chì esistenu ? 
+    <value>Travaglii in doppiu sò stati trovi in u schedariu di fila d’attesa chì voi pruvate d’impurtà. Vulete rimpiazzà l’arregistramenti chì esistenu ? 
 Què pianterà tuttu travagliu in corsu.</value>
   </data>
   <data name="QueueService_DuplicatesTitle" xml:space="preserve">
     <value>Duppioni trovi</value>
   </data>
   <data name="OptionsView_EnableQuicksyncLowPower" xml:space="preserve">
-    <value>Attivà u QuickSync di bassa cunsumazione.</value>
+    <value>Attivà u QuickSync di bassa cunsumazione (quand’ellu hè accettatu).</value>
   </data>
   <data name="QueueView_JobInformationNotAvailable" xml:space="preserve">
     <value>Ci vole à selezziunà un travagliu solu per fighjà l’infurmazioni di sintesi.</value>
   </data>
   <data name="OptionsView_EnableWorkerProcesses" xml:space="preserve">
-    <value>Eseguisce ogni travagliu di a fila d’attesa in un trattamentu di travagliu distintu. (Esperimentale)</value>
+    <value>Eseguisce ogni travagliu di a fila d’attesa in un trattamentu di travagliu distintu.</value>
   </data>
   <data name="OptionsView_WorkerDefaultPort" xml:space="preserve">
-    <value>Portu di reta predefinitu per u trattamentu di travagliu :</value>
+    <value>Portu di reta predefinitu per u trattamentu di travagliu :</value>
   </data>
   <data name="Presets_NotAvailableForUse" xml:space="preserve">
     <value>A prerigatura selezziunata ùn hè micca dispunibule nant’à stu sistema.
@@ -2207,19 +2203,19 @@ Ci vole à sceglie una prerigatura sfarente.</value>
     <value>Isulamentu di i trattamenti</value>
   </data>
   <data name="OptionsView_ProcessIsolation_Warning1" xml:space="preserve">
-    <value>Nota : L’adopru di sta funzione lancerà un servitore HTTP ligatu à l’indirizzu 127.0.0.1 nant’à u portu sceltu.</value>
+    <value>Nota : L’adopru di sta funzione lancerà un servitore HTTP ligatu à l’indirizzu 127.0.0.1 nant’à u portu sceltu.</value>
   </data>
   <data name="OptionsView_ProcessIsolation_Warning2" xml:space="preserve">
     <value>S’è u portu definitu hè dighjà impiegatu, si truverà u primu portu liberu in un intervallu massimu di 100 à partesi di u portu definitu.</value>
   </data>
   <data name="OptionsView_SimultaneousEncodes" xml:space="preserve">
-    <value>Numeru massimu di cudificazioni simultanei :</value>
+    <value>Numeru massimu di cudificazioni simultanei :</value>
   </data>
   <data name="StaticPreviewView_CancelPreview" xml:space="preserve">
     <value>Abbandunà</value>
   </data>
   <data name="MainView_SelectedPresets" xml:space="preserve">
-    <value>Prerigatura :</value>
+    <value>Prerigatura :</value>
   </data>
   <data name="SummaryView_SameAsSource" xml:space="preserve">
     <value>Listessa chè a fonte</value>
@@ -2228,7 +2224,7 @@ Ci vole à sceglie una prerigatura sfarente.</value>
     <value>Reinizializazione di e preferenze</value>
   </data>
   <data name="OptionsViewModel_ResetHandBrakeQuestion" xml:space="preserve">
-    <value>Site sicuru di vulè reinizià e preferenze d’HandBrake à i so valori predefiniti ?</value>
+    <value>Site sicuru di vulè reinizià e preferenze d’HandBrake à i so valori predefiniti ?</value>
   </data>
   <data name="PaddingMode_Custom" xml:space="preserve">
     <value>Persunalizatu (Micca ristrintu)</value>
@@ -2246,25 +2242,25 @@ Ci vole à sceglie una prerigatura sfarente.</value>
     <value>Larghezza (imburrà fine à a cunfina di a risuluzione)</value>
   </data>
   <data name="PictureSettingsView_Padding" xml:space="preserve">
-    <value>Imburrera :</value>
+    <value>Imburrera :</value>
   </data>
   <data name="PictureSettingsView_PaddingColour" xml:space="preserve">
-    <value>Culore d’imburrera :</value>
+    <value>Culore d’imburrera :</value>
   </data>
   <data name="PictureSettingsView_Borders" xml:space="preserve">
     <value>Bordi</value>
   </data>
   <data name="PictureSettingsView_ResAndScaling" xml:space="preserve">
-    <value>Risuluzione è messa à a scala</value>
+    <value>Risuluzione è messa à a scala :</value>
   </data>
   <data name="PictureSettingsView_RotateAndCrop" xml:space="preserve">
-    <value>Girà è runzicà</value>
+    <value>Girà è inquadrà :</value>
   </data>
   <data name="OptionsView_Win10Only" xml:space="preserve">
-    <value>( Windows 10 solu ! )</value>
+    <value>( Windows 10 solu ! )</value>
   </data>
   <data name="QueueView_FilterSettings" xml:space="preserve">
-    <value>Filtri :</value>
+    <value>Filtri :</value>
   </data>
   <data name="SummaryView_Default" xml:space="preserve">
     <value>Predefinitu</value>
@@ -2294,13 +2290,13 @@ Ci vole à sceglie una prerigatura sfarente.</value>
     <value>Persunalizatu</value>
   </data>
   <data name="PictureSettingsView_MaxHeight" xml:space="preserve">
-    <value>Altezza massima :</value>
+    <value>Altezza massima :</value>
   </data>
   <data name="PictureSettingsView_MaxWidth" xml:space="preserve">
-    <value>Larghezza massima :</value>
+    <value>Larghezza massima :</value>
   </data>
   <data name="PictureSettingsView_ResLimit" xml:space="preserve">
-    <value>Cunfina di risuluzione :</value>
+    <value>Cunfina di risuluzione :</value>
   </data>
   <data name="PictureSettingsResLimitModes_none" xml:space="preserve">
     <value>Alcunu</value>
@@ -2318,7 +2314,7 @@ Ci vole à sceglie una prerigatura sfarente.</value>
     <value>Impurtà a/e prerigatura(e) da un schedariu</value>
   </data>
   <data name="ManagePresetView_PresetInfo" xml:space="preserve">
-    <value>Infurmazione nant’à a prerigatura :</value>
+    <value>Infurmazione nant’à a prerigatura :</value>
   </data>
   <data name="ManagePresetView_RestrictedPreset" xml:space="preserve">
     <value>E prerigature integrate ùn ponu micca esse mudificate.</value>
@@ -2343,7 +2339,7 @@ Ci vole à sceglie una prerigatura sfarente.</value>
   </data>
   <data name="Options_PassthruMetadataTooltip" xml:space="preserve">
     <value>St’ozzione permette à i campi metadati basichi d’esse cupiati da a fonte ver di u schedariu di destinazione.
-I campi sò limitati à :
+I campi sò limitati à :
 - Nome
 - Artista
 - Artista di l’albumu
@@ -2358,9 +2354,6 @@ I campi sò limitati à :
   <data name="String1" xml:space="preserve">
     <value/>
   </data>
-  <data name="PresetManagerView_DefaultPreset" xml:space="preserve">
-    <value>(Prerigatura predefinita)</value>
-  </data>
   <data name="PresetService_CategoryAlreadyExists" xml:space="preserve">
     <value>U nome di categuria scrittu esiste dighjà. Ci vole à sceglie un nome sfarente.</value>
   </data>
@@ -2368,7 +2361,7 @@ I campi sò limitati à :
     <value>U nome di categuria era viotu. Ci vole à pruvede un nome.</value>
   </data>
   <data name="TextEntryView_EnterName" xml:space="preserve">
-    <value>Scrivite un nome :</value>
+    <value>Scrivite un nome : </value>
   </data>
   <data name="ManagePresetView_NoPresetSelected" xml:space="preserve">
     <value>Ùn ci hè alcuna prerigatura selezziunata.</value>
@@ -2377,9 +2370,90 @@ I campi sò limitati à :
     <value>Espurtà tutte e prerigature persunalizate</value>
   </data>
   <data name="Options_LowDiskspaceLevelText" xml:space="preserve">
-    <value>Livellu quandu l’alerte nant’à u spaziu discu debule s’affissenu :</value>
+    <value>Livellu quandu l’alerte nant’à u spaziu discu debule s’affissenu :</value>
   </data>
   <data name="OptionsView_SimultaneousHardwareLimitNotice" xml:space="preserve">
-    <value>Nota : Ghjè a limitazione alta di i travaglii simultanei. Certe limitazioni materiale ponu fà diminuisce u numeru attuale di travaglii simultanei durante a cudificazione.</value>
+    <value>Nota : Ghjè a limitazione alta di i travaglii simultanei. Certe limitazioni materiale ponu fà diminuisce u numeru attuale di travaglii simultanei durante a cudificazione.</value>
+  </data>
+  <data name="Preset_NotAvailable" xml:space="preserve">
+    <value>(Micca dispunibule)</value>
+  </data>
+  <data name="AddPresetView_IsDefault" xml:space="preserve">
+    <value>Hè predefinitu :</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>Innò</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Iè</value>
+  </data>
+  <data name="StaticPreviewView_FineTuning" xml:space="preserve">
+    <value>Preferenze di rigatura fina di a fiura</value>
+  </data>
+  <data name="StaticPreviewView_ShowPictureSettingsAdjustment" xml:space="preserve">
+    <value>Affissà e cumande di rigatura di l’inquadratura.</value>
+  </data>
+  <data name="DarkTheme_dark" xml:space="preserve">
+    <value>Impiegà u scuru</value>
+  </data>
+  <data name="DarkTheme_light" xml:space="preserve">
+    <value>Impiegà u chjaru</value>
+  </data>
+  <data name="DarkTheme_system" xml:space="preserve">
+    <value>Quellu di u sistema</value>
+  </data>
+  <data name="OptionsView_DarkThemeMode" xml:space="preserve">
+    <value>Tema :</value>
+  </data>
+  <data name="OptionsView_RequiresRestart" xml:space="preserve">
+    <value>(Richiede un rilanciu)</value>
+  </data>
+  <data name="FiltersView_ChromaSmooth" xml:space="preserve">
+    <value>Allisciata cromatica :</value>
+  </data>
+  <data name="FiltersView_ColourSpace" xml:space="preserve">
+    <value>Spaziu di culore :</value>
+  </data>
+  <data name="SummaryView_Colourspace" xml:space="preserve">
+    <value>Spaziu di culore</value>
+  </data>
+  <data name="PictureSettingsView_SeePreview" xml:space="preserve">
+    <value>Apre l’apprezzazione</value>
+  </data>
+  <data name="SummaryView_SourcePreview" xml:space="preserve">
+    <value>Apprezzazione di a fonte :</value>
+  </data>
+  <data name="QueueView_JobStatus" xml:space="preserve">
+    <value>Statu di u travagliu :</value>
+  </data>
+  <data name="QueueView_JobStatus_Cancelled" xml:space="preserve">
+    <value>Abbandunatu</value>
+  </data>
+  <data name="QueueView_JobStatus_Complete" xml:space="preserve">
+    <value>Compiu</value>
+  </data>
+  <data name="QueueView_JobStatus_InitFailed" xml:space="preserve">
+    <value>Preferenze inaccettevule. Verificate u ghjurnale per sapene di più.</value>
+  </data>
+  <data name="QueueView_JobStatus_InvalidInput" xml:space="preserve">
+    <value>Intrata inaccettevule. Verificate u ghjurnale per sapene di più.</value>
+  </data>
+  <data name="QueueView_JobStatus_NoErrorCode" xml:space="preserve">
+    <value>Statu scunnisciutu. Verificate u ghjurnale per sapene di più.</value>
+  </data>
+  <data name="QueueView_JobStatus_ReadError" xml:space="preserve">
+    <value>Sbaglii scuperti pruvendu di leghje a fonte.</value>
+  </data>
+  <data name="QueueView_JobStatus_Unknown" xml:space="preserve">
+    <value>Prublema scunnisciutu. Verificate u ghjurnale per sapene di più.</value>
+  </data>
+  <data name="QueueView_JobStatus_WorkerCrash" xml:space="preserve">
+    <value>U trattamentu di travagliu s’hè lampatu. Verificate u ghjurnale per sapene di più.</value>
+  </data>
+  <data name="Startup_HbDllMissing" xml:space="preserve">
+    <value>U schedariu « hb.dll » hè assente. Ci vole à intallà torna.</value>
+  </data>
+  <data name="OptionsView_SafeMode" xml:space="preserve">
+    <value>Avertimentu : Fate casu chì sta versione in « Modu assicuratu » d’HandBrake ùn cuntene micca l’accessu à i cudificatori materiale. S’è vò vulete impiegà i cudificatori materiale, ci vole à scaricà da u situ web una versione altra chì quella in « Modu assicuratu ».</value>
   </data>
 </root>

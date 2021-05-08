@@ -18,29 +18,33 @@
 
 @interface HBMetadata ()
 
-@property (nonatomic, readonly) hb_metadata_t *hb_metadata;
-@property (nonatomic, copy) NSString *releaseDate;
+@property (nonatomic, readonly, nullable) hb_metadata_t *metadata;
+@property (nonatomic, copy, nullable) NSString *releaseDate;
 
 @end
 
 @implementation HBMetadata
-- (instancetype)initWithMetadata:(hb_metadata_t *)data
+- (instancetype)initWithMetadata:(hb_metadata_t *)metadata
 {
     self = [super init];
     if (self)
     {
-        _hb_metadata = data;
+        _metadata = metadata;
     }
     return self;
 }
 
 - (NSString *)releaseDate
 {
-    if (self.hb_metadata->release_date == nil)
+    if (_metadata && _metadata->dict)
     {
-        return nil;
+        const char *releaseDate = hb_dict_get_string(_metadata->dict, "ReleaseDate");
+        if (releaseDate)
+        {
+            return @(releaseDate);
+        }
     }
-    return @(self.hb_metadata->release_date);
+    return nil;
 }
 
 @end
@@ -497,7 +501,8 @@ fail:
                 {
                     title = @(chapter->title);
                 }
-                else
+
+                if (title == NULL)
                 {
                     title = [NSString stringWithFormat:HBKitLocalizedString(@"Chapter %d", "Title -> chapter name"), i + 1];
                 }
@@ -520,7 +525,7 @@ fail:
 {
     NSDictionary *result = nil;
 
-    hb_dict_t *hb_preset = [preset content].hb_value;
+    hb_dict_t *hb_preset = preset.content.hb_value;
     hb_dict_t *job = hb_preset_job_init(self.hb_handle, self.hb_title->index, hb_preset);
 
     if (job)

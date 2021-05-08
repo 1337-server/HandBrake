@@ -16,7 +16,7 @@ namespace HandBrake.Interop.Interop.HbLib
     /// The hb_geometry_s.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
-    public struct hb_geometry_s
+    internal struct hb_geometry_s
     {
         /// <summary>
         /// The width.
@@ -38,7 +38,7 @@ namespace HandBrake.Interop.Interop.HbLib
     /// The hb_ui_geometry_s.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
-    public struct hb_geometry_settings_s
+    internal struct hb_geometry_settings_s
     {
         /// <summary>
         ///  Anamorphic mode, see job struct anamorphic
@@ -48,7 +48,9 @@ namespace HandBrake.Interop.Interop.HbLib
         /// <summary>
         ///  Specifies settings that shouldn't be changed
         /// </summary>
-        public int keep; 
+        public int keep;
+
+        public int flags;
 
         /// <summary>
         /// use dvd dimensions to determine PAR
@@ -58,13 +60,16 @@ namespace HandBrake.Interop.Interop.HbLib
         /// <summary>
         /// pixel alignment for loose anamorphic
         /// </summary>
-        public int modulus; 
+        public int modulus;
 
         /// <summary>
-        /// Cropping
+        /// Pixels cropped from source before scaling
         /// </summary>
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4, ArraySubType = UnmanagedType.I4)]
         public int[] crop;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4, ArraySubType = UnmanagedType.I4)]
+        public int[] pad;
 
         /// <summary>
         /// max destination storage width
@@ -76,6 +81,10 @@ namespace HandBrake.Interop.Interop.HbLib
         /// </summary>
         public int maxHeight;
 
+        public int displayWidth;
+
+        public int displayHeight;
+
         /// <summary>
         /// Pixel aspect used in custom anamorphic
         /// </summary>
@@ -86,7 +95,7 @@ namespace HandBrake.Interop.Interop.HbLib
     /// The hb_rational_t.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
-    public struct hb_rational_t
+    internal struct hb_rational_t
     {
         /// <summary>
         /// The num. W
@@ -98,4 +107,16 @@ namespace HandBrake.Interop.Interop.HbLib
         /// </summary>
         public int den;
     }
+
+    [StructLayout(LayoutKind.Sequential)]
+    struct hb_geometry_crop_s
+    {
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4, ArraySubType = UnmanagedType.I4)]
+        public int[] crop;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4, ArraySubType = UnmanagedType.I4)]
+        public int[] pad;
+
+        public hb_geometry_s geometry;
+    };
 }

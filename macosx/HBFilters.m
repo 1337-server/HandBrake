@@ -38,6 +38,9 @@ NSString * const HBFiltersChangedNotification = @"HBFiltersChangedNotification";
         _denoiseCustomString = @"";
         _denoisePreset = @"medium";
         _denoiseTune = @"none";
+        _chromaSmooth = @"off";
+        _chromaSmoothTune = @"off";
+        _chromaSmoothCustomString = @"";
         _sharpen = @"off";
         _sharpenCustomString = @"";
         _sharpenPreset = @"medium";
@@ -45,6 +48,8 @@ NSString * const HBFiltersChangedNotification = @"HBFiltersChangedNotification";
         _deblock = @"off";
         _deblockTune = @"none";
         _deblockCustomString = @"";
+        _colorspace = @"off";
+        _colorspaceCustomString = @"";
 
         _notificationsEnabled = YES;
     }
@@ -59,6 +64,110 @@ NSString * const HBFiltersChangedNotification = @"HBFiltersChangedNotification";
                                                                                               object:self
                                                                                             userInfo:nil]];
     }
+}
+
+#define LAPSHARP_DEFAULT_PRESET      "medium"
+#define UNSHARP_DEFAULT_PRESET       "medium"
+#define CHROMA_SMOOTH_DEFAULT_PRESET "medium"
+#define NLMEANS_DEFAULT_PRESET       "medium"
+#define DEINTERLACE_DEFAULT_PRESET   "default"
+#define DECOMB_DEFAULT_PRESET        "default"
+#define DETELECINE_DEFAULT_PRESET    "default"
+#define COMB_DETECT_DEFAULT_PRESET   "default"
+#define HQDN3D_DEFAULT_PRESET        "medium"
+#define DEBLOCK_DEFAULT_PRESET       "medium"
+#define COLORSPACE_DEFAULT_PRESET    "bt709"
+
+- (NSString *)filterKeysDescription:(int)filter_id
+{
+    char **keys = hb_filter_get_keys(filter_id);
+    char  *colon = "";
+
+    NSMutableString *result = [[NSMutableString alloc] init];
+    [result appendString:HBKitLocalizedString(@"Syntax: ", @"HBFilters -> invalid filter custom settings error recovery suggestion")];
+
+    for (int ii = 0; keys[ii] != NULL; ii++)
+    {
+        int c = tolower(keys[ii][0]);
+        [result appendFormat:@"%s%s=%c", colon, keys[ii], c];
+        colon = ":";
+    }
+    hb_str_vfree(keys);
+
+    [result appendString:@"\n\n"];
+    [result appendString:HBKitLocalizedString(@"Default: ", @"HBFilters -> invalid filter custom settings error recovery suggestion")];
+
+    const char *preset = "default";
+    switch (filter_id)
+    {
+        case HB_FILTER_UNSHARP:
+            preset = UNSHARP_DEFAULT_PRESET;
+            break;
+        case HB_FILTER_LAPSHARP:
+            preset = LAPSHARP_DEFAULT_PRESET;
+            break;
+        case HB_FILTER_CHROMA_SMOOTH:
+            preset = CHROMA_SMOOTH_DEFAULT_PRESET;
+            break;
+        case HB_FILTER_NLMEANS:
+            preset = NLMEANS_DEFAULT_PRESET;
+            break;
+        case HB_FILTER_DEINTERLACE:
+            preset = DEINTERLACE_DEFAULT_PRESET;
+            break;
+        case HB_FILTER_DECOMB:
+            preset = DECOMB_DEFAULT_PRESET;
+            break;
+        case HB_FILTER_DETELECINE:
+            preset = DETELECINE_DEFAULT_PRESET;
+            break;
+        case HB_FILTER_HQDN3D:
+            preset = HQDN3D_DEFAULT_PRESET;
+            break;
+        case HB_FILTER_COMB_DETECT:
+            preset = COMB_DETECT_DEFAULT_PRESET;
+            break;
+        case HB_FILTER_DEBLOCK:
+            preset = DEBLOCK_DEFAULT_PRESET;
+            break;
+        default:
+            break;
+    }
+    switch (filter_id)
+    {
+        case HB_FILTER_DEINTERLACE:
+        case HB_FILTER_NLMEANS:
+        case HB_FILTER_CHROMA_SMOOTH:
+        case HB_FILTER_COLORSPACE:
+        case HB_FILTER_UNSHARP:
+        case HB_FILTER_LAPSHARP:
+        case HB_FILTER_DECOMB:
+        case HB_FILTER_DETELECINE:
+        case HB_FILTER_HQDN3D:
+        case HB_FILTER_COMB_DETECT:
+        case HB_FILTER_DEBLOCK:
+        {
+            hb_dict_t *settings;
+            settings = hb_generate_filter_settings(filter_id, preset, NULL, NULL);
+            char *str = hb_filter_settings_string(filter_id, settings);
+            hb_value_free(&settings);
+
+            char **split = hb_str_vsplit(str, ':');
+            colon = "";
+
+            for (int ii = 0; split[ii] != NULL; ii++)
+            {
+                [result appendFormat:@"%s%s", colon, split[ii]];
+                colon = ":";
+            }
+            hb_str_vfree(split);
+            free(str);
+        } break;
+        default:
+            break;
+    }
+
+    return result;
 }
 
 #pragma mark - Detelecine
@@ -120,7 +229,7 @@ NSString * const HBFiltersChangedNotification = @"HBFiltersChangedNotification";
             {
                 NSDictionary *userInfo = @{NSLocalizedDescriptionKey: HBKitLocalizedString(@"Invalid custom detelecine settings.",
                                                                                         @"HBFilters -> invalid detelecine custom string description"),
-                                           NSLocalizedRecoverySuggestionErrorKey: HBKitLocalizedString(@"Syntax: skip-left=s:skip-right=s:skip-top=s:skip-bottom=s:strict-breaks=s:plane=p:parity=p:disable=d\n\nDefault: skip-left=1:skip-right=1:skip-top=4:skip-bottom=4:plane=0",                                                                                                            @"HBJob -> invalid detelecine custom settings error recovery suggestion")};
+                                           NSLocalizedRecoverySuggestionErrorKey: [self filterKeysDescription:filter_id]};
                 *outError = [NSError errorWithDomain:@"HBFilterError" code:0 userInfo:userInfo];
             }
         }
@@ -187,7 +296,7 @@ NSString * const HBFiltersChangedNotification = @"HBFiltersChangedNotification";
             {
                 NSDictionary *userInfo = @{NSLocalizedDescriptionKey: HBKitLocalizedString(@"Invalid custom comb detect settings.",
                                                                                         @"HBFilters -> invalid comb detect custom string description"),
-                                           NSLocalizedRecoverySuggestionErrorKey: HBKitLocalizedString(@"Syntax: mode=m:spatial-metric=s:motion-thresh=m:spatial-thresh=s:filter-mode=f:block-thresh=b:block-width=b:block-height=b:disable=d\n\nDefault: mode=3:spatial-metric=2:motion-thresh=1:spatial-thresh=1:filter-mode=2:block-thresh=40:block-width=16:block-height=16",                                                                                                            @"HBJob -> invalid comb detect custom settings error recovery suggestion")};
+                                           NSLocalizedRecoverySuggestionErrorKey: [self filterKeysDescription:filter_id]};
                 *outError = [NSError errorWithDomain:@"HBFilterError" code:0 userInfo:userInfo];
             }
         }
@@ -298,14 +407,14 @@ NSString * const HBFiltersChangedNotification = @"HBFiltersChangedNotification";
                 {
                     NSDictionary *userInfo = @{NSLocalizedDescriptionKey: HBKitLocalizedString(@"Invalid Yadif custom settings.",
                                                                                             @"HBFilters -> invalid Yadif custom string description"),
-                                               NSLocalizedRecoverySuggestionErrorKey: HBKitLocalizedString(@"Yadif syntax: mode=m:parity=p\n\nYadif default: mode=3",                                                                                                            @"HBJob -> invalid Yadif custom settings error recovery suggestion")};
+                                               NSLocalizedRecoverySuggestionErrorKey: [self filterKeysDescription:filter_id]};
                     *outError = [NSError errorWithDomain:@"HBFilterError" code:0 userInfo:userInfo];
                 }
                 else if (filter_id == HB_FILTER_DECOMB)
                 {
                     NSDictionary *userInfo = @{NSLocalizedDescriptionKey: HBKitLocalizedString(@"Invalid Decomb custom settings.",
                                                                                             @"HBFilters -> invalid Decomb custom string description"),
-                                               NSLocalizedRecoverySuggestionErrorKey: HBKitLocalizedString(@"Decomb syntax: mode=m:magnitude-thresh=m:variance-thresh=v:laplacian-thresh=l:dilation-thresh=d:erosion-thresh=e:noise-thresh=n:search-distance=s:postproc=p:parity=p\n\nDecomb default: mode=7",                                                                                                            @"HBJob -> invalid Decomb custom settings error recovery suggestion")};
+                                               NSLocalizedRecoverySuggestionErrorKey: [self filterKeysDescription:filter_id]};
                     *outError = [NSError errorWithDomain:@"HBFilterError" code:0 userInfo:userInfo];
                 }
             }
@@ -416,16 +525,102 @@ NSString * const HBFiltersChangedNotification = @"HBFiltersChangedNotification";
                 {
                     NSDictionary *userInfo = @{NSLocalizedDescriptionKey: HBKitLocalizedString(@"Invalid custom HQDN3D settings",
                                                                                             @"HBFilters -> invalid denoise custom string description"),
-                                               NSLocalizedRecoverySuggestionErrorKey: HBKitLocalizedString(@"HQDN3D syntax: y-spatial=y:cb-spatial=c:cr-spatial=c:y-temporal=y:cb-temporal=c:cr-temporal=c\n\nDefault settings: y-spatial=3:cb-spatial=2:cr-spatial=2:y-temporal=2:cb-temporal=3:cr-temporal=3",                                                                                                            @"HBJob -> invalid name error recovery suggestion")};
+                                               NSLocalizedRecoverySuggestionErrorKey: [self filterKeysDescription:filter_id]};
                     *outError = [NSError errorWithDomain:@"HBFilterError" code:0 userInfo:userInfo];
                 }
                 else if (filter_id == HB_FILTER_NLMEANS)
                 {
                     NSDictionary *userInfo = @{NSLocalizedDescriptionKey: HBKitLocalizedString(@"Invalid custom NLMeans settings",
                                                                                             @"HBFilters -> invalid denoise custom string description"),
-                                               NSLocalizedRecoverySuggestionErrorKey: HBKitLocalizedString(@"NLMeans syntax: y-strength=y:y-origin-tune=y:y-patch-size=y:y-range=y:y-frame-count=y:y-prefilter=y:cb-strength=c:cb-origin-tune=c:cb-patch-size=c:cb-range=c:cb-frame-count=c:cb-prefilter=c:cr-strength=c:cr-origin-tune=c:cr-patch-size=c:cr-range=c:cr-frame-count=c:cr-prefilter=c:threads=t\n\nDefault settings: y-strength=6:y-origin-tune=1:y-patch-size=7:y-range=3:y-frame-count=2:y-prefilter=0:cb-strength=6:cb-origin-tune=1:cb-patch-size=7:cb-range=3:cb-frame-count=2:cb-prefilter=0",                                                                                                            @"HBJob -> invalid name error recovery suggestion")};
+                                               NSLocalizedRecoverySuggestionErrorKey: [self filterKeysDescription:filter_id]};
                     *outError = [NSError errorWithDomain:@"HBFilterError" code:0 userInfo:userInfo];
                 }
+            }
+        }
+    }
+
+    return retval;
+}
+
+#pragma mark - Chroma Smooth
+
+- (void)setChromaSmooth:(NSString *)chromaSmooth
+{
+    if (![chromaSmooth isEqualToString:_chromaSmooth])
+    {
+        [[self.undo prepareWithInvocationTarget:self] setChromaSmooth:_chromaSmooth];
+    }
+    if (chromaSmooth)
+    {
+        _chromaSmooth = [chromaSmooth copy];
+    }
+    else
+    {
+        _chromaSmooth = @"off";
+    }
+
+    [self postChangedNotification];
+}
+
+- (void)setChromaSmoothTune:(NSString *)chromaSmoothTune
+{
+    if (![chromaSmoothTune isEqualToString:_chromaSmoothTune])
+    {
+        [[self.undo prepareWithInvocationTarget:self] setChromaSmoothTune:_chromaSmoothTune];
+    }
+    if (chromaSmoothTune)
+    {
+        _chromaSmoothTune = [chromaSmoothTune copy];
+    }
+    else
+    {
+        _chromaSmoothTune = @"none";
+    }
+
+    [self postChangedNotification];
+}
+
+- (void)setChromaSmoothCustomString:(NSString *)chromaSmoothCustomString
+{
+    if (![chromaSmoothCustomString isEqualToString:_chromaSmoothCustomString])
+    {
+        [[self.undo prepareWithInvocationTarget:self] setChromaSmoothCustomString:_chromaSmoothCustomString];
+    }
+    if (chromaSmoothCustomString)
+    {
+        _chromaSmoothCustomString = [chromaSmoothCustomString copy];
+    }
+    else
+    {
+        _chromaSmoothCustomString = @"";
+    }
+
+    [self postChangedNotification];
+}
+
+- (BOOL)validateChromaSmoothCustomString:(id *)ioValue error:(NSError * __autoreleasing *)outError
+{
+    BOOL retval = YES;
+
+    if (nil != *ioValue)
+    {
+        NSString *customValue = *ioValue;
+
+        int filter_id = HB_FILTER_CHROMA_SMOOTH;
+        hb_dict_t *filter_dict = hb_generate_filter_settings(filter_id,
+                                                             "custom",
+                                                             NULL,
+                                                             customValue.UTF8String);
+
+        if (filter_dict == NULL)
+        {
+            retval = NO;
+            if (outError)
+            {
+                    NSDictionary *userInfo = @{NSLocalizedDescriptionKey: HBKitLocalizedString(@"Invalid chroma smooth custom settings.",
+                                                                                               @"HBFilters -> invalid chroma smooth custom string description"),
+                                               NSLocalizedRecoverySuggestionErrorKey: [self filterKeysDescription:filter_id]};
+                    *outError = [NSError errorWithDomain:@"HBFilterError" code:0 userInfo:userInfo];
             }
         }
     }
@@ -567,14 +762,14 @@ NSString * const HBFiltersChangedNotification = @"HBFiltersChangedNotification";
                 {
                     NSDictionary *userInfo = @{NSLocalizedDescriptionKey: HBKitLocalizedString(@"Invalid unsharp custom settings.",
                                                                                             @"HBFilters -> invalid unsharp custom string description"),
-                                               NSLocalizedRecoverySuggestionErrorKey: HBKitLocalizedString(@"Unsharp syntax: y-strength=y:y-size=y:cb-strength=c:cb-size=c:cr-strength=c:cr-size=c\n\nUnsharp default: y-strength=0.25:y-size=7:cb-strength=0.25:cb-size=7",                                                                                                            @"HBJob -> invalid unsharp custom settings error recovery suggestion")};
+                                               NSLocalizedRecoverySuggestionErrorKey: [self filterKeysDescription:filter_id]};
                     *outError = [NSError errorWithDomain:@"HBFilterError" code:0 userInfo:userInfo];
                 }
                 else if (filter_id == HB_FILTER_LAPSHARP)
                 {
                     NSDictionary *userInfo = @{NSLocalizedDescriptionKey: HBKitLocalizedString(@"Invalid lapsharp custom settings.",
                                                                                             @"HBFilters -> invalid lapsharp custom string description"),
-                                               NSLocalizedRecoverySuggestionErrorKey: HBKitLocalizedString(@"Lapsharp syntax: y-strength=y:y-kernel=y:cb-strength=c:cb-kernel=c:cr-strength=c:cr-kernel=c\n\nLapsharp default: y-strength=0.2:y-kernel=isolap:cb-strength=0.2:cb-kernel=isolap",                                                                                                            @"HBJob -> invalid lapsharp custom settings error recovery suggestion")};
+                                               NSLocalizedRecoverySuggestionErrorKey: [self filterKeysDescription:filter_id]};
                     *outError = [NSError errorWithDomain:@"HBFilterError" code:0 userInfo:userInfo];
                 }
             }
@@ -661,7 +856,7 @@ NSString * const HBFiltersChangedNotification = @"HBFiltersChangedNotification";
             {
                     NSDictionary *userInfo = @{NSLocalizedDescriptionKey: HBKitLocalizedString(@"Invalid deblock custom settings.",
                                                                                                @"HBFilters -> invalid deblock custom string description"),
-                                               NSLocalizedRecoverySuggestionErrorKey: HBKitLocalizedString(@"Deblock syntax: strength=s:thresh=t:blocksize=b",                                                                                                            @"HBJob -> invalid deblock custom settings error recovery suggestion")};
+                                               NSLocalizedRecoverySuggestionErrorKey: [self filterKeysDescription:filter_id]};
                     *outError = [NSError errorWithDomain:@"HBFilterError" code:0 userInfo:userInfo];
             }
         }
@@ -682,6 +877,74 @@ NSString * const HBFiltersChangedNotification = @"HBFiltersChangedNotification";
     [self postChangedNotification];
 }
 
+#pragma mark - Colorspace
+
+- (void)setColorspace:(NSString *)colorspace
+{
+    if (![colorspace isEqualToString:_colorspace])
+    {
+        [[self.undo prepareWithInvocationTarget:self] setColorspace:_colorspace];
+    }
+    if (colorspace)
+    {
+        _colorspace = [colorspace copy];
+    }
+    else
+    {
+        _colorspace = @"off";
+    }
+
+    [self postChangedNotification];
+}
+
+- (void)setColorspaceCustomString:(NSString *)colorspaceCustomString
+{
+    if (![colorspaceCustomString isEqualToString:_colorspaceCustomString])
+    {
+        [[self.undo prepareWithInvocationTarget:self] setColorspaceCustomString:_colorspaceCustomString];
+    }
+    if (colorspaceCustomString)
+    {
+        _colorspaceCustomString = [colorspaceCustomString copy];
+    }
+    else
+    {
+        _colorspaceCustomString = @"";
+    }
+
+    [self postChangedNotification];
+}
+
+- (BOOL)validateColorspaceCustomString:(id *)ioValue error:(NSError * __autoreleasing *)outError
+{
+    BOOL retval = YES;
+
+    if (nil != *ioValue)
+    {
+        NSString *customValue = *ioValue;
+
+        int filter_id = HB_FILTER_COLORSPACE;
+        hb_dict_t *filter_dict = hb_generate_filter_settings(filter_id,
+                                                             "custom",
+                                                             NULL,
+                                                             customValue.UTF8String);
+
+        if (filter_dict == NULL)
+        {
+            retval = NO;
+            if (outError)
+            {
+                    NSDictionary *userInfo = @{NSLocalizedDescriptionKey: HBKitLocalizedString(@"Invalid colorspace custom settings.",
+                                                                                               @"HBFilters -> invalid chroma smooth custom string description"),
+                                               NSLocalizedRecoverySuggestionErrorKey: [self filterKeysDescription:filter_id]};
+                    *outError = [NSError errorWithDomain:@"HBFilterError" code:0 userInfo:userInfo];
+            }
+        }
+    }
+
+    return retval;
+}
+
 #pragma mark - KVO
 
 + (NSSet *)keyPathsForValuesAffectingValueForKey:(NSString *)key
@@ -690,7 +953,7 @@ NSString * const HBFiltersChangedNotification = @"HBFiltersChangedNotification";
 
     if ([key isEqualToString:@"summary"])
     {
-        retval = [NSSet setWithObjects:@"detelecine", @"detelecineCustomString", @"deinterlace", @"deinterlacePreset", @"deinterlaceCustomString", @"denoise", @"denoisePreset", @"denoiseTune", @"denoiseCustomString", @"deblock", @"deblockTune", @"deblockCustomString", @"grayscale", @"sharpen", @"sharpenPreset", @"sharpenTune", @"sharpenCustomString", nil];
+        retval = [NSSet setWithObjects:@"detelecine", @"detelecineCustomString", @"deinterlace", @"deinterlacePreset", @"deinterlaceCustomString", @"denoise", @"denoisePreset", @"denoiseTune", @"denoiseCustomString", @"deblock", @"deblockTune", @"deblockCustomString", @"grayscale", @"sharpen", @"sharpenPreset", @"sharpenTune", @"sharpenCustomString", @"chromaSmooth", @"chromaSmoothTune", @"chromaSmoothCustomString", @"colorspace", @"colorspaceCustomString", nil];
     }
     else if ([key isEqualToString:@"customDetelecineSelected"])
     {
@@ -708,6 +971,11 @@ NSString * const HBFiltersChangedNotification = @"HBFiltersChangedNotification";
     else if ([key isEqualToString:@"denoiseEnabled"])
     {
         retval = [NSSet setWithObject:@"denoise"];
+    }
+    else if ([key isEqualToString:@"chromaSmoothEnabled"] ||
+             [key isEqualToString:@"customChromaSmoothSelected"])
+    {
+        retval = [NSSet setWithObject:@"chromaSmooth"];
     }
     else if ([key isEqualToString:@"sharpenTunesAvailable"] ||
              [key isEqualToString:@"customSharpenSelected"])
@@ -733,6 +1001,10 @@ NSString * const HBFiltersChangedNotification = @"HBFiltersChangedNotification";
              [key isEqualToString:@"deinterlacePresets"])
     {
         retval = [NSSet setWithObjects:@"deinterlace", @"deinterlacePreset", nil];
+    }
+    else if ([key isEqualToString:@"customColorspaceSelected"])
+    {
+        retval = [NSSet setWithObject:@"colorspace"];
     }
     else
     {
@@ -766,6 +1038,10 @@ NSString * const HBFiltersChangedNotification = @"HBFiltersChangedNotification";
         copy->_denoiseTune = [_denoiseTune copy];
         copy->_denoiseCustomString = [_denoiseCustomString copy];
 
+        copy->_chromaSmooth = [_chromaSmooth copy];
+        copy->_chromaSmoothTune = [_chromaSmoothTune copy];
+        copy->_chromaSmoothCustomString = [_chromaSmoothCustomString copy];
+
         copy->_sharpen = [_sharpen copy];
         copy->_sharpenPreset = [_sharpenPreset copy];
         copy->_sharpenTune = [_sharpenTune copy];
@@ -776,6 +1052,9 @@ NSString * const HBFiltersChangedNotification = @"HBFiltersChangedNotification";
         copy->_deblockCustomString = [_deblockCustomString copy];
 
         copy->_grayscale = _grayscale;
+
+        copy->_colorspace = [_colorspace copy];
+        copy->_colorspaceCustomString = [_colorspaceCustomString copy];
     }
 
     return copy;
@@ -807,6 +1086,10 @@ NSString * const HBFiltersChangedNotification = @"HBFiltersChangedNotification";
     encodeObject(_denoiseTune);
     encodeObject(_denoiseCustomString);
 
+    encodeObject(_chromaSmooth);
+    encodeObject(_chromaSmoothTune);
+    encodeObject(_chromaSmoothCustomString);
+
     encodeObject(_sharpen);
     encodeObject(_sharpenPreset);
     encodeObject(_sharpenTune);
@@ -817,6 +1100,9 @@ NSString * const HBFiltersChangedNotification = @"HBFiltersChangedNotification";
     encodeObject(_deblockCustomString);
 
     encodeBool(_grayscale);
+
+    encodeObject(_colorspace);
+    encodeObject(_colorspaceCustomString);
 }
 
 - (instancetype)initWithCoder:(NSCoder *)decoder
@@ -838,6 +1124,10 @@ NSString * const HBFiltersChangedNotification = @"HBFiltersChangedNotification";
     decodeObjectOrFail(_denoiseTune, NSString);
     decodeObjectOrFail(_denoiseCustomString, NSString);
 
+    decodeObjectOrFail(_chromaSmooth, NSString);
+    decodeObjectOrFail(_chromaSmoothTune, NSString);
+    decodeObjectOrFail(_chromaSmoothCustomString, NSString);
+
     decodeObjectOrFail(_sharpen, NSString);
     decodeObjectOrFail(_sharpenPreset, NSString);
     decodeObjectOrFail(_sharpenTune, NSString);
@@ -848,6 +1138,9 @@ NSString * const HBFiltersChangedNotification = @"HBFiltersChangedNotification";
     decodeObjectOrFail(_deblockCustomString, NSString);
 
     decodeBool(_grayscale);
+
+    decodeObjectOrFail(_colorspace, NSString);
+    decodeObjectOrFail(_colorspaceCustomString, NSString);
 
     _notificationsEnabled = YES;
 
@@ -876,6 +1169,10 @@ fail:
     preset[@"PictureDenoiseTune"] = self.denoiseTune;
     preset[@"PictureDenoiseCustom"] = self.denoiseCustomString;
 
+    preset[@"PictureChromaSmoothPreset"] = self.chromaSmooth;
+    preset[@"PictureChromaSmoothTune"] = self.chromaSmoothTune;
+    preset[@"PictureChromaSmoothCustom"] = self.chromaSmoothCustomString;
+
     preset[@"PictureSharpenFilter"] = self.sharpen;
     preset[@"PictureSharpenPreset"] = self.sharpenPreset;
     preset[@"PictureSharpenTune"] = self.sharpenTune;
@@ -886,6 +1183,9 @@ fail:
     preset[@"PictureDeblockCustom"] = self.deblockCustomString;
 
     preset[@"VideoGrayScale"] = @(self.grayscale);
+
+    preset[@"PictureColorspacePreset"] = self.colorspace;
+    preset[@"PictureColorspaceCustom"] = self.colorspaceCustomString;
 }
 
 - (void)applyPreset:(HBPreset *)preset jobSettings:(NSDictionary *)settings
@@ -914,6 +1214,11 @@ fail:
         self.denoiseTune = preset[@"PictureDenoiseTune"];
         self.denoiseCustomString = preset[@"PictureDenoiseCustom"];
 
+        // Chroma Smooth
+        self.chromaSmooth = preset[@"PictureChromaSmoothPreset"];
+        self.chromaSmoothTune = preset[@"PictureChromaSmoothTune"];
+        self.chromaSmoothCustomString = preset[@"PictureChromaSmoothCustom"];
+
         // Sharpen
         self.sharpen = preset[@"PictureSharpenFilter"];
         self.sharpenPreset = preset[@"PictureSharpenPreset"];
@@ -926,6 +1231,10 @@ fail:
         self.deblockCustomString = preset[@"PictureDeblockCustom"];
 
         self.grayscale = [preset[@"VideoGrayScale"] boolValue];
+
+        // Colorspace
+        self.colorspace = preset[@"PictureColorspacePreset"];
+        self.colorspaceCustomString = preset[@"PictureColorspaceCustom"];
     }
 
     self.notificationsEnabled = YES;

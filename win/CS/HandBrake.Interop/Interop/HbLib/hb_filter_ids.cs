@@ -26,13 +26,14 @@ namespace HandBrake.Interop.Interop.HbLib
         HB_FILTER_HQDN3D = HB_FILTER_DENOISE,
         HB_FILTER_NLMEANS,
         HB_FILTER_CHROMA_SMOOTH,
+        HB_FILTER_ROTATE,
         HB_FILTER_RENDER_SUB,
         HB_FILTER_CROP_SCALE,
         HB_FILTER_LAPSHARP,
         HB_FILTER_UNSHARP,
-        HB_FILTER_ROTATE,
         HB_FILTER_GRAYSCALE,
         HB_FILTER_PAD,
+        HB_FILTER_COLORSPACE,
 
         // Finally filters that don't care what order they are in,
         // except that they must be after the above filters
@@ -42,6 +43,9 @@ namespace HandBrake.Interop.Interop.HbLib
         HB_FILTER_QSV_POST,
         // default MSDK VPP filter
         HB_FILTER_QSV,
-        HB_FILTER_LAST = HB_FILTER_QSV
+        HB_FILTER_LAST = HB_FILTER_QSV,
+
+        // wrapper filter for frame based multi-threading of simple filters
+        HB_FILTER_MT_FRAME,
     }
 }

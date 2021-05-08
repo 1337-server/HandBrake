@@ -11,9 +11,10 @@ namespace HandBrake.Interop.Interop.Interfaces
 {
     using System;
 
-    using HandBrake.Interop.Interop.EventArgs;
+    using HandBrake.Interop.Interop.Interfaces.EventArgs;
+    using HandBrake.Interop.Interop.Interfaces.Model.Preview;
+    using HandBrake.Interop.Interop.Json.Encode;
     using HandBrake.Interop.Interop.Json.Scan;
-    using HandBrake.Interop.Interop.Model.Preview;
 
     /// <summary>
     /// The Interface for HandBrakeInstance
@@ -25,7 +26,7 @@ namespace HandBrake.Interop.Interop.Interfaces
         /// <summary>
         /// Fires when a scan has completed.
         /// </summary>
-        event EventHandler<EventArgs> ScanCompleted;
+        event EventHandler<System.EventArgs> ScanCompleted;
 
         /// <summary>
         /// Fires for progress updates when scanning.
@@ -72,13 +73,10 @@ namespace HandBrake.Interop.Interop.Interfaces
         /// <param name="previewNumber">
         /// The index of the preview to get (0-based).
         /// </param>
-        /// <param name="deinterlace">
-        /// True to enable basic deinterlace of preview images.
-        /// </param>
         /// <returns>
         /// An image with the requested preview.
         /// </returns>
-        RawPreviewData GetPreview(PreviewSettings job, int previewNumber, bool deinterlace);
+        RawPreviewData GetPreview(JsonEncodeObject job, int previewNumber);
 
         /// <summary>
         /// Starts a scan of the given path.

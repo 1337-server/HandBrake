@@ -1,6 +1,6 @@
 /*
  * settings.h
- * Copyright (C) John Stebbins 2008-2020 <stebbins@stebbins>
+ * Copyright (C) John Stebbins 2008-2021 <stebbins@stebbins>
  *
  * settings.h is free software.
  *
@@ -27,6 +27,7 @@
 
 GhbValue* ghb_get_job_settings(GhbValue *settings);
 GhbValue* ghb_get_job_source_settings(GhbValue *settings);
+int       ghb_get_job_title_id(GhbValue *settings);
 GhbValue* ghb_get_job_range_settings(GhbValue *settings);
 GhbValue* ghb_get_job_par_settings(GhbValue *settings);
 GhbValue* ghb_get_job_dest_settings(GhbValue *settings);

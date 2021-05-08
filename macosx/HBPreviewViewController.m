@@ -120,7 +120,7 @@ It may be used under the terms of the GNU General Public License. */
         [CATransaction begin];
         CABasicAnimation *fadeInAnimation = [CABasicAnimation animationWithKeyPath:@"opacity"];
         fadeInAnimation.fromValue = @(hud.layer.presentationLayer.opacity);
-        fadeInAnimation.toValue = @(1.0);
+        fadeInAnimation.toValue = @1.0;
         fadeInAnimation.beginTime = 0.0;
         fadeInAnimation.duration = ANIMATION_DUR;
 
@@ -138,7 +138,7 @@ It may be used under the terms of the GNU General Public License. */
         [CATransaction begin];
         CABasicAnimation *fadeOutAnimation = [CABasicAnimation animationWithKeyPath:@"opacity"];
         fadeOutAnimation.fromValue = @(hud.layer.presentationLayer.opacity);
-        fadeOutAnimation.toValue = @(0.0);
+        fadeOutAnimation.toValue = @0.0;
         fadeOutAnimation.beginTime = 0.0;
         fadeOutAnimation.duration = ANIMATION_DUR;
 
@@ -182,9 +182,12 @@ It may be used under the terms of the GNU General Public License. */
     if (self.generator && self.visible)
     {
         CGImageRef fPreviewImage = [self.generator copyImageAtIndex:self.selectedIndex shouldCache:YES];
-        self.previewView.image = fPreviewImage;
-        CFRelease(fPreviewImage);
-        self.previewView.layer.opacity = 1;
+        if (fPreviewImage)
+        {
+            self.previewView.image = fPreviewImage;
+            CFRelease(fPreviewImage);
+            self.previewView.layer.opacity = 1;
+        }
     }
     else
     {

@@ -19,15 +19,15 @@ namespace HandBrakeWPF.Instance
     using System.Threading;
     using System.Threading.Tasks;
 
-    using HandBrake.Interop.Interop.EventArgs;
     using HandBrake.Interop.Interop.Interfaces;
+    using HandBrake.Interop.Interop.Interfaces.EventArgs;
     using HandBrake.Interop.Interop.Json.Encode;
     using HandBrake.Interop.Interop.Json.State;
-    using HandBrake.Interop.Json;
-    using HandBrake.Worker.Routing.Commands;
+    using HandBrake.Interop.Utilities;
 
     using HandBrakeWPF.Instance.Model;
     using HandBrakeWPF.Model.Options;
+    using HandBrakeWPF.Model.Worker;
     using HandBrakeWPF.Services.Interfaces;
     using HandBrakeWPF.Services.Logging.Interfaces;
     using HandBrakeWPF.Utilities;
@@ -79,7 +79,7 @@ namespace HandBrakeWPF.Instance
             }
         }
 
-        public async void StartEncode(JsonEncodeObject jobToStart)
+        public void StartEncode(JsonEncodeObject jobToStart)
         {
             if (this.IsServerRunning())
             {
@@ -167,8 +167,9 @@ namespace HandBrakeWPF.Instance
                             workerProcess.PriorityClass = ProcessPriorityClass.BelowNormal;
                             break;
                     }
-                    
-                    this.logService.LogMessage(string.Format("Remote Process started with Process ID: {0} and port: {1}", this.workerProcess.Id, port));
+
+                    int maxAllowed = userSettingService.GetUserSetting<int>(UserSettingConstants.SimultaneousEncodes);
+                    this.logService.LogMessage(string.Format("Remote Process started with Process ID: {0} using port: {1}. Max Allowed Instances: {2}", this.workerProcess.Id, port, maxAllowed));
                 }
             }
             catch (Exception e)
@@ -223,7 +224,7 @@ namespace HandBrakeWPF.Instance
 
         private void WorkerProcess_Exited(object sender, EventArgs e)
         {
-            this.logService.LogMessage("Worker Process Exited!");
+            this.logService.LogMessage("Worker process exited!");
         }
 
         private void StopServer()
@@ -251,7 +252,18 @@ namespace HandBrakeWPF.Instance
                     encodeCompleteFired = true;
                     this.encodePollTimer?.Stop();
 
-                    this.EncodeCompleted?.Invoke(sender: this, e: new EncodeCompletedEventArgs(-11));
+                    int exitcode = -11;
+                    if (this.workerProcess != null && this.workerProcess.HasExited)
+                    {
+                        this.logService.LogMessage("Worker process exit was not expected.");
+                        exitcode = -12;
+                    }
+                    else
+                    {
+                        this.logService.LogMessage("Worker process appears to be unresponsive. Terminating .... ");
+                    }
+
+                    this.EncodeCompleted?.Invoke(sender: this, e: new EncodeCompletedEventArgs(exitcode));
                     
                     if (this.workerProcess != null && !this.workerProcess.HasExited)
                     {
@@ -263,7 +275,7 @@ namespace HandBrakeWPF.Instance
 
                 response = await this.MakeHttpGetRequest("PollEncodeProgress");
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 retryCount = this.retryCount + 1;
             }

@@ -236,8 +236,11 @@ int hb_qsv_context_clean(hb_qsv_context * qsv, int full_job)
             hb_qsv_pipe_list_clean(&qsv->pipes);
 
         if (qsv->mfx_session && !full_job) {
+            // MFXClose() fails in the media_driver under Linux when encoding interrupted
+#if defined(_WIN32) || defined(__MINGW32__)
             sts = MFXClose(qsv->mfx_session);
             HB_QSV_CHECK_RESULT(sts, MFX_ERR_NONE, sts);
+#endif
             qsv->mfx_session = 0;
         }
     }
@@ -584,7 +587,7 @@ int av_is_qsv_available(mfxIMPL impl, mfxVersion * ver)
     return sts;
 }
 
-void hb_qsv_wait_on_sync(hb_qsv_context *qsv, hb_qsv_stage *stage)
+int hb_qsv_wait_on_sync(hb_qsv_context *qsv, hb_qsv_stage *stage)
 {
     int iter = 0;
     mfxStatus sts = MFX_ERR_NONE;
@@ -601,10 +604,11 @@ void hb_qsv_wait_on_sync(hb_qsv_context *qsv, hb_qsv_stage *stage)
                     hb_qsv_sleep(10);
                     continue;
                 }
-                HB_QSV_CHECK_RET(sts, MFX_ERR_NONE, sts);
+                HB_QSV_CHECK_RESULT(sts, MFX_ERR_NONE, sts);
                 break;
             }
         }
+    return 0;
 }
 
 #endif // HB_PROJECT_FEATURE_QSV

@@ -17,17 +17,17 @@ jobs:
 
     - name: Setup Toolchain
       run: |
-        wget https://github.com/bradleysepos/mingw-w64-build/releases/download/9.1.0/mingw-w64-toolchain-9.1.0-linux-x86_64.tar.gz
-        SHA=$(sha1sum mingw-w64-toolchain-9.1.0-linux-x86_64.tar.gz)
-        EXPECTED="4c0fadeaaa0c72ed7107bf49ebddf5c8a35abd92  mingw-w64-toolchain-9.1.0-linux-x86_64.tar.gz"
+        wget https://github.com/bradleysepos/mingw-w64-build/releases/download/9.2.0/mingw-w64-toolchain-9.2.0-linux-x86_64.tar.gz
+        SHA=$(sha1sum mingw-w64-toolchain-9.2.0-linux-x86_64.tar.gz)
+        EXPECTED="560ceb85cdf2783c68226d3761f865c42101c3f6  mingw-w64-toolchain-9.2.0-linux-x86_64.tar.gz"
         if [ "$SHA" == "$EXPECTED" ];
         then
             echo "Toolchain Verified. Extracting ..."
             mkdir toolchains
-            mv mingw-w64-toolchain-9.1.0-linux-x86_64.tar.gz toolchains
+            mv mingw-w64-toolchain-9.2.0-linux-x86_64.tar.gz toolchains
             cd toolchains
-            tar xvf mingw-w64-toolchain-9.1.0-linux-x86_64.tar.gz
-            cd mingw-w64-toolchain-9.1.0-linux-x86_64/mingw-w64-x86_64/
+            tar xvf mingw-w64-toolchain-9.2.0-linux-x86_64.tar.gz
+            cd mingw-w64-toolchain-9.2.0-linux-x86_64/mingw-w64-x86_64/
             pwd
         else
             echo "Toolchain Verification FAILED. Exiting!"
@@ -36,8 +36,8 @@ jobs:
 
     - name: Build CLI and LibHB
       run: |
-        export PATH="/home/runner/work/HandBrake/HandBrake/toolchains/mingw-w64-toolchain-9.1.0-linux-x86_64/mingw-w64-x86_64/bin:${PATH}"
-        ./configure --cross=x86_64-w64-mingw32 --enable-qsv --enable-vce --enable-nvenc --launch-jobs=$(nproc) --launch
+        export PATH="/home/runner/work/HandBrake/HandBrake/toolchains/mingw-w64-toolchain-9.2.0-linux-x86_64/mingw-w64-x86_64/bin:${PATH}"
+        ./configure --cross=x86_64-w64-mingw32 --enable-qsv --enable-vce --enable-nvenc --launch-jobs=1 --launch
         cd build
         make pkg.create.zip
 
@@ -73,7 +73,7 @@ jobs:
       uses: actions/download-artifact@v2
       with:
        name: LibHandBrake
-       path: win/CS/HandBrakeWPF/bin/Debug
+       path: win/CS/HandBrakeWPF/bin/publish
 
     - name: Import the Signing Cert
       run: |
@@ -90,16 +90,16 @@ jobs:
     - name: Build Windows GUI
       run: |
         $env:Path += ";C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin"
-        msbuild win\cs\build.xml /t:Nightly /p:PfxFile=$env:SigningCertificate /p:PfxPwd=${{ secrets.HandBrakeTeam_pfx_pwd }} /p:SignTimestampServer=http://time.certum.pl/
+        msbuild win\cs\build.xml /t:x64 /p:PfxFile=$env:SigningCertificate /p:PfxPwd=${{ secrets.HandBrakeTeam_pfx_pwd }} /p:SignTimestampServer=http://time.certum.pl/
 
     - name: Upload HandBrake exe Installer
       uses: actions/upload-artifact@v2
       with:
         name: HandBrake-x86_64-Win_GUI-EXE
-        path: win/CS/HandBrakeWPF/bin/Debug/HandBrake-Nightly-x86_64-Win_GUI.exe
+        path: win/CS/HandBrakeWPF/bin/publish/HandBrake-Nightly-x86_64-Win_GUI.exe
 
     - name: Upload HandBrake msi Installer
       uses: actions/upload-artifact@v2
       with:
         name:  HandBrake-x86_64-Win_GUI-MSI
-        path: win/CS/HandBrakeWPF/bin/Debug/HandBrake-Nightly-x86_64-Win_GUI.msi
+        path: win/CS/HandBrakeWPF/bin/publish/HandBrake-Nightly-x86_64-Win_GUI.msi

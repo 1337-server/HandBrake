@@ -187,6 +187,16 @@ namespace HandBrake.Interop.Interop.Json.Presets
         /// </summary>
         public string PictureDetelecineCustom { get; set; }
 
+        public string PictureColorspacePreset { get; set; }
+
+        public string PictureColorspaceCustom { get; set; }
+
+        public string PictureChromaSmoothPreset { get; set; }
+
+        public string PictureChromaSmoothTune { get; set; }
+
+        public string PictureChromaSmoothCustom { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether picture itu par.
         /// </summary>
@@ -201,11 +211,6 @@ namespace HandBrake.Interop.Interop.Json.Presets
         /// Gets or sets a value indicating whether picture loose crop.
         /// </summary>
         public bool PictureLooseCrop { get; set; }
-
-        /// <summary>
-        /// Gets or sets the picture modulus.
-        /// </summary>
-        public int PictureModulus { get; set; }
 
         /// <summary>
         /// Gets or sets the picture par.
@@ -237,6 +242,10 @@ namespace HandBrake.Interop.Interop.Json.Presets
         /// </summary>
         public int? PictureHeight { get; set; }
 
+        public bool PictureUseMaximumSize { get; set; }
+
+        public bool PictureAllowUpscaling { get; set; }
+
         /// <summary>
         /// Gets or sets the picture force height.
         /// </summary>
@@ -247,6 +256,18 @@ namespace HandBrake.Interop.Interop.Json.Presets
         /// </summary>
         public int PictureForceWidth { get; set; }
 
+        public string PicturePadMode { get; set; }
+
+        public int PicturePadTop { get; set; }
+
+        public int PicturePadBottom { get; set; }
+
+        public int PicturePadLeft { get; set; }
+
+        public int PicturePadRight { get; set; }
+
+        public string PicturePadColor { get; set; }
+        
         /// <summary>
         /// Gets or sets the preset description.
         /// </summary>
@@ -261,16 +282,6 @@ namespace HandBrake.Interop.Interop.Json.Presets
         /// Gets or sets the type.
         /// </summary>
         public int Type { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether uses picture filters.
-        /// </summary>
-        public bool UsesPictureFilters { get; set; }
-
-        /// <summary>
-        /// Gets or sets the uses picture settings.
-        /// </summary>
-        public int UsesPictureSettings { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether subtitle add cc.
@@ -411,5 +422,9 @@ namespace HandBrake.Interop.Interop.Json.Presets
         /// Gets or sets a value indicating whether x 264 use advanced options.
         /// </summary>
         public bool x264UseAdvancedOptions { get; set; }
+
+        public bool PresetDisabled { get; set; }
+
+        public bool MetadataPassthrough { get; set; }
     }
 }

@@ -19,17 +19,18 @@ namespace HandBrake.Interop.Interop
     using System.Timers;
     using System.Xml;
 
-    using HandBrake.Interop.Interop.EventArgs;
-    using HandBrake.Interop.Interop.Factories;
     using HandBrake.Interop.Interop.HbLib;
     using HandBrake.Interop.Interop.Helpers;
     using HandBrake.Interop.Interop.Interfaces;
+    using HandBrake.Interop.Interop.Interfaces.EventArgs;
+    using HandBrake.Interop.Interop.Interfaces.Model;
+    using HandBrake.Interop.Interop.Interfaces.Model.Encoders;
+    using HandBrake.Interop.Interop.Interfaces.Model.Picture;
+    using HandBrake.Interop.Interop.Interfaces.Model.Preview;
     using HandBrake.Interop.Interop.Json.Encode;
     using HandBrake.Interop.Interop.Json.Scan;
     using HandBrake.Interop.Interop.Json.State;
-    using HandBrake.Interop.Interop.Model.Encoding;
-    using HandBrake.Interop.Interop.Model.Preview;
-    using HandBrake.Interop.Json;
+    using HandBrake.Interop.Utilities;
 
     public class HandBrakeInstance : IHandBrakeInstance, IDisposable
     {
@@ -188,43 +189,21 @@ namespace HandBrake.Interop.Interop
         /// <param name="previewNumber">
         /// The index of the preview to get (0-based).
         /// </param>
-        /// <param name="deinterlace">
-        /// True to enable basic deinterlace of preview images.
-        /// </param>
         /// <returns>
         /// An image with the requested preview.
         /// </returns>
         [HandleProcessCorruptedStateExceptions]
-        public RawPreviewData GetPreview(PreviewSettings settings, int previewNumber, bool deinterlace)
+        public RawPreviewData GetPreview(JsonEncodeObject settings, int previewNumber)
         {
-            SourceTitle title = this.Titles.TitleList.FirstOrDefault(t => t.Index == settings.TitleNumber);
-
-            // Create the Expected Output Geometry details for libhb.
-            hb_geometry_settings_s uiGeometry = new hb_geometry_settings_s
-            {
-                crop = new[] { settings.Cropping.Top, settings.Cropping.Bottom, settings.Cropping.Left, settings.Cropping.Right },
-                itu_par = 0,
-                keep = (int)AnamorphicFactory.KeepSetting.HB_KEEP_WIDTH + (settings.KeepDisplayAspect ? 0x04 : 0), // TODO Keep Width?
-                maxWidth = settings.MaxWidth,
-                maxHeight = settings.MaxHeight,
-                mode = (int)(hb_anamorphic_mode_t)settings.Anamorphic,
-                modulus = settings.Modulus ?? 16,
-                geometry = new hb_geometry_s
-                {
-                    height = settings.Height,
-                    width = settings.Width,
-                    par = new hb_rational_t { den = settings.PixelAspectY, num = settings.PixelAspectX }
-                }
-            };
-
             // Fetch the image data from LibHb
-            IntPtr resultingImageStuct = HBFunctions.hb_get_preview2(this.Handle, settings.TitleNumber, previewNumber, ref uiGeometry, deinterlace ? 1 : 0);
+            string taskJson = JsonSerializer.Serialize(settings, JsonSettings.Options);
+            IntPtr resultingImageStuct = HBFunctions.hb_get_preview3_json(this.Handle, previewNumber, taskJson);
             hb_image_s image = InteropUtilities.ToStructureFromPtr<hb_image_s>(resultingImageStuct);
 
             // Copy the filled image buffer to a managed array.
             int stride_width = image.plane[0].stride;
             int stride_height = image.plane[0].height_stride;
-            int imageBufferSize = stride_width * stride_height;  // int imageBufferSize = outputWidth * outputHeight * 4;
+            int imageBufferSize = stride_width * stride_height;
 
             byte[] managedBuffer = new byte[imageBufferSize];
             Marshal.Copy(image.plane[0].data, managedBuffer, 0, imageBufferSize);

@@ -1,7 +1,7 @@
 /* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*- */
 /*
  * jobdict.c
- * Copyright (C) John Stebbins 2008-2020 <stebbins@stebbins>
+ * Copyright (C) John Stebbins 2008-2021 <stebbins@stebbins>
  *
  * settings.c is free software.
  *
@@ -82,6 +82,17 @@ GhbValue* ghb_get_job_source_settings(GhbValue *settings)
         ghb_dict_set(job, "Source", source);
     }
     return source;
+}
+
+int ghb_get_job_title_id(GhbValue *settings)
+{
+    GhbValue * source = ghb_get_job_source_settings(settings);
+    GhbValue * title  = ghb_dict_get(source, "Title");
+    if (title == NULL)
+    {
+        return -1;
+    }
+    return ghb_value_get_int(title);
 }
 
 GhbValue* ghb_get_job_range_settings(GhbValue *settings)
@@ -189,6 +200,7 @@ GhbValue* ghb_get_job_metadata_settings(GhbValue *settings)
     {
         meta = ghb_dict_new();
         ghb_dict_set(job, "Metadata", meta);
+        meta = ghb_dict_get(job, "Metadata");
     }
     return meta;
 }

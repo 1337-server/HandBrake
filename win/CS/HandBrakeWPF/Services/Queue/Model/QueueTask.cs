@@ -10,18 +10,16 @@
 namespace HandBrakeWPF.Services.Queue.Model
 {
     using System;
-    using System.Runtime.CompilerServices;
+    using System.Text.Json.Serialization;
 
     using Caliburn.Micro;
 
-    using HandBrake.Interop.Model;
+    using HandBrake.Interop.Interop.Interfaces.Model;
 
     using HandBrakeWPF.Services.Presets.Model;
     using HandBrakeWPF.Utilities;
 
-    using Newtonsoft.Json;
-
-    using EncodeTask = HandBrakeWPF.Services.Encode.Model.EncodeTask;
+    using EncodeTask = Encode.Model.EncodeTask;
 
     public class QueueTask : PropertyChangedBase
     {
@@ -61,25 +59,19 @@ namespace HandBrakeWPF.Services.Queue.Model
             this.JobProgress = new QueueProgressStatus();
         }
 
-        [JsonProperty]
         public string TaskId { get; set; }
 
         [JsonIgnore]
         public string Id { get; }
 
-        [JsonProperty]
         public string ScannedSourcePath { get; set; }
 
         [JsonIgnore]
         public Guid? TaskToken { get; set; }
 
-        [JsonProperty]
         public QueueItemStatus Status
         {
-            get
-            {
-                return this.status;
-            }
+            get => this.status;
 
             set
             {
@@ -90,13 +82,10 @@ namespace HandBrakeWPF.Services.Queue.Model
             }
         }
 
-        [JsonProperty]
         public EncodeTask Task { get; set; }
 
-        [JsonProperty]
         public HBConfiguration Configuration { get; set; }
 
-        [JsonProperty]
         public QueueStats Statistics { get; set; }
 
         [JsonIgnore]
@@ -106,13 +95,7 @@ namespace HandBrakeWPF.Services.Queue.Model
         public bool IsJobStatusVisible => this.Status == QueueItemStatus.InProgress;
         
         [JsonIgnore]
-        public string SelectedPresetKey
-        {
-            get
-            {
-                return this.presetKey;
-            }
-        }
+        public string SelectedPresetKey => this.presetKey;
 
         [JsonIgnore]
         public bool ShowEncodeProgress => this.Status == QueueItemStatus.InProgress && SystemInfo.IsWindows10();

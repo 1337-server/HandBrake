@@ -13,17 +13,17 @@ namespace HandBrakeWPF.Converters.Video
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
+    using System.Runtime.InteropServices;
     using System.Windows.Data;
 
     using HandBrake.Interop.Interop;
-    using HandBrake.Interop.Interop.Model.Encoding;
 
     using HandBrakeWPF.Services.Interfaces;
     using HandBrakeWPF.Utilities;
 
-    using EncodeTask = HandBrakeWPF.Services.Encode.Model.EncodeTask;
-    using OutputFormat = HandBrakeWPF.Services.Encode.Model.Models.OutputFormat;
-    using SystemInfo = HandBrake.Interop.Utilities.SystemInfo;
+    using EncodeTask = Services.Encode.Model.EncodeTask;
+    using OutputFormat = Services.Encode.Model.Models.OutputFormat;
+    using VideoEncoder = Model.Video.VideoEncoder;
 
     /// <summary>
     /// Video Encoder Converter
@@ -90,39 +90,45 @@ namespace HandBrakeWPF.Converters.Video
                     encoders.RemoveAll(ve => !(ve.Equals(VideoEncoder.VP9) || ve.Equals(VideoEncoder.VP8)));
                 }
 
-                if (!isQsvEnabled || !SystemInfo.IsQsvAvailableH264)
+                if (!isQsvEnabled || !HandBrakeHardwareEncoderHelper.IsQsvAvailableH264)
                 {
                     encoders.Remove(VideoEncoder.QuickSync);
                 }
 
-                if (!isQsvEnabled || !SystemInfo.IsQsvAvailableH265)
+                if (!isQsvEnabled || !HandBrakeHardwareEncoderHelper.IsQsvAvailableH265)
                 {
                     encoders.Remove(VideoEncoder.QuickSyncH265);
                     encoders.Remove(VideoEncoder.QuickSyncH26510b);
                 }
-                else if (!SystemInfo.IsQsvAvailableH26510bit)
+                else if (!HandBrakeHardwareEncoderHelper.IsQsvAvailableH26510bit)
                 {
                     encoders.Remove(VideoEncoder.QuickSyncH26510b);
                 }
 
-                if (!isVceEnabled || !SystemInfo.IsVceH264Available)
+                if (!isVceEnabled || !HandBrakeHardwareEncoderHelper.IsVceH264Available)
                 {
                     encoders.Remove(VideoEncoder.VceH264);
                 }
 
-                if (!isVceEnabled || !SystemInfo.IsVceH265Available)
+                if (!isVceEnabled || !HandBrakeHardwareEncoderHelper.IsVceH265Available)
                 {
                     encoders.Remove(VideoEncoder.VceH265);
                 }
 
-                if (!isNvencEnabled || !SystemInfo.IsNVEncH264Available)
+                if (!isNvencEnabled || !HandBrakeHardwareEncoderHelper.IsNVEncH264Available)
                 {
                     encoders.Remove(VideoEncoder.NvencH264);
                 }
 
-                if (!isNvencEnabled || !SystemInfo.IsNVEncH265Available)
+                if (!isNvencEnabled || !HandBrakeHardwareEncoderHelper.IsNVEncH265Available)
                 {
                     encoders.Remove(VideoEncoder.NvencH265);
+                }
+
+                if (RuntimeInformation.ProcessArchitecture != Architecture.Arm64)
+                {
+                    encoders.Remove(VideoEncoder.MFH264);
+                    encoders.Remove(VideoEncoder.MFH265);
                 }
 
                 return EnumHelper<VideoEncoder>.GetEnumDisplayValuesSubset(encoders);

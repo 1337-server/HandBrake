@@ -15,8 +15,9 @@ namespace HandBrake.Interop.Interop
 
     using HandBrake.Interop.Interop.HbLib;
     using HandBrake.Interop.Interop.Helpers;
-    using HandBrake.Interop.Interop.Model;
-    using HandBrake.Interop.Interop.Model.Encoding;
+    using HandBrake.Interop.Interop.Interfaces.Model;
+    using HandBrake.Interop.Interop.Interfaces.Model.Encoders;
+    using HandBrake.Interop.Utilities;
 
     public static class HandBrakeEncoderHelpers
     {
@@ -714,11 +715,16 @@ namespace HandBrake.Interop.Interop
 
         public static List<int> GetQsvAdaptorList()
         {
-            IntPtr gpuListPtr = HBFunctions.hb_qsv_adapters_list();
+            if (HandBrakeHardwareEncoderHelper.IsQsvAvailable)
+            {
+                IntPtr gpuListPtr = HBFunctions.hb_qsv_adapters_list();
 
-            List<int> gpuList = InteropUtilities.ToListFromHandBrakeList<int>(gpuListPtr);
+                List<int> gpuList = InteropUtilities.ToListFromHandBrakeList<int>(gpuListPtr);
 
-            return gpuList;
+                return gpuList;
+            }
+
+            return new List<int>();
         }
     }
 }

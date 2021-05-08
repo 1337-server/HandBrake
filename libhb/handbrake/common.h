@@ -1,6 +1,6 @@
 /* common.h
 
-   Copyright (c) 2003-2020 HandBrake Team
+   Copyright (c) 2003-2021 HandBrake Team
    This file is part of the HandBrake source code
    Homepage: <http://handbrake.fr/>.
    It may be used under the terms of the GNU General Public License v2.
@@ -139,13 +139,9 @@ void      * hb_list_item( const hb_list_t *, int );
 void        hb_list_close( hb_list_t ** );
 
 void hb_reduce( int *x, int *y, int num, int den );
-void hb_limit_rational( int *x, int *y, int num, int den, int limit );
+void hb_limit_rational( int *x, int *y, int64_t num, int64_t den, int limit );
 void hb_reduce64( int64_t *x, int64_t *y, int64_t num, int64_t den );
 void hb_limit_rational64( int64_t *x, int64_t *y, int64_t num, int64_t den, int64_t limit );
-
-#define HB_KEEP_WIDTH           0x01
-#define HB_KEEP_HEIGHT          0x02
-#define HB_KEEP_DISPLAY_ASPECT  0x04
 
 void hb_job_set_encoder_preset (hb_job_t *job, const char *preset);
 void hb_job_set_encoder_tune   (hb_job_t *job, const char *tune);
@@ -188,16 +184,8 @@ void hb_attachment_close(hb_attachment_t **attachment);
 hb_metadata_t * hb_metadata_init(void);
 hb_metadata_t * hb_metadata_copy(const hb_metadata_t *src);
 void hb_metadata_close(hb_metadata_t **metadata);
-void hb_metadata_set_name( hb_metadata_t *metadata, const char *name );
-void hb_metadata_set_artist( hb_metadata_t *metadata, const char *artist );
-void hb_metadata_set_composer( hb_metadata_t *metadata, const char *composer );
-void hb_metadata_set_release_date( hb_metadata_t *metadata, const char *release_date );
-void hb_metadata_set_comment( hb_metadata_t *metadata, const char *comment );
-void hb_metadata_set_genre( hb_metadata_t *metadata, const char *genre );
-void hb_metadata_set_album( hb_metadata_t *metadata, const char *album );
-void hb_metadata_set_album_artist( hb_metadata_t *metadata, const char *album_artist );
-void hb_metadata_set_description( hb_metadata_t *metadata, const char *description );
-void hb_metadata_set_long_description( hb_metadata_t *metadata, const char *long_description );
+void hb_update_meta_dict(hb_dict_t * dict, const char * key, const char * value);
+const char * hb_lookup_meta_key(const char * mux_key);
 void hb_metadata_add_coverart( hb_metadata_t *metadata, const uint8_t *data, int size, int type );
 void hb_metadata_rem_coverart( hb_metadata_t *metadata, int ii );
 
@@ -254,6 +242,16 @@ struct hb_rational_s
     int den;
 };
 
+static inline hb_rational_t hb_make_q(int num, int den)
+{
+    hb_rational_t r = { num, den };
+    return r;
+}
+
+static inline double hb_q2d(hb_rational_t a){
+    return a.num / (double) a.den;
+}
+
 struct hb_geometry_s
 {
     int width;
@@ -261,15 +259,38 @@ struct hb_geometry_s
     hb_rational_t par;
 };
 
+struct hb_geometry_crop_s
+{
+    int crop[4];
+    int pad[4];
+    hb_geometry_t geometry;
+};
+
+// hb_geometry_settings_s 'keep' flags
+#define HB_KEEP_WIDTH           0x01
+#define HB_KEEP_HEIGHT          0x02
+#define HB_KEEP_DISPLAY_ASPECT  0x04
+#define HB_KEEP_DISPLAY_WIDTH   0x08
+#define HB_KEEP_PAD             0x10
+
+// hb_geometry_settings_s 'flags'
+#define HB_GEO_SCALE_UP         0x01
+#define HB_GEO_SCALE_BEST       0x02
+
 struct hb_geometry_settings_s
 {
-    int mode;                   // Anamorphic mode, see job struct anamorphic
-    int keep;                   // Specifies settings that shouldn't be changed
-    int itu_par;                // use dvd dimensions to determine PAR
-    int modulus;                // pixel alignment for loose anamorphic
-    int crop[4];                // Pixels cropped from source before scaling
-    int maxWidth;               // max destination storage width
-    int maxHeight;              // max destination storage height
+    int mode;               // Anamorphic mode, see job struct anamorphic
+    int keep;               // Specifies settings that shouldn't be changed
+    int flags;              // Flags that affect calculations
+    int itu_par;            // use dvd dimensions to determine PAR
+    int modulus;            // pixel alignment for loose anamorphic
+    int crop[4];            // Pixels cropped from source before scaling
+    int pad[4];             // Pixels cropped from source before scaling
+    int maxWidth;           // max destination storage width
+    int maxHeight;          // max destination storage height
+    int displayWidth;       // display width, used with !HB_KEEP_DISPLAY_ASPECT
+    int displayHeight;      // display height, used with !HB_KEEP_DISPLAY_ASPECT
+                            // Note that display size includes pad!
     hb_geometry_t geometry;
 };
 
@@ -280,6 +301,9 @@ struct hb_image_s
     int max_plane;
     int width;
     int height;
+    int color_prim;
+    int color_transfer;
+    int color_matrix;
     uint8_t *data;
 
     struct image_plane
@@ -307,6 +331,20 @@ struct hb_subtitle_config_s
     const char * src_filename;
     char         src_codeset[40];
     int64_t      offset;
+};
+
+struct hb_mastering_display_metadata_s {
+    hb_rational_t display_primaries[3][2];
+    hb_rational_t white_point[2];
+    hb_rational_t min_luminance;
+    hb_rational_t max_luminance;
+    int has_primaries;
+    int has_luminance;
+};
+
+struct hb_content_light_metadata_s {
+    unsigned max_cll;
+    unsigned max_fall;
 };
 
 /*******************************************************************************
@@ -370,6 +408,7 @@ void        hb_video_quality_get_limits(uint32_t codec, float *low, float *high,
 const char* hb_video_quality_get_name(uint32_t codec);
 int         hb_video_quality_is_supported(uint32_t codec);
 
+int                hb_video_encoder_is_supported(int encoder);
 int                hb_video_encoder_get_depth   (int encoder);
 const char* const* hb_video_encoder_get_presets (int encoder);
 const char* const* hb_video_encoder_get_tunes   (int encoder);
@@ -511,7 +550,7 @@ struct hb_job_s
          cfr:               0 (vfr), 1 (cfr), 2 (pfr) [see render.c]
          pass:              0, 1 or 2 (or -1 for scan)
          areBframes:        boolean to note if b-frames are used */
-#define HB_VCODEC_MASK         0x0FFFFFF
+#define HB_VCODEC_MASK         0x7FFFFFF
 #define HB_VCODEC_INVALID      0x0000000
 #define HB_VCODEC_THEORA       0x0000002
 #define HB_VCODEC_FFMPEG_MPEG4 0x0000010
@@ -524,7 +563,10 @@ struct hb_job_s
 #define HB_VCODEC_FFMPEG_NVENC_H265 0x00200000
 #define HB_VCODEC_FFMPEG_VT_H264 0x00400000
 #define HB_VCODEC_FFMPEG_VT_H265 0x00800000
-#define HB_VCODEC_FFMPEG_MASK  (0x00000F0|HB_VCODEC_FFMPEG_VCE_H264|HB_VCODEC_FFMPEG_VCE_H265|HB_VCODEC_FFMPEG_NVENC_H264|HB_VCODEC_FFMPEG_NVENC_H265|HB_VCODEC_FFMPEG_VT_H264|HB_VCODEC_FFMPEG_VT_H265)
+#define HB_VCODEC_FFMPEG_VT_H265_10BIT 0x01000000
+#define HB_VCODEC_FFMPEG_MF_H264 0x02000000
+#define HB_VCODEC_FFMPEG_MF_H265 0x04000000
+#define HB_VCODEC_FFMPEG_MASK  (0x00000F0|HB_VCODEC_FFMPEG_VCE_H264|HB_VCODEC_FFMPEG_VCE_H265|HB_VCODEC_FFMPEG_NVENC_H264|HB_VCODEC_FFMPEG_NVENC_H265|HB_VCODEC_FFMPEG_VT_H264|HB_VCODEC_FFMPEG_VT_H265|HB_VCODEC_FFMPEG_VT_H265_10BIT|HB_VCODEC_FFMPEG_MF_H264|HB_VCODEC_FFMPEG_MF_H265)
 #define HB_VCODEC_QSV_H264     0x0000100
 #define HB_VCODEC_QSV_H265_8BIT     0x0000200
 #define HB_VCODEC_QSV_H265_10BIT    0x0000400
@@ -535,14 +577,14 @@ struct hb_job_s
 #define HB_VCODEC_X264         HB_VCODEC_X264_8BIT
 #define HB_VCODEC_X264_10BIT   0x0020000
 #define HB_VCODEC_X264_MASK    0x0030000
-#define HB_VCODEC_H264_MASK    (HB_VCODEC_X264_MASK|HB_VCODEC_QSV_H264|HB_VCODEC_FFMPEG_VCE_H264|HB_VCODEC_FFMPEG_NVENC_H264|HB_VCODEC_FFMPEG_VT_H264)
+#define HB_VCODEC_H264_MASK    (HB_VCODEC_X264_MASK|HB_VCODEC_QSV_H264|HB_VCODEC_FFMPEG_VCE_H264|HB_VCODEC_FFMPEG_NVENC_H264|HB_VCODEC_FFMPEG_VT_H264|HB_VCODEC_FFMPEG_MF_H264)
 #define HB_VCODEC_X265_8BIT    0x0001000
 #define HB_VCODEC_X265         HB_VCODEC_X265_8BIT
 #define HB_VCODEC_X265_10BIT   0x0002000
 #define HB_VCODEC_X265_12BIT   0x0004000
 #define HB_VCODEC_X265_16BIT   0x0008000
 #define HB_VCODEC_X265_MASK    0x000F000
-#define HB_VCODEC_H265_MASK    (HB_VCODEC_X265_MASK|HB_VCODEC_QSV_H265_MASK|HB_VCODEC_FFMPEG_VCE_H265|HB_VCODEC_FFMPEG_NVENC_H265|HB_VCODEC_FFMPEG_VT_H265)
+#define HB_VCODEC_H265_MASK    (HB_VCODEC_X265_MASK|HB_VCODEC_QSV_H265_MASK|HB_VCODEC_FFMPEG_VCE_H265|HB_VCODEC_FFMPEG_NVENC_H265|HB_VCODEC_FFMPEG_VT_H265|HB_VCODEC_FFMPEG_VT_H265_10BIT|HB_VCODEC_FFMPEG_MF_H265)
 
 /* define an invalid CQ value compatible with all CQ-capable codecs */
 #define HB_INVALID_VIDEO_QUALITY (-1000.)
@@ -624,6 +666,9 @@ struct hb_job_s
 #define HB_COLR_MAT_CD_CL        13 // chromaticity derived constant lum
 #define HB_COLR_MAT_ICTCP        14 // ITU-R BT.2100-0, ICtCp
 // 0, 3-5, 8, 11-65535: reserved/not implemented
+
+    hb_mastering_display_metadata_t mastering;
+    hb_content_light_metadata_t coll;
 
     hb_list_t     * list_chapter;
 
@@ -1045,16 +1090,7 @@ struct hb_coverart_s
 
 struct hb_metadata_s
 {
-    char  *name;
-    char  *artist;          // Actors
-    char  *composer;
-    char  *release_date;
-    char  *comment;
-    char  *album;           // DVD
-    char  *album_artist;    // Director
-    char  *genre;
-    char  *description;
-    char  *long_description;
+    hb_dict_t * dict;
     hb_list_t * list_coverart;
 };
 
@@ -1089,6 +1125,8 @@ struct hb_title_s
     int             color_transfer;
     int             color_matrix;
     int             color_range;
+    hb_mastering_display_metadata_t mastering;
+    hb_content_light_metadata_t     coll;
     hb_rational_t   vrate;
     int             crop[4];
     enum {HB_DVD_DEMUXER, HB_TS_DEMUXER, HB_PS_DEMUXER, HB_NULL_DEMUXER} demuxer;
@@ -1375,11 +1413,11 @@ enum
     HB_FILTER_HQDN3D = HB_FILTER_DENOISE,
     HB_FILTER_NLMEANS,
     HB_FILTER_CHROMA_SMOOTH,
+    HB_FILTER_ROTATE,
     HB_FILTER_RENDER_SUB,
     HB_FILTER_CROP_SCALE,
     HB_FILTER_LAPSHARP,
     HB_FILTER_UNSHARP,
-    HB_FILTER_ROTATE,
     HB_FILTER_GRAYSCALE,
     HB_FILTER_PAD,
     HB_FILTER_COLORSPACE,
@@ -1401,6 +1439,8 @@ hb_filter_object_t * hb_filter_get( int filter_id );
 hb_filter_object_t * hb_filter_init( int filter_id );
 hb_filter_object_t * hb_filter_copy( hb_filter_object_t * filter );
 hb_list_t          * hb_filter_list_copy(const hb_list_t *src);
+hb_dict_t          * hb_filter_dict_find(const hb_value_array_t * list,
+                                         int filter_id);
 hb_filter_object_t * hb_filter_find(const hb_list_t *list, int filter_id);
 void                 hb_filter_close( hb_filter_object_t ** );
 void                 hb_filter_info_close( hb_filter_info_t ** );
@@ -1450,6 +1490,7 @@ int hb_output_color_transfer(hb_job_t * job);
 int hb_output_color_matrix(hb_job_t * job);
 
 int hb_get_bit_depth(int format);
+int hb_get_best_pix_fmt(hb_job_t * job);
 
 #define HB_NEG_FLOAT_REG "(([-])?(([0-9]+([.,][0-9]+)?)|([.,][0-9]+))"
 #define HB_FLOAT_REG     "(([0-9]+([.,][0-9]+)?)|([.,][0-9]+))"

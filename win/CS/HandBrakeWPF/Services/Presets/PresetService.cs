@@ -12,17 +12,17 @@ namespace HandBrakeWPF.Services.Presets
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Collections.Specialized;
     using System.ComponentModel;
     using System.IO;
     using System.Linq;
+    using System.Runtime.InteropServices;
+    using System.Text.Json;
     using System.Windows;
 
     using HandBrake.Interop.Interop;
+    using HandBrake.Interop.Interop.Interfaces.Model;
+    using HandBrake.Interop.Interop.Interfaces.Model.Presets;
     using HandBrake.Interop.Interop.Json.Presets;
-    using HandBrake.Interop.Interop.Model;
-    using HandBrake.Interop.Interop.Model.Encoding;
-    using HandBrake.Interop.Model;
     using HandBrake.Interop.Utilities;
 
     using HandBrakeWPF.Factories;
@@ -35,16 +35,14 @@ namespace HandBrakeWPF.Services.Presets
     using HandBrakeWPF.Services.Presets.Model;
     using HandBrakeWPF.Utilities;
 
-    using Newtonsoft.Json;
-
-    using GeneralApplicationException = HandBrakeWPF.Exceptions.GeneralApplicationException;
-    using SystemInfo = HandBrake.Interop.Utilities.SystemInfo;
+    using GeneralApplicationException = Exceptions.GeneralApplicationException;
+    using VideoEncoder = HandBrakeWPF.Model.Video.VideoEncoder;
 
     public class PresetService : IPresetService
     {
         public const int ForcePresetReset = 3;
         public static string UserPresetCatgoryName = "Custom Presets";
-        private readonly string presetFile = Path.Combine(DirectoryUtilities.GetUserStoragePath(VersionHelper.IsNightly()), "presets.json");
+        private readonly string presetFile = Path.Combine(DirectoryUtilities.GetUserStoragePath(HandBrakeVersionHelper.IsNightly()), "presets.json");
         private readonly ObservableCollection<IPresetObject> presets = new ObservableCollection<IPresetObject>(); // Can store Presets and PresetDisplayCategory objects.
         private readonly Dictionary<string, Preset> flatPresetDict = new Dictionary<string, Preset>();
         private readonly List<Preset> flatPresetList = new List<Preset>();
@@ -158,7 +156,7 @@ namespace HandBrakeWPF.Services.Presets
                     bool containsBuildInPreset = false;
                     foreach (var objectPreset in container.PresetList)
                     {
-                        HBPresetCategory category = JsonConvert.DeserializeObject<HBPresetCategory>(objectPreset.ToString());
+                        HBPresetCategory category = JsonSerializer.Deserialize<HBPresetCategory>(objectPreset.ToString(), JsonSettings.Options);
                         if (category != null && category.ChildrenArray != null && category.ChildrenArray.Count > 0)
                         {
                             foreach (HBPreset hbPreset in category.ChildrenArray)
@@ -178,7 +176,7 @@ namespace HandBrakeWPF.Services.Presets
                         }
                         else
                         {
-                            HBPreset hbPreset = JsonConvert.DeserializeObject<HBPreset>(objectPreset.ToString());
+                            HBPreset hbPreset = JsonSerializer.Deserialize<HBPreset>(objectPreset.ToString(), JsonSettings.Options);
                             if (hbPreset != null)
                             {
                                 Preset preset = this.ConvertHbPreset(hbPreset, null);
@@ -423,6 +421,8 @@ namespace HandBrakeWPF.Services.Presets
             // Clear the current built in Presets and now parse the temporary Presets file.
             this.ClearBuiltIn();
 
+            bool hasUserDefault = this.flatPresetDict.Values.FirstOrDefault(f => f.IsDefault) != null;
+
             IList<HBPresetCategory> presetCategories = HandBrakePresetService.GetBuiltInPresets();
 
             foreach (var category in presetCategories)
@@ -433,7 +433,12 @@ namespace HandBrakeWPF.Services.Presets
                     preset.IsBuildIn = true;
                     preset.Category = category.PresetName;
                     preset.Task.AllowedPassthruOptions = new AllowedPassthru(true); // We don't want to override the built-in preset
-                    preset.IsPresetDisabled = this.IsPresetDisabled(preset);
+                    preset.IsPresetDisabled = this.IsPresetDisabled(preset) || hbpreset.PresetDisabled;
+
+                    if (hbpreset.Default && hasUserDefault)
+                    {
+                        preset.IsDefault = false;
+                    }
 
                     this.Add(preset, true);
                 }
@@ -502,7 +507,7 @@ namespace HandBrakeWPF.Services.Presets
 
         public void SaveCategoryStates()
         {
-            StringCollection expandedPresets = new StringCollection();
+            List<string> expandedPresets = new List<string>();
             foreach (IPresetObject presetObject in this.presets)
             {
                 PresetDisplayCategory category = presetObject as PresetDisplayCategory;
@@ -517,7 +522,7 @@ namespace HandBrakeWPF.Services.Presets
 
         public void LoadCategoryStates()
         {
-            StringCollection expandedPresets = this.userSettingService.GetUserSetting<StringCollection>(UserSettingConstants.PresetExpandedStateList);
+            List<string> expandedPresets = this.userSettingService.GetUserSetting<List<string>>(UserSettingConstants.PresetExpandedStateList);
             if (expandedPresets == null || expandedPresets.Count == 0)
             {
                 return;
@@ -673,7 +678,7 @@ namespace HandBrakeWPF.Services.Presets
             // The presets file loaded was OK, so process it.
             foreach (var item in container.PresetList)
             {
-                object deserialisedItem = JsonConvert.DeserializeObject<HBPresetCategory>(item.ToString());
+                object deserialisedItem = JsonSerializer.Deserialize<HBPresetCategory>(item.ToString(), JsonSettings.Options);
 
                 // Handle Categorised Presets.
                 HBPresetCategory category = deserialisedItem as HBPresetCategory;
@@ -693,13 +698,13 @@ namespace HandBrakeWPF.Services.Presets
                 }
 
                 // Uncategorised Presets
-                deserialisedItem = JsonConvert.DeserializeObject<HBPreset>(item.ToString());
+                deserialisedItem = JsonSerializer.Deserialize<HBPreset>(item.ToString(), JsonSettings.Options);
                 HBPreset hbPreset = deserialisedItem as HBPreset;
                 if (hbPreset != null && !hbPreset.Folder)
                 {
                     Preset preset = JsonPresetFactory.ImportPreset(hbPreset);
                     preset.Category = UserPresetCatgoryName;
-                    preset.IsBuildIn = hbPreset.Type == 1;
+                    preset.IsBuildIn = hbPreset.Type == 0;
                     preset.IsPresetDisabled = this.IsPresetDisabled(preset);
 
                     this.Add(preset, true);
@@ -729,8 +734,6 @@ namespace HandBrakeWPF.Services.Presets
                 this.HandlePresetListsForSave(this.flatPresetList.Where(o => o.IsBuildIn).ToList(), presetCategories, uncategorisedPresets);
 
                 // Wrap the categories in a container. 
-                JsonSerializerSettings settings = new JsonSerializerSettings { MissingMemberHandling = MissingMemberHandling.Ignore };
-
                 PresetVersion presetVersion = HandBrakePresetService.GetCurrentPresetVersion();
                 PresetTransportContainer container = new PresetTransportContainer(presetVersion.Major, presetVersion.Minor, presetVersion.Micro) { PresetList = new List<object>() };
                 container.PresetList.AddRange(presetCategories.Values);
@@ -739,7 +742,7 @@ namespace HandBrakeWPF.Services.Presets
                 // Write the preset container out to file.
                 using (FileStream strm = new FileStream(this.presetFile, FileMode.Create, FileAccess.Write))
                 {
-                    string presetsJson = JsonConvert.SerializeObject(container, Formatting.Indented, settings);
+                    string presetsJson = JsonSerializer.Serialize(container, JsonSettings.Options);
                     using (StreamWriter writer = new StreamWriter(strm))
                     {
                         writer.WriteLine(presetsJson);
@@ -826,41 +829,53 @@ namespace HandBrakeWPF.Services.Presets
 
         private bool IsPresetDisabled(Preset preset)
         {
-            if (preset.Task.VideoEncoder == VideoEncoder.QuickSync && !SystemInfo.IsQsvAvailable)
+            bool isQsvEnabled = this.userSettingService.GetUserSetting<bool>(UserSettingConstants.EnableQuickSyncEncoding);
+            bool isNvencEnabled = this.userSettingService.GetUserSetting<bool>(UserSettingConstants.EnableNvencEncoder);
+            bool isVcnEnabled = this.userSettingService.GetUserSetting<bool>(UserSettingConstants.EnableVceEncoder);
+
+            if (preset.Task.VideoEncoder == VideoEncoder.QuickSync && (!HandBrakeHardwareEncoderHelper.IsQsvAvailable || !isQsvEnabled))
             {
                 return true;
             }
 
-            if (preset.Task.VideoEncoder == VideoEncoder.QuickSyncH265 && !SystemInfo.IsQsvAvailableH265)
+            if (preset.Task.VideoEncoder == VideoEncoder.QuickSyncH265 && (!HandBrakeHardwareEncoderHelper.IsQsvAvailableH265 || !isQsvEnabled))
             {
                 return true;
             }
 
-            if (preset.Task.VideoEncoder == VideoEncoder.QuickSyncH26510b && !SystemInfo.IsQsvAvailableH265)
+            if (preset.Task.VideoEncoder == VideoEncoder.QuickSyncH26510b && (!HandBrakeHardwareEncoderHelper.IsQsvAvailableH265 || !isQsvEnabled))
             {
                 return true;
             }
 
-            if (preset.Task.VideoEncoder == VideoEncoder.VceH264 && !SystemInfo.IsVceH264Available)
+            if (preset.Task.VideoEncoder == VideoEncoder.VceH264 && (!HandBrakeHardwareEncoderHelper.IsVceH264Available || !isVcnEnabled))
             {
                 return true;
             }
 
-            if (preset.Task.VideoEncoder == VideoEncoder.VceH265 && !SystemInfo.IsVceH265Available)
+            if (preset.Task.VideoEncoder == VideoEncoder.VceH265 && (!HandBrakeHardwareEncoderHelper.IsVceH265Available || !isVcnEnabled))
             {
                 return true;
             }
 
-            if (preset.Task.VideoEncoder == VideoEncoder.NvencH264 && !SystemInfo.IsNVEncH264Available)
+            if (preset.Task.VideoEncoder == VideoEncoder.NvencH264 && (!HandBrakeHardwareEncoderHelper.IsNVEncH264Available || !isNvencEnabled))
             {
                 return true;
             }
 
-            if (preset.Task.VideoEncoder == VideoEncoder.NvencH265 && !SystemInfo.IsNVEncH265Available)
+            if (preset.Task.VideoEncoder == VideoEncoder.NvencH265 && (!HandBrakeHardwareEncoderHelper.IsNVEncH265Available || !isNvencEnabled))
             {
                 return true;
             }
-            
+
+            if (preset.Task.VideoEncoder == VideoEncoder.MFH264 || preset.Task.VideoEncoder == VideoEncoder.MFH265)
+            {
+                if (RuntimeInformation.ProcessArchitecture != Architecture.Arm64)
+                {
+                    return true;
+                }
+            }
+
             return false;
         }
 

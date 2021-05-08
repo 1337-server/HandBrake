@@ -1,6 +1,6 @@
 /* test.c
 
-   Copyright (c) 2003-2020 HandBrake Team
+   Copyright (c) 2003-2021 HandBrake Team
    This file is part of the HandBrake source code
    Homepage: <http://handbrake.fr/>.
    It may be used under the terms of the GNU General Public License v2.
@@ -57,6 +57,7 @@
 #define HQDN3D_DEFAULT_PRESET        "medium"
 #define ROTATE_DEFAULT               "angle=180:hflip=0"
 #define DEBLOCK_DEFAULT_PRESET       "medium"
+#define COLORSPACE_DEFAULT_PRESET    "bt709"
 
 /* Options */
 static int     debug               = HB_DEBUG_ALL;
@@ -75,6 +76,9 @@ static int     native_dub          = 0;
 static int     twoPass             = -1;
 static int     pad_disable         = 0;
 static char *  pad                 = NULL;
+static int     colorspace_disable  = 0;
+static int     colorspace_custom   = 0;
+static char *  colorspace          = NULL;
 static int     deinterlace_disable = 0;
 static int     deinterlace_custom  = 0;
 static char *  deinterlace         = NULL;
@@ -195,6 +199,7 @@ static int      stop_at_frame = 0;
 static uint64_t min_title_duration = 10;
 #if HB_PROJECT_FEATURE_QSV
 static int      qsv_async_depth    = -1;
+static int      qsv_adapter        = -1;
 static int      qsv_decode         = -1;
 #endif
 
@@ -1230,6 +1235,7 @@ static void showFilterDefault(FILE* const out, int filter_id)
         case HB_FILTER_DEINTERLACE:
         case HB_FILTER_NLMEANS:
         case HB_FILTER_CHROMA_SMOOTH:
+        case HB_FILTER_COLORSPACE:
         case HB_FILTER_UNSHARP:
         case HB_FILTER_LAPSHARP:
         case HB_FILTER_DECOMB:
@@ -1793,6 +1799,10 @@ static void ShowHelp()
 "                           The position of image in pad may also be set.\n");
     showFilterKeys(out, HB_FILTER_PAD);
     fprintf( out,
+"   --colorspace <string>   Convert colorspace, transfer characteristics or color primaries.\n");
+    showFilterPresets(out, HB_FILTER_COLORSPACE);
+    showFilterKeys(out, HB_FILTER_COLORSPACE);
+    fprintf( out,
 "   -g, --grayscale         Grayscale encoding\n"
 "   --no-grayscale          Disable preset 'grayscale'\n"
 "\n"
@@ -1929,8 +1939,15 @@ if (hb_qsv_available())
 "                           explicitly synchronized.\n"
 "                           Omit 'number' for zero.\n"
 "                           (default: 4)\n"
+    );
+#if defined(_WIN32) || defined(__MINGW32__)
+    fprintf( out,
+"   --qsv-adapter[=index]\n"
+"                           Set QSV hardware graphics adapter index\n"
+"                           (default: QSV hardware graphics adapter with highest hardware generation)\n"
 "\n"
     );
+#endif
 }
 #endif
 }
@@ -2137,35 +2154,36 @@ static int ParseOptions( int argc, char ** argv )
     #define AUDIO_DITHER         294
     #define QSV_BASELINE         295
     #define QSV_ASYNC_DEPTH      296
-    #define QSV_IMPLEMENTATION   297
-    #define FILTER_NLMEANS       298
-    #define FILTER_NLMEANS_TUNE  299
-    #define AUDIO_LANG_LIST      300
-    #define SUBTITLE_LANG_LIST   301
-    #define PRESET_EXPORT        302
-    #define PRESET_EXPORT_DESC   303
-    #define PRESET_EXPORT_FILE   304
-    #define PRESET_IMPORT        305
-    #define PRESET_IMPORT_GUI    306
-    #define VERSION              307
-    #define DESCRIBE             308
-    #define PAD                  309
-    #define FILTER_COMB_DETECT   310
-    #define QUEUE_IMPORT         311
-    #define FILTER_UNSHARP       312
-    #define FILTER_UNSHARP_TUNE  313
-    #define FILTER_LAPSHARP      314
-    #define FILTER_LAPSHARP_TUNE 315
-    #define JSON_LOGGING         316
-    #define SSA_FILE             317
-    #define SSA_OFFSET           318
-    #define SSA_LANG             319
-    #define SSA_DEFAULT          320
-    #define SSA_BURN             321
-    #define FILTER_CHROMA_SMOOTH      322
-    #define FILTER_CHROMA_SMOOTH_TUNE 323
-    #define FILTER_DEBLOCK_TUNE  324
-
+    #define QSV_ADAPTER          297
+    #define QSV_IMPLEMENTATION   298
+    #define FILTER_NLMEANS       299
+    #define FILTER_NLMEANS_TUNE  300
+    #define AUDIO_LANG_LIST      301
+    #define SUBTITLE_LANG_LIST   302
+    #define PRESET_EXPORT        303
+    #define PRESET_EXPORT_DESC   304
+    #define PRESET_EXPORT_FILE   305
+    #define PRESET_IMPORT        306
+    #define PRESET_IMPORT_GUI    307
+    #define VERSION              308
+    #define DESCRIBE             309
+    #define PAD                  310
+    #define FILTER_COMB_DETECT   311
+    #define QUEUE_IMPORT         312
+    #define FILTER_UNSHARP       313
+    #define FILTER_UNSHARP_TUNE  314
+    #define FILTER_LAPSHARP      315
+    #define FILTER_LAPSHARP_TUNE 316
+    #define JSON_LOGGING         317
+    #define SSA_FILE             318
+    #define SSA_OFFSET           319
+    #define SSA_LANG             320
+    #define SSA_DEFAULT          321
+    #define SSA_BURN             322
+    #define FILTER_CHROMA_SMOOTH      323
+    #define FILTER_CHROMA_SMOOTH_TUNE 324
+    #define FILTER_DEBLOCK_TUNE  325
+    #define FILTER_COLORSPACE    326
     for( ;; )
     {
         static struct option long_options[] =
@@ -2179,6 +2197,7 @@ static int ParseOptions( int argc, char ** argv )
 #if HB_PROJECT_FEATURE_QSV
             { "qsv-baseline",         no_argument,       NULL,        QSV_BASELINE,       },
             { "qsv-async-depth",      required_argument, NULL,        QSV_ASYNC_DEPTH,    },
+            { "qsv-adapter",          required_argument, NULL,        QSV_ADAPTER         },
             { "qsv-implementation",   required_argument, NULL,        QSV_IMPLEMENTATION, },
             { "disable-qsv-decoding", no_argument,       &qsv_decode, 0,                  },
             { "enable-qsv-decoding",  no_argument,       &qsv_decode, 1,                  },
@@ -2284,6 +2303,8 @@ static int ParseOptions( int argc, char ** argv )
             { "no-loose-crop", no_argument,     &loose_crop, 0 },
             { "pad",         required_argument, NULL,            PAD },
             { "no-pad",      no_argument,       &pad_disable,    1 },
+            { "colorspace",    required_argument, NULL,    FILTER_COLORSPACE},
+            { "no-colorspace", no_argument,       &colorspace_disable, 1 },
 
             // mapping of legacy option names for backwards compatibility
             { "qsv-preset",           required_argument, NULL, ENCODER_PRESET,       },
@@ -2734,6 +2755,17 @@ static int ParseOptions( int argc, char ** argv )
                 free(nlmeans_tune);
                 nlmeans_tune = strdup(optarg);
                 break;
+            case FILTER_COLORSPACE:
+                free(colorspace);
+                if (optarg != NULL)
+                {
+                    colorspace = strdup(optarg);
+                }
+                else
+                {
+                    colorspace = strdup(COLORSPACE_DEFAULT_PRESET);
+                }
+                break;
             case FILTER_CHROMA_SMOOTH:
                 free(chroma_smooth);
                 if (optarg != NULL)
@@ -3085,6 +3117,9 @@ static int ParseOptions( int argc, char ** argv )
             case QSV_ASYNC_DEPTH:
                 qsv_async_depth = atoi(optarg);
                 break;
+            case QSV_ADAPTER:
+                qsv_adapter = atoi(optarg);
+                break;
             case QSV_IMPLEMENTATION:
                 hb_qsv_impl_set_preferred(optarg);
                 break;
@@ -3165,6 +3200,31 @@ static int ParseOptions( int argc, char ** argv )
         else if (hb_validate_filter_string(HB_FILTER_PAD, pad))
         {
             fprintf(stderr, "Invalid pad option %s\n", pad);
+            return -1;
+        }
+    }
+
+    if (colorspace != NULL)
+    {
+        if (colorspace_disable)
+        {
+            fprintf(stderr,
+                    "Incompatible options --colorspace and --no-colorspace\n");
+            return -1;
+        }
+        if (!hb_validate_filter_preset(HB_FILTER_COLORSPACE, colorspace, NULL, NULL))
+        {
+            // Nothing to do, but must validate preset before
+            // attempting to validate custom settings to prevent potential
+            // false positive
+        }
+        else if (!hb_validate_filter_string(HB_FILTER_COLORSPACE, colorspace))
+        {
+            colorspace_custom = 1;
+        }
+        else
+        {
+            fprintf(stderr, "Invalid colorspace option %s\n", colorspace);
             return -1;
         }
     }
@@ -4164,6 +4224,11 @@ static hb_dict_t * PreparePreset(const char *preset_name)
         hb_dict_set(preset, "VideoQSVAsyncDepth",
                         hb_value_int(qsv_async_depth));
     }
+    if (qsv_adapter >= 0)
+    {
+        hb_dict_set(preset, "VideoQSVAdapterIndex",
+                        hb_value_int(qsv_adapter));
+    }
     if (qsv_decode != -1)
     {
         hb_dict_set(preset, "VideoQSVDecode", hb_value_int(qsv_decode));
@@ -4471,6 +4536,26 @@ static hb_dict_t * PreparePreset(const char *preset_name)
     if (pad != NULL)
     {
         hb_dict_set(preset, "PicturePad", hb_value_string(pad));
+    }
+    if (colorspace_disable)
+    {
+        hb_dict_set(preset, "PictureColorspacePreset", hb_value_string("off"));
+    }
+    if (colorspace != NULL)
+    {
+        hb_dict_set(preset, "PictureColorspacePreset", hb_value_string(colorspace));
+        if (!colorspace_custom)
+        {
+            hb_dict_set(preset, "PictureColorspacePreset",
+                        hb_value_string(colorspace));
+        }
+        else
+        {
+            hb_dict_set(preset, "PictureColorspacePreset",
+                        hb_value_string("custom"));
+            hb_dict_set(preset, "PictureColorspaceCustom",
+                        hb_value_string(colorspace));
+        }
     }
 
     return preset;

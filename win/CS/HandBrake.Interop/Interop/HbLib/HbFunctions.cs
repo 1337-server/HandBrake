@@ -60,6 +60,9 @@ namespace HandBrake.Interop.Interop.HbLib
         [DllImport("hb", EntryPoint = "hb_set_anamorphic_size2", CallingConvention = CallingConvention.Cdecl)]
         public static extern void hb_set_anamorphic_size2(ref hb_geometry_s sourceGeometry, ref hb_geometry_settings_s uiGeometry, ref hb_geometry_s result);
 
+        [DllImport("hb", EntryPoint = "hb_rotate_geometry", CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr hb_rotate_geometry(ref hb_geometry_crop_s geo, ref hb_geometry_crop_s result, int angle, int hflip);
+
         [DllImport("hb", EntryPoint = "hb_count", CallingConvention = CallingConvention.Cdecl)]
         public static extern int hb_count(IntPtr hbHandle);
 
@@ -248,11 +251,9 @@ namespace HandBrake.Interop.Interop.HbLib
         [DllImport("hb", EntryPoint = "hb_nvenc_h265_available", CallingConvention = CallingConvention.Cdecl)]
         public static extern int hb_nvenc_h265_available();
 
-        [DllImport("hb", EntryPoint = "hb_get_preview2", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr hb_get_preview2(IntPtr hbHandle, int title_idx, int preview_idx, ref hb_geometry_settings_s geo, int deinterlace);
-
         [DllImport("hb", EntryPoint = "hb_image_close", CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr hb_image_close(IntPtr image);
+
 
         /* JSON API */
 
@@ -305,10 +306,20 @@ namespace HandBrake.Interop.Interop.HbLib
         [DllImport("hb", EntryPoint = "hb_get_cpu_platform", CallingConvention = CallingConvention.Cdecl)]
         public static extern int hb_get_cpu_platform();
 
-        [DllImport("hb", EntryPoint = "qsv_hardware_generation", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int qsv_hardware_generation(int cpu_platform);
+        [DllImport("hb", EntryPoint = "hb_qsv_get_platform", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int hb_qsv_get_platform(int adapter_index);
+
+        [DllImport("hb", EntryPoint = "hb_qsv_hardware_generation", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int hb_qsv_hardware_generation(int cpu_platform);
+
+        [DllImport("hb", EntryPoint = "hb_qsv_get_adapter_index", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int hb_qsv_get_adapter_index();
 
         [DllImport("hb", EntryPoint = "hb_qsv_adapters_list", CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr hb_qsv_adapters_list();
+        
+        // hb_get_preview3(hb_handle_t* h, int picture, const char * job_dict)
+        [DllImport("hb", EntryPoint = "hb_get_preview3_json", CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr hb_get_preview3_json(IntPtr hbHandle, int preview_idx, [In][MarshalAs(UnmanagedType.LPStr)] string job_dict);
     }
 }

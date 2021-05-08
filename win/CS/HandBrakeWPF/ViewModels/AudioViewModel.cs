@@ -17,7 +17,7 @@ namespace HandBrakeWPF.ViewModels
     using Caliburn.Micro;
 
     using HandBrake.Interop.Interop;
-    using HandBrake.Interop.Interop.Model.Encoding;
+    using HandBrake.Interop.Interop.Interfaces.Model.Encoders;
     using HandBrake.Interop.Utilities;
 
     using HandBrakeWPF.EventArgs;
@@ -224,7 +224,7 @@ namespace HandBrakeWPF.ViewModels
         /// </summary>
         public void ShowAudioDefaults()
         {
-            if (this.windowManager.ShowDialog(this.AudioDefaultsViewModel) == true)
+            if (this.windowManager.ShowDialogAsync(this.AudioDefaultsViewModel).Result == true)
             {
                 this.OnTabStatusChanged(null);
             }

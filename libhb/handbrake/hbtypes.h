@@ -1,6 +1,6 @@
 /* hbtypes.h
 
-   Copyright (c) 2003-2020 HandBrake Team
+   Copyright (c) 2003-2021 HandBrake Team
    This file is part of the HandBrake source code
    Homepage: <http://handbrake.fr/>.
    It may be used under the terms of the GNU General Public License v2.
@@ -20,6 +20,7 @@ typedef struct hb_encoder_s hb_encoder_t;
 typedef struct hb_container_s hb_container_t;
 typedef struct hb_rational_s hb_rational_t;
 typedef struct hb_geometry_s hb_geometry_t;
+typedef struct hb_geometry_crop_s hb_geometry_crop_t;
 typedef struct hb_geometry_settings_s hb_geometry_settings_t;
 typedef struct hb_image_s hb_image_t;
 typedef struct hb_job_s  hb_job_t;
@@ -43,5 +44,7 @@ typedef struct hb_buffer_settings_s hb_buffer_settings_t;
 typedef struct hb_image_format_s hb_image_format_t;
 typedef struct hb_fifo_s hb_fifo_t;
 typedef struct hb_lock_s hb_lock_t;
+typedef struct hb_mastering_display_metadata_s hb_mastering_display_metadata_t;
+typedef struct hb_content_light_metadata_s hb_content_light_metadata_t;
 
 #endif // HANDBRAKE_TYPES_H

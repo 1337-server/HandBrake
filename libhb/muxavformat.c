@@ -1,6 +1,6 @@
 /* muxavformat.c
 
-   Copyright (c) 2003-2020 HandBrake Team
+   Copyright (c) 2003-2021 HandBrake Team
    This file is part of the HandBrake source code
    Homepage: <http://handbrake.fr/>.
    It may be used under the terms of the GNU General Public License v2.
@@ -47,6 +47,8 @@ struct hb_mux_object_s
 
     AVFormatContext   * oc;
     AVRational          time_base;
+    AVPacket          * pkt;
+    AVPacket          * empty_pkt;
 
     int                 ntracks;
     hb_mux_data_t    ** tracks;
@@ -54,40 +56,59 @@ struct hb_mux_object_s
 
 enum
 {
-    META_TITLE,
-    META_ARTIST,
-    META_DIRECTOR,
-    META_COMPOSER,
-    META_RELEASE_DATE,
-    META_COMMENT,
-    META_ALBUM,
-    META_GENRE,
-    META_DESCRIPTION,
-    META_SYNOPSIS,
-    META_LAST
-};
-
-enum
-{
+    META_HB,
     META_MUX_MP4,
     META_MUX_MKV,
     META_MUX_WEBM,
     META_MUX_LAST
 };
 
-const char *metadata_keys[META_LAST][META_MUX_LAST] =
+const char *metadata_keys[][META_MUX_LAST] =
 {
-    {"title",        "TITLE"},
-    {"artist",       "ARTIST"},
-    {"album_artist", "DIRECTOR"},
-    {"composer",     "COMPOSER"},
-    {"date",         "DATE_RELEASED"},
-    {"comment",      "SUMMARY"},
-    {"album",        NULL},
-    {"genre",        "GENRE"},
-    {"description",  "DESCRIPTION"},
-    {"synopsis",     "SYNOPSIS"}
+    {"Name",            "title",        "TITLE"},
+    {"Artist",          "artist",       "ARTIST"},
+    {"AlbumArtist",     "album_artist", "DIRECTOR"},
+    {"Composer",        "composer",     "COMPOSER"},
+    {"ReleaseDate",     "date",         "DATE_RELEASED"},
+    {"Comment",         "comment",      "SUMMARY"},
+    {"Album",           "album",        NULL},
+    {"Genre",           "genre",        "GENRE"},
+    {"Description",     "description",  "DESCRIPTION"},
+    {"LongDescription", "synopsis",     "SYNOPSIS"},
+    {NULL}
 };
+
+static const char * lookup_meta_mux_key(int meta_mux, const char * hb_key)
+{
+    int ii;
+
+    for (ii = 0; metadata_keys[ii][META_HB] != NULL; ii++)
+    {
+        if (!strcmp(hb_key, metadata_keys[ii][META_HB]))
+        {
+            return metadata_keys[ii][meta_mux];
+        }
+    }
+    return NULL;
+}
+
+const char * hb_lookup_meta_key(const char * mux_key)
+{
+    int ii, jj;
+
+    for (ii = 0; metadata_keys[ii][META_HB] != NULL; ii++)
+    {
+        for (jj = 0; jj < META_MUX_LAST; jj++)
+        {
+            if (metadata_keys[ii][jj] != NULL &&
+                !strcmp(mux_key, metadata_keys[ii][jj]))
+            {
+                return metadata_keys[ii][META_HB];
+            }
+        }
+    }
+    return NULL;
+}
 
 static char* lookup_lang_code(int mux, char *iso639_2)
 {
@@ -136,6 +157,16 @@ static int avformatInit( hb_mux_object_t * m )
     uint8_t         need_fonts = 0;
     char *lang;
 
+    m->pkt = av_packet_alloc();
+    m->empty_pkt = av_packet_alloc();
+
+    m->pkt = av_packet_alloc();
+    if (m->pkt == NULL || m->empty_pkt == NULL)
+    {
+        hb_error("muxavformat: av_packet_alloc failed");
+        goto error;
+    }
+
     max_tracks = 1 + hb_list_count( job->list_audio ) +
                      hb_list_count( job->list_subtitle );
     m->tracks = calloc(max_tracks, sizeof(hb_mux_data_t*));
@@ -154,9 +185,9 @@ static int avformatInit( hb_mux_object_t * m )
 
             av_dict_set(&av_opts, "brand", "mp42", 0);
             if (job->mp4_optimize)
-                av_dict_set(&av_opts, "movflags", "faststart+disable_chpl", 0);
+                av_dict_set(&av_opts, "movflags", "faststart+disable_chpl+write_colr", 0);
             else
-                av_dict_set(&av_opts, "movflags", "+disable_chpl", 0);
+                av_dict_set(&av_opts, "movflags", "+disable_chpl+write_colr", 0);
             break;
 
         case HB_MUX_AV_MKV:
@@ -166,6 +197,7 @@ static int avformatInit( hb_mux_object_t * m )
             m->time_base.den = 1000;
             muxer_name = "matroska";
             meta_mux = META_MUX_MKV;
+            av_dict_set(&av_opts, "default_mode", "passthrough", 0);
             break;
 
         case HB_MUX_AV_WEBM:
@@ -175,6 +207,7 @@ static int avformatInit( hb_mux_object_t * m )
             m->time_base.den = 1000;
             muxer_name = "webm";
             meta_mux = META_MUX_WEBM;
+            av_dict_set(&av_opts, "default_mode", "passthrough", 0);
             break;
 
         default:
@@ -195,8 +228,13 @@ static int avformatInit( hb_mux_object_t * m )
                      &m->oc->interrupt_callback, NULL);
     if( ret < 0 )
     {
+      if( ret == -2 ) 
+      {
+        hb_error( "avio_open2 failed, errno -2: Could not write to indicated output file. Please check destination path and file permissions" );
+      }
+      else
         hb_error( "avio_open2 failed, errno %d", ret);
-        goto error;
+      goto error;
     }
 
     /* Video track */
@@ -268,6 +306,7 @@ static int avformatInit( hb_mux_object_t * m )
         case HB_VCODEC_FFMPEG_VCE_H264:
         case HB_VCODEC_FFMPEG_NVENC_H264:
         case HB_VCODEC_FFMPEG_VT_H264:
+        case HB_VCODEC_FFMPEG_MF_H264:
             track->st->codecpar->codec_id = AV_CODEC_ID_H264;
             if (job->mux == HB_MUX_AV_MP4 && job->inline_parameter_sets)
             {
@@ -404,6 +443,8 @@ static int avformatInit( hb_mux_object_t * m )
         case HB_VCODEC_FFMPEG_VCE_H265:
         case HB_VCODEC_FFMPEG_NVENC_H265:
         case HB_VCODEC_FFMPEG_VT_H265:
+        case HB_VCODEC_FFMPEG_VT_H265_10BIT:
+        case HB_VCODEC_FFMPEG_MF_H265:
             track->st->codecpar->codec_id  = AV_CODEC_ID_HEVC;
             if (job->mux == HB_MUX_AV_MP4 && job->inline_parameter_sets)
             {
@@ -442,6 +483,42 @@ static int avformatInit( hb_mux_object_t * m )
     track->st->codecpar->width                   = job->width;
     track->st->codecpar->height                  = job->height;
     track->st->disposition |= AV_DISPOSITION_DEFAULT;
+
+    track->st->codecpar->color_primaries = job->color_prim;
+    track->st->codecpar->color_trc       = job->color_transfer;
+    track->st->codecpar->color_space     = job->color_matrix;
+    track->st->codecpar->color_range     = job->color_range;
+
+    if (job->color_transfer == HB_COLR_TRA_SMPTEST2084)
+    {
+        if (job->mastering.has_primaries || job->mastering.has_luminance)
+        {
+            AVMasteringDisplayMetadata mastering = hb_mastering_hb_to_ff(job->mastering);
+
+            uint8_t *mastering_data = av_malloc(sizeof(AVMasteringDisplayMetadata));
+            memcpy(mastering_data, &mastering, sizeof(AVMasteringDisplayMetadata));
+
+            av_stream_add_side_data(track->st,
+                                    AV_PKT_DATA_MASTERING_DISPLAY_METADATA,
+                                    mastering_data,
+                                    sizeof(AVMasteringDisplayMetadata));
+        }
+
+        if (job->coll.max_cll && job->coll.max_fall)
+        {
+            AVContentLightMetadata coll;
+            coll.MaxCLL = job->coll.max_cll;
+            coll.MaxFALL = job->coll.max_fall;
+
+            uint8_t *coll_data = av_malloc(sizeof(AVContentLightMetadata));
+            memcpy(coll_data, &coll, sizeof(AVContentLightMetadata));
+
+            av_stream_add_side_data(track->st,
+                                    AV_PKT_DATA_CONTENT_LIGHT_LEVEL,
+                                    coll_data,
+                                    sizeof(AVContentLightMetadata));
+        }
+    }
 
     hb_rational_t vrate = job->vrate;
 
@@ -626,7 +703,7 @@ static int avformatInit( hb_mux_object_t * m )
                     ret = av_bsf_alloc(bsf, &ctx);
                     if (ret < 0)
                     {
-                        hb_error("AAC bistream filter: alloc failure");
+                        hb_error("AAC bitstream filter: alloc failure");
                         goto error;
                     }
                     ctx->time_base_in.num = 1;
@@ -650,7 +727,7 @@ static int avformatInit( hb_mux_object_t * m )
             ret = av_bsf_init(track->bitstream_context);
             if (ret < 0)
             {
-                hb_error("bistream filter: init failure");
+                hb_error("bitstream filter: init failure");
                 goto error;
             }
         }
@@ -1031,75 +1108,31 @@ static int avformatInit( hb_mux_object_t * m )
         }
     }
 
-    if( job->metadata )
+    if( job->metadata && job->metadata->dict )
     {
-        hb_metadata_t *md = job->metadata;
-
         hb_deep_log(2, "Writing Metadata to output file...");
-        if (md->name &&
-            metadata_keys[META_TITLE][meta_mux] != NULL)
+        hb_dict_iter_t iter = hb_dict_iter_init(job->metadata->dict);
+
+        while (iter != HB_DICT_ITER_DONE)
         {
-            av_dict_set(&m->oc->metadata,
-                        metadata_keys[META_TITLE][meta_mux], md->name, 0);
-        }
-        if (md->artist &&
-            metadata_keys[META_ARTIST][meta_mux] != NULL)
-        {
-            av_dict_set(&m->oc->metadata,
-                        metadata_keys[META_ARTIST][meta_mux], md->artist, 0);
-        }
-        if (md->album_artist &&
-            metadata_keys[META_DIRECTOR][meta_mux] != NULL)
-        {
-            av_dict_set(&m->oc->metadata,
-                        metadata_keys[META_DIRECTOR][meta_mux],
-                        md->album_artist, 0);
-        }
-        if (md->composer &&
-            metadata_keys[META_COMPOSER][meta_mux] != NULL)
-        {
-            av_dict_set(&m->oc->metadata,
-                        metadata_keys[META_COMPOSER][meta_mux],
-                        md->composer, 0);
-        }
-        if (md->release_date &&
-            metadata_keys[META_RELEASE_DATE][meta_mux] != NULL)
-        {
-            av_dict_set(&m->oc->metadata,
-                        metadata_keys[META_RELEASE_DATE][meta_mux],
-                        md->release_date, 0);
-        }
-        if (md->comment &&
-            metadata_keys[META_COMMENT][meta_mux] != NULL)
-        {
-            av_dict_set(&m->oc->metadata,
-                        metadata_keys[META_COMMENT][meta_mux], md->comment, 0);
-        }
-        if (!md->name && md->album &&
-            metadata_keys[META_ALBUM][meta_mux] != NULL)
-        {
-            av_dict_set(&m->oc->metadata,
-                        metadata_keys[META_ALBUM][meta_mux], md->album, 0);
-        }
-        if (md->genre &&
-            metadata_keys[META_GENRE][meta_mux] != NULL)
-        {
-            av_dict_set(&m->oc->metadata,
-                        metadata_keys[META_GENRE][meta_mux], md->genre, 0);
-        }
-        if (md->description &&
-            metadata_keys[META_DESCRIPTION][meta_mux] != NULL)
-        {
-            av_dict_set(&m->oc->metadata,
-                        metadata_keys[META_DESCRIPTION][meta_mux],
-                        md->description, 0);
-        }
-        if (md->long_description &&
-            metadata_keys[META_SYNOPSIS][meta_mux] != NULL)
-        {
-            av_dict_set(&m->oc->metadata,
-                        metadata_keys[META_SYNOPSIS][meta_mux],
-                        md->long_description, 0);
+            const char * key;
+            hb_value_t * val;
+
+            hb_dict_iter_next_ex(job->metadata->dict, &iter, &key, &val);
+            if (key != NULL && val != NULL)
+            {
+                const char * str = hb_value_get_string(val);
+
+                if (str != NULL)
+                {
+                    const char * mux_key = lookup_meta_mux_key(meta_mux, key);
+
+                    if (mux_key != NULL)
+                    {
+                        av_dict_set(&m->oc->metadata, mux_key, str, 0);
+                    }
+                }
+            }
         }
     }
 
@@ -1179,7 +1212,6 @@ static int add_chapter(hb_mux_object_t *m, int64_t start, int64_t end, char * ti
 
 static int avformatMux(hb_mux_object_t *m, hb_mux_data_t *track, hb_buffer_t *buf)
 {
-    AVPacket   pkt;
     int64_t    dts, pts, duration = AV_NOPTS_VALUE;
     hb_job_t * job     = m->job;
     uint8_t  * sub_out = NULL;
@@ -1202,17 +1234,16 @@ static int avformatMux(hb_mux_object_t *m, hb_mux_data_t *track, hb_buffer_t *bu
             // subtitle that was written
             if (track->duration > 0)
             {
-                AVPacket empty_pkt;
                 uint8_t empty[2] = {0,0};
 
-                av_init_packet(&empty_pkt);
-                empty_pkt.data = empty;
-                empty_pkt.size = 2;
-                empty_pkt.dts = track->duration;
-                empty_pkt.pts = track->duration;
-                empty_pkt.duration = 90;
-                empty_pkt.stream_index = track->st->index;
-                av_interleaved_write_frame(m->oc, &empty_pkt);
+                m->empty_pkt->data = empty;
+                m->empty_pkt->size = 2;
+                m->empty_pkt->dts = track->duration;
+                m->empty_pkt->pts = track->duration;
+                m->empty_pkt->duration = 90;
+                m->empty_pkt->stream_index = track->st->index;
+                av_interleaved_write_frame(m->oc, m->empty_pkt);
+                av_packet_unref(m->empty_pkt);
             }
         }
         return 0;
@@ -1285,30 +1316,29 @@ static int avformatMux(hb_mux_object_t *m, hb_mux_data_t *track, hb_buffer_t *bu
         }
     }
 
-    av_init_packet(&pkt);
-    pkt.data = buf->data;
-    pkt.size = buf->size;
-    pkt.dts = dts;
-    pkt.pts = pts;
-    pkt.duration = duration;
+    m->pkt->data = buf->data;
+    m->pkt->size = buf->size;
+    m->pkt->dts = dts;
+    m->pkt->pts = pts;
+    m->pkt->duration = duration;
 
     if (track->type == MUX_TYPE_VIDEO)
     {
         if ((buf->s.frametype == HB_FRAME_IDR) ||
             (buf->s.flags & HB_FLAG_FRAMETYPE_KEY))
         {
-            pkt.flags |= AV_PKT_FLAG_KEY;
+            m->pkt->flags |= AV_PKT_FLAG_KEY;
         }
 #ifdef AV_PKT_FLAG_DISPOSABLE
         if (!(buf->s.flags & HB_FLAG_FRAMETYPE_REF))
         {
-            pkt.flags |= AV_PKT_FLAG_DISPOSABLE;
+            m->pkt->flags |= AV_PKT_FLAG_DISPOSABLE;
         }
 #endif
     }
     else if (buf->s.frametype & HB_FRAME_MASK_KEY)
     {
-        pkt.flags |= AV_PKT_FLAG_KEY;
+        m->pkt->flags |= AV_PKT_FLAG_KEY;
     }
 
     switch (track->type)
@@ -1332,7 +1362,7 @@ static int avformatMux(hb_mux_object_t *m, hb_mux_data_t *track, hb_buffer_t *bu
                     // make sure we're not writing a chapter that has 0 length
                     if (chapter != NULL &&
                         track->prev_chapter_tc != AV_NOPTS_VALUE &&
-                        track->prev_chapter_tc < pkt.pts)
+                        track->prev_chapter_tc < m->pkt->pts)
                     {
                         char title[1024];
                         if (chapter->title != NULL)
@@ -1344,11 +1374,11 @@ static int avformatMux(hb_mux_object_t *m, hb_mux_data_t *track, hb_buffer_t *bu
                             snprintf(title, 1023, "Chapter %d",
                                      track->current_chapter);
                         }
-                        add_chapter(m, track->prev_chapter_tc, pkt.pts, title);
+                        add_chapter(m, track->prev_chapter_tc, m->pkt->pts, title);
                     }
                 }
                 track->current_chapter = buf->s.new_chap;
-                track->prev_chapter_tc = pkt.pts;
+                track->prev_chapter_tc = m->pkt->pts;
             }
         } break;
 
@@ -1359,17 +1389,16 @@ static int avformatMux(hb_mux_object_t *m, hb_mux_data_t *track, hb_buffer_t *bu
                 /* Write an empty sample */
                 if ( track->duration < pts )
                 {
-                    AVPacket empty_pkt;
                     uint8_t empty[2] = {0,0};
 
-                    av_init_packet(&empty_pkt);
-                    empty_pkt.data = empty;
-                    empty_pkt.size = 2;
-                    empty_pkt.dts = track->duration;
-                    empty_pkt.pts = track->duration;
-                    empty_pkt.duration = pts - track->duration;
-                    empty_pkt.stream_index = track->st->index;
-                    int ret = av_interleaved_write_frame(m->oc, &empty_pkt);
+                    m->empty_pkt->data = empty;
+                    m->empty_pkt->size = 2;
+                    m->empty_pkt->dts = track->duration;
+                    m->empty_pkt->pts = track->duration;
+                    m->empty_pkt->duration = pts - track->duration;
+                    m->empty_pkt->stream_index = track->st->index;
+                    int ret = av_interleaved_write_frame(m->oc, m->empty_pkt);
+                    av_packet_unref(m->empty_pkt);
                     if (ret < 0)
                     {
                         char errstr[64];
@@ -1410,14 +1439,14 @@ static int avformatMux(hb_mux_object_t *m, hb_mux_data_t *track, hb_buffer_t *bu
                         memcpy(sub_out + 2 + buffersize, styleatom, stylesize);
                         sub_out[0] = (buffersize >> 8) & 0xff;
                         sub_out[1] = buffersize & 0xff;
-                        pkt.data = sub_out;
-                        pkt.size = buffersize + stylesize + 2;
+                        m->pkt->data = sub_out;
+                        m->pkt->size = buffersize + stylesize + 2;
                     }
                     free(buffer);
                     free(styleatom);
                 }
             }
-            if (pkt.data == NULL)
+            if (m->pkt->data == NULL)
             {
                 // Memory allocation failure!
                 hb_error("avformatMux: subtitle memory allocation failure");
@@ -1430,19 +1459,19 @@ static int avformatMux(hb_mux_object_t *m, hb_mux_data_t *track, hb_buffer_t *bu
         default:
             break;
     }
-    track->duration = pts + pkt.duration;
+    track->duration = pts + m->pkt->duration;
 
     if (track->bitstream_context)
     {
         int ret;
-        ret = av_bsf_send_packet(track->bitstream_context, &pkt);
+        ret = av_bsf_send_packet(track->bitstream_context, m->pkt);
         if (ret < 0)
         {
             hb_error("avformatMux: track %d av_bsf_send_packet failed",
                      track->st->index);
             return ret;
         }
-        ret = av_bsf_receive_packet(track->bitstream_context, &pkt);
+        ret = av_bsf_receive_packet(track->bitstream_context, m->pkt);
         if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF)
         {
             return 0;
@@ -1455,8 +1484,9 @@ static int avformatMux(hb_mux_object_t *m, hb_mux_data_t *track, hb_buffer_t *bu
         }
     }
 
-    pkt.stream_index = track->st->index;
-    int ret = av_interleaved_write_frame(m->oc, &pkt);
+    m->pkt->stream_index = track->st->index;
+    int ret = av_interleaved_write_frame(m->oc, m->pkt);
+    av_packet_unref(m->pkt);
     if (sub_out != NULL)
     {
         free(sub_out);
@@ -1572,6 +1602,8 @@ static int avformatEnd(hb_mux_object_t *m)
     av_write_trailer(m->oc);
     avio_close(m->oc->pb);
     avformat_free_context(m->oc);
+    av_packet_free(&m->pkt);
+    av_packet_free(&m->empty_pkt);
     free(m->tracks);
     m->oc = NULL;
 

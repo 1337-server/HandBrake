@@ -1,6 +1,6 @@
 /* fifo.c
 
-   Copyright (c) 2003-2020 HandBrake Team
+   Copyright (c) 2003-2021 HandBrake Team
    This file is part of the HandBrake source code
    Homepage: <http://handbrake.fr/>.
    It may be used under the terms of the GNU General Public License v2.
@@ -870,6 +870,9 @@ hb_image_t * hb_buffer_to_image(hb_buffer_t *buf)
     image->format = buf->f.fmt;
     image->width = buf->f.width;
     image->height = buf->f.height;
+    image->color_prim     = buf->f.color_prim;
+    image->color_transfer = buf->f.color_transfer;
+    image->color_matrix   = buf->f.color_matrix;
     memcpy(image->data, buf->data, buf->size);
 
     int p;

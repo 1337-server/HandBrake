@@ -18,7 +18,7 @@ namespace HandBrakeWPF.ViewModels
     using HandBrakeWPF.ViewModelItems.Filters;
     using HandBrakeWPF.ViewModels.Interfaces;
 
-    using EncodeTask = HandBrakeWPF.Services.Encode.Model.EncodeTask;
+    using EncodeTask = Services.Encode.Model.EncodeTask;
 
     public class FiltersViewModel : ViewModelBase, IFiltersViewModel
     {
@@ -32,6 +32,8 @@ namespace HandBrakeWPF.ViewModels
             this.DeinterlaceFilter = new DeinterlaceFilterItem(this.CurrentTask, () => this.OnTabStatusChanged(null));
             this.DeblockFilter = new DeblockFilter(this.CurrentTask, () => this.OnTabStatusChanged(null));
             this.GrayscaleFilter = new GrayscaleFilter(this.CurrentTask, () => this.OnTabStatusChanged(null));
+            this.ColourSpaceFilter = new ColourSpaceFilter(this.CurrentTask, () => this.OnTabStatusChanged(null));
+            this.ChromaSmoothFilter = new ChromaSmoothFilter(this.CurrentTask, () => this.OnTabStatusChanged(null));
         }
 
         public event EventHandler<TabStatusEventArgs> TabStatusChanged;
@@ -48,7 +50,11 @@ namespace HandBrakeWPF.ViewModels
 
         public DeblockFilter DeblockFilter { get; set; }
 
+        public ColourSpaceFilter ColourSpaceFilter { get; set; }
+
         public GrayscaleFilter GrayscaleFilter { get; set; }
+
+        public ChromaSmoothFilter ChromaSmoothFilter { get; set; }
         
         public void SetPreset(Preset preset, EncodeTask task)
         {
@@ -59,6 +65,9 @@ namespace HandBrakeWPF.ViewModels
             this.DetelecineFilter.SetPreset(preset, task);
             this.DeinterlaceFilter.SetPreset(preset, task);
             this.DeblockFilter.SetPreset(preset, task);
+            this.ColourSpaceFilter.SetPreset(preset, task);
+            this.ChromaSmoothFilter.SetPreset(preset, task);
+            this.GrayscaleFilter.SetPreset(preset, task);
         }
 
         public void UpdateTask(EncodeTask task)
@@ -71,6 +80,8 @@ namespace HandBrakeWPF.ViewModels
             this.DeinterlaceFilter.UpdateTask(task);
             this.DeblockFilter.UpdateTask(task);
             this.GrayscaleFilter.UpdateTask(task);
+            this.ColourSpaceFilter.UpdateTask(task);
+            this.ChromaSmoothFilter.UpdateTask(task);
         }
 
         public bool MatchesPreset(Preset preset)
@@ -105,6 +116,16 @@ namespace HandBrakeWPF.ViewModels
                 return false;
             }
 
+            if (!this.ColourSpaceFilter.MatchesPreset(preset))
+            {
+                return false;
+            }
+
+            if (!this.ChromaSmoothFilter.MatchesPreset(preset))
+            {
+                return false;
+            }
+
             return true;
         }
 
@@ -117,6 +138,8 @@ namespace HandBrakeWPF.ViewModels
             this.DeinterlaceFilter.SetSource(source, title, preset, task);
             this.DeblockFilter.SetSource(source, title, preset, task);
             this.GrayscaleFilter.SetSource(source, title, preset, task);
+            this.ColourSpaceFilter.SetSource(source, title, preset, task);
+            this.ChromaSmoothFilter.SetSource(source, title, preset, task);
         }
 
         protected virtual void OnTabStatusChanged(TabStatusEventArgs e)

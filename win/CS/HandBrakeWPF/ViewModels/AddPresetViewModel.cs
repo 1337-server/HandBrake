@@ -12,6 +12,7 @@ namespace HandBrakeWPF.ViewModels
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Linq;
+    using System.Runtime.CompilerServices;
     using System.Windows;
 
     using Caliburn.Micro;
@@ -61,6 +62,8 @@ namespace HandBrakeWPF.ViewModels
         }
 
         public Preset Preset { get; }
+
+        public string PresetName => this.Preset.Name;
 
         public bool ShowCustomInputs
         {
@@ -248,7 +251,7 @@ namespace HandBrakeWPF.ViewModels
         public void EditAudioDefaults()
         {
             this.audioDefaultsViewModel.ResetApplied();
-            this.windowManager.ShowDialog(this.audioDefaultsViewModel);
+            this.windowManager.ShowDialogAsync(this.audioDefaultsViewModel);
             if (audioDefaultsViewModel.IsApplied)
             {
                 this.Preset.AudioTrackBehaviours = this.audioDefaultsViewModel.AudioBehaviours.Clone();
@@ -270,12 +273,12 @@ namespace HandBrakeWPF.ViewModels
 
         public void Cancel()
         {
-            this.Close();
+            this.TryCloseAsync(false);
         }
 
-        public void Close()
+        private void Close()
         {
-            this.TryClose();
+            this.TryCloseAsync(true);
         }
 
         private void SetSelectedPictureSettingsResLimitMode()

@@ -1,7 +1,7 @@
 /* chroma_smooth.c
 
    Copyright (c) 2002 Rémi Guyomarch <rguyom at pobox.com>
-   Copyright (c) 2003-2020 HandBrake Team
+   Copyright (c) 2003-2021 HandBrake Team
    This file is part of the HandBrake source code
    Homepage: <http://handbrake.fr/>.
    It may be used under the terms of the GNU General Public License v2.
@@ -40,6 +40,9 @@ struct hb_filter_private_s
     chroma_smooth_plane_context_t     plane_ctx[3];
     chroma_smooth_thread_context3_t * thread_ctx;
     int                               threads;
+
+    hb_filter_init_t         input;
+    hb_filter_init_t         output;
 };
 
 static int chroma_smooth_init(hb_filter_object_t *filter,
@@ -164,6 +167,8 @@ static int chroma_smooth_init(hb_filter_object_t *filter,
     }
     hb_filter_private_t * pv = filter->private_data;
 
+    pv->input = *init;
+
     // Mark parameters unset
     for (int c = 0; c < 3; c++)
     {
@@ -239,6 +244,8 @@ static int chroma_smooth_init(hb_filter_object_t *filter,
         chroma_smooth_close(filter);
         return -1;
     }
+
+    pv->output = *init;
 
     return 0;
 }
@@ -331,6 +338,10 @@ static int chroma_smooth_work_thread(hb_filter_object_t *filter,
     }
 
     out = hb_frame_buffer_init(in->f.fmt, in->f.width, in->f.height);
+    out->f.color_prim     = pv->output.color_prim;
+    out->f.color_transfer = pv->output.color_transfer;
+    out->f.color_matrix   = pv->output.color_matrix;
+    out->f.color_range    = pv->output.color_range ;
 
     int c;
     for (c = 0; c < 3; c++)

@@ -892,7 +892,7 @@ int qsv_enc_init(hb_work_private_t *pv)
             *job->die = 1;
             return -1;
         }
-        pv->loaded_plugins = hb_qsv_load_plugins(pv->qsv_info, qsv->mfx_session, version);
+        pv->loaded_plugins = hb_qsv_load_plugins(hb_qsv_get_adapter_index(), pv->qsv_info, qsv->mfx_session, version);
         if (pv->loaded_plugins == NULL)
         {
             hb_error("qsv_enc_init: hb_qsv_load_plugins failed");
@@ -998,35 +998,6 @@ int qsv_enc_init(hb_work_private_t *pv)
     return 0;
 }
 
-static mfxIMPL hb_qsv_dx_index_to_impl(int dx_index)
-{
-    mfxIMPL impl;
-
-    switch (dx_index)
-    {
-        {
-        case 0:
-            impl = MFX_IMPL_HARDWARE;
-            break;
-        case 1:
-            impl = MFX_IMPL_HARDWARE2;
-            break;
-        case 2:
-            impl = MFX_IMPL_HARDWARE3;
-            break;
-        case 3:
-            impl = MFX_IMPL_HARDWARE4;
-            break;
-
-        default:
-            // try searching on all display adapters
-            impl = MFX_IMPL_HARDWARE_ANY;
-            break;
-        }
-    }
-    return impl;
-}
-
 /***********************************************************************
  * encqsvInit
  ***********************************************************************
@@ -1039,7 +1010,7 @@ int encqsvInit(hb_work_object_t *w, hb_job_t *job)
 
     pv->is_sys_mem         = hb_qsv_full_path_is_enabled(job) ? 0 : 1; // TODO: re-implement QSV VPP filtering support
     pv->job                = job;
-    pv->qsv_info           = hb_qsv_info_get(job->vcodec);
+    pv->qsv_info           = hb_qsv_encoder_info_get(hb_qsv_get_adapter_index(), job->vcodec);
     pv->delayed_processing = hb_list_init();
     pv->last_start         = INT64_MIN;
     hb_buffer_list_clear(&pv->encoded_frames);
@@ -1104,12 +1075,12 @@ int encqsvInit(hb_work_object_t *w, hb_job_t *job)
         }
         hb_dict_free(&options_list);
     }
-#if !defined(SYS_LINUX) && !defined(SYS_FREEBSD)
-    if (pv->is_sys_mem)
+#if defined(_WIN32) || defined(__MINGW32__)
+    if (pv->is_sys_mem && hb_qsv_implementation_is_hardware(pv->qsv_info->implementation))
     {
         // select the right hardware implementation based on dx index
         if (!job->qsv.ctx->qsv_device)
-            hb_qsv_param_parse_dx_index(pv->job, -1);
+            hb_qsv_param_parse_dx_index(pv->job, hb_qsv_get_adapter_index());
         mfxIMPL hw_preference = MFX_IMPL_VIA_D3D11;
         pv->qsv_info->implementation = hb_qsv_dx_index_to_impl(job->qsv.ctx->dx_index) | hw_preference;
     }
@@ -1257,7 +1228,7 @@ int encqsvInit(hb_work_object_t *w, hb_job_t *job)
 #endif
     // set VBV here (this will be overridden for CQP and ignored for LA)
     // only set BufferSizeInKB, InitialDelayInKB and MaxKbps if we have
-    // them - otheriwse Media SDK will pick values for us automatically
+    // them - otherwise Media SDK will pick values for us automatically
     if (pv->param.rc.vbv_buffer_size > 0)
     {
         if (pv->param.rc.vbv_buffer_init > 1.0)
@@ -1465,7 +1436,7 @@ int encqsvInit(hb_work_object_t *w, hb_job_t *job)
     }
 
     /* Load required MFX plug-ins */
-    pv->loaded_plugins = hb_qsv_load_plugins(pv->qsv_info, session, version);
+    pv->loaded_plugins = hb_qsv_load_plugins(hb_qsv_get_adapter_index(), pv->qsv_info, session, version);
     if (pv->loaded_plugins == NULL)
     {
         hb_error("encqsvInit: hb_qsv_load_plugins failed");
@@ -2086,6 +2057,7 @@ static int qsv_enc_work(hb_work_private_t *pv,
                         mfxFrameSurface1 *surface,
                         HBQSVFramesContext *frames_ctx)
 {
+    int err;
     mfxStatus sts;
     hb_qsv_context *qsv_ctx       = pv->job->qsv.ctx;
     hb_qsv_space   *qsv_enc_space = pv->job->qsv.ctx->enc_space;
@@ -2189,7 +2161,12 @@ static int qsv_enc_work(hb_work_private_t *pv,
                 pv->async_depth--;
 
                 /* perform a sync operation to get the output bitstream */
-                hb_qsv_wait_on_sync(qsv_ctx, task->stage);
+                err = hb_qsv_wait_on_sync(qsv_ctx, task->stage);
+                if (err < 0)
+                {
+                    hb_error("encqsv: hb_qsv_wait_on_sync failed (%d)", err);
+                    return err;
+                }
 
                 if (task->bs->DataLength > 0)
                 {
@@ -2219,6 +2196,7 @@ static int qsv_enc_work(hb_work_private_t *pv,
 
 int encqsvWork(hb_work_object_t *w, hb_buffer_t **buf_in, hb_buffer_t **buf_out)
 {
+    int err;
     hb_work_private_t *pv = w->private_data;
     hb_buffer_t *in       = *buf_in;
     hb_job_t *job         = pv->job;
@@ -2238,7 +2216,12 @@ int encqsvWork(hb_work_object_t *w, hb_buffer_t **buf_in, hb_buffer_t **buf_out)
      */
     if (in->s.flags & HB_BUF_FLAG_EOF)
     {
-        qsv_enc_work(pv, NULL, NULL, NULL);
+        err = qsv_enc_work(pv, NULL, NULL, NULL);
+        if (err < 0)
+        {
+            hb_error("encqsvWork: EOF qsv_enc_work failed %d", err);
+            goto fail;
+        }
         hb_buffer_list_append(&pv->encoded_frames, in);
         *buf_out = hb_buffer_list_clear(&pv->encoded_frames);
         *buf_in = NULL; // don't let 'work_loop' close this buffer
@@ -2269,19 +2252,18 @@ int encqsvWork(hb_work_object_t *w, hb_buffer_t **buf_in, hb_buffer_t **buf_out)
     {
 #if HB_PROJECT_FEATURE_QSV
         QSVMid *mid = NULL;
-        if(in->qsv_details.frame)
+        if (in->qsv_details.frame && in->qsv_details.frame->data[3])
         {
             surface = ((mfxFrameSurface1*)in->qsv_details.frame->data[3]);
             frames_ctx = in->qsv_details.qsv_frames_ctx;
             hb_qsv_get_mid_by_surface_from_pool(frames_ctx, surface, &mid);
+            hb_qsv_replace_surface_mid(frames_ctx, mid, surface);
         }
         else
         {
-            // Create black buffer in the begining of the encoding, usually first 2 frames
-            hb_qsv_get_free_surface_from_pool_with_range(pv->job->qsv.ctx->hb_dec_qsv_frames_ctx, HB_QSV_POOL_SURFACE_SIZE - HB_QSV_POOL_ENCODER_SIZE, HB_QSV_POOL_SURFACE_SIZE, &mid, &surface);
-            frames_ctx = pv->job->qsv.ctx->hb_dec_qsv_frames_ctx;
+            hb_error("encqsv: in->qsv_details no surface available");
+            goto fail;
         }
-        hb_qsv_replace_surface_mid(frames_ctx, mid, surface);
 #endif
         // At this point, enc_qsv takes ownership of the QSV resources
         // in the 'in' buffer.
@@ -2337,8 +2319,10 @@ int encqsvWork(hb_work_object_t *w, hb_buffer_t **buf_in, hb_buffer_t **buf_out)
     {
         mfxStatus sts;
 
-        if (qsv_enc_work(pv, NULL, NULL, NULL) < 0)
+        err = qsv_enc_work(pv, NULL, NULL, NULL);
+        if (err < 0)
         {
+            hb_error("encqsvWork: new_chap qsv_enc_work failed %d", err);
             goto fail;
         }
 
@@ -2375,8 +2359,10 @@ int encqsvWork(hb_work_object_t *w, hb_buffer_t **buf_in, hb_buffer_t **buf_out)
     /*
      * Now that the input surface is setup, we can encode it.
      */
-    if (qsv_enc_work(pv, qsv_atom, surface, frames_ctx) < 0)
+    err = qsv_enc_work(pv, qsv_atom, surface, frames_ctx);
+    if (err < 0)
     {
+        hb_error("encqsvWork: qsv_enc_work failed %d", err);
         goto fail;
     }
 #if HB_PROJECT_FEATURE_QSV

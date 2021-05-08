@@ -1,7 +1,7 @@
 /* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*- */
 /*
  * queuehandler.c
- * Copyright (C) John Stebbins 2008-2020 <stebbins@stebbins>
+ * Copyright (C) John Stebbins 2008-2021 <stebbins@stebbins>
  *
  * queuehandler.c is free software.
  *
@@ -309,8 +309,8 @@ queue_update_summary(GhbValue * queueDict, signal_user_data_t *ud)
 
     width          = ghb_dict_get_int(uiDict, "scale_width");
     height         = ghb_dict_get_int(uiDict, "scale_height");
-    display_width  = ghb_dict_get_int(uiDict, "PictureDisplayWidth");
-    display_height = ghb_dict_get_int(uiDict, "PictureDisplayHeight");
+    display_width  = ghb_dict_get_int(uiDict, "PictureDARWidth");
+    display_height = ghb_dict_get_int(uiDict, "DisplayHeight");
     par_width      = ghb_dict_get_int(uiDict, "PicturePARWidth");
     par_height     = ghb_dict_get_int(uiDict, "PicturePARHeight");
     crop[0]        = ghb_dict_get_int(uiDict, "PictureTopCrop");
@@ -323,7 +323,7 @@ queue_update_summary(GhbValue * queueDict, signal_user_data_t *ud)
     display_aspect = ghb_get_display_aspect_string(display_width,
                                                    display_height);
 
-    display_width  = ghb_dict_get_int(uiDict, "PictureDisplayWidth");
+    display_width  = ghb_dict_get_int(uiDict, "PictureDARWidth");
     text = g_strdup_printf(_("%d:%d:%d:%d Crop\n"
                              "%dx%d storage, %dx%d display\n"
                              "%d:%d Pixel Aspect Ratio\n"
@@ -447,7 +447,7 @@ queue_update_summary(GhbValue * queueDict, signal_user_data_t *ud)
 
     // Append Filters to video summary
     gboolean     detel, comb_detect, deint, decomb, deblock, nlmeans, denoise;
-    gboolean     unsharp, lapsharp, rot, gray;
+    gboolean     unsharp, lapsharp, hflip, rot, gray;
 
     ctext       = ghb_dict_get_string(uiDict, "PictureDetelecine");
     detel       = ctext != NULL && !!strcasecmp(ctext, "off");
@@ -464,8 +464,9 @@ queue_update_summary(GhbValue * queueDict, signal_user_data_t *ud)
     ctext       = ghb_dict_get_string(uiDict, "PictureSharpenFilter");
     unsharp     = ctext != NULL && !strcasecmp(ctext, "unsharp");
     lapsharp    = ctext != NULL && !strcasecmp(ctext, "lapsharp");
-    ctext       = ghb_dict_get_string(uiDict, "PictureRotate");
-    rot         = ctext != NULL && !!strcasecmp(ctext, "disable=1");
+    hflip       = ghb_dict_get_bool(uiDict, "hflip");
+    ctext       = ghb_dict_get_string(uiDict, "rotate");
+    rot         = ctext != NULL && !!strcasecmp(ctext, "0");
     gray        = ghb_dict_get_bool(uiDict, "VideoGrayScale");
 
     sep = "\n";
@@ -523,7 +524,7 @@ queue_update_summary(GhbValue * queueDict, signal_user_data_t *ud)
         g_string_append_printf(str, "%s%s", sep, filter->name);
         sep = ", ";
     }
-    if (rot)
+    if (rot || hflip)
     {
         hb_filter_object_t * filter = hb_filter_get(HB_FILTER_ROTATE);
         g_string_append_printf(str, "%s%s", sep, filter->name);
@@ -1916,11 +1917,6 @@ void ghb_finalize_job(GhbValue *settings)
     preset = ghb_settings_to_preset(settings);
     job    = ghb_dict_get(settings, "Job");
 
-    // Apply selected preset settings
-    hb_preset_apply_mux(preset, job);
-    hb_preset_apply_video(preset, job);
-    hb_preset_apply_filters(preset, job);
-
     // Add scale filter since the above does not
     GhbValue *filter_list, *filter_dict;
     int width, height, crop[4];
@@ -1946,6 +1942,11 @@ void ghb_finalize_job(GhbValue *settings)
     ghb_dict_set_int(filter_dict, "ID", HB_FILTER_CROP_SCALE);
     ghb_dict_set(filter_dict, "Settings", dict);
     hb_add_filter2(filter_list, filter_dict);
+
+    // Apply selected preset settings
+    hb_preset_apply_mux(preset, job);
+    hb_preset_apply_video(preset, job);
+    hb_preset_apply_filters(preset, job);
 
     ghb_value_free(&preset);
 }

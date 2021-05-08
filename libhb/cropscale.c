@@ -63,7 +63,9 @@ static int crop_scale_init(hb_filter_object_t * filter, hb_filter_init_t * init)
 
     hb_dict_t        * settings = filter->settings;
     hb_value_array_t * avfilters = hb_value_array_init();
-    int                width, height, top, bottom, left, right;
+    int                width, height;
+    int                cropped_width, cropped_height;
+    int                top = 0, bottom = 0, left = 0, right = 0;
     const char       * matrix;
 
     // Convert crop settings to 'crop' avfilter
@@ -71,6 +73,8 @@ static int crop_scale_init(hb_filter_object_t * filter, hb_filter_init_t * init)
     hb_dict_extract_int(&bottom, settings, "crop-bottom");
     hb_dict_extract_int(&left, settings, "crop-left");
     hb_dict_extract_int(&right, settings, "crop-right");
+    cropped_width  = init->geometry.width - left - right;
+    cropped_height = init->geometry.height - top - bottom;
     if (top > 0 || bottom > 0 || left > 0 || right > 0)
     {
         hb_dict_t * avfilter   = hb_dict_init();
@@ -78,11 +82,14 @@ static int crop_scale_init(hb_filter_object_t * filter, hb_filter_init_t * init)
 
         hb_dict_set_int(avsettings, "x", left);
         hb_dict_set_int(avsettings, "y", top);
-        hb_dict_set_int(avsettings, "w", init->geometry.width - left - right);
-        hb_dict_set_int(avsettings, "h", init->geometry.height - top - bottom);
+        hb_dict_set_int(avsettings, "w", cropped_width);
+        hb_dict_set_int(avsettings, "h", cropped_height);
         hb_dict_set(avfilter, "crop", avsettings);
         hb_value_array_append(avfilters, avfilter);
     }
+
+    width  = cropped_width;
+    height = cropped_height;
 
     // Convert scale settings to 'scale' avfilter
     hb_dict_extract_int(&width, settings, "width");
@@ -94,15 +101,26 @@ static int crop_scale_init(hb_filter_object_t * filter, hb_filter_init_t * init)
 #if HB_PROJECT_FEATURE_QSV && (defined( _WIN32 ) || defined( __MINGW32__ ))
     if (hb_qsv_hw_filters_are_enabled(init->job))
     {
-        hb_dict_set_int(avsettings, "w", width);
-        hb_dict_set_int(avsettings, "h", height);
-        hb_dict_set(avfilter, "scale_qsv", avsettings);
         int result = hb_create_ffmpeg_pool(init->job, width, height, init->pix_fmt, HB_QSV_POOL_SURFACE_SIZE, 0, &init->job->qsv.ctx->hb_vpp_qsv_frames_ctx->hw_frames_ctx);
         if (result < 0)
         {
             hb_error("hb_create_ffmpeg_pool vpp allocation failed");
             return result;
         }
+
+        hb_dict_set_int(avsettings, "w", width);
+        hb_dict_set_int(avsettings, "h", height);
+        if (init->job->qsv.ctx->vpp_scale_mode)
+        {
+            hb_dict_set_string(avsettings, "mode", init->job->qsv.ctx->vpp_scale_mode);
+        }
+        if (init->job->qsv.ctx->vpp_interpolation_method)
+        {
+            hb_dict_set_string(avsettings, "method", init->job->qsv.ctx->vpp_interpolation_method);
+        }
+        hb_log("qsv: scaling filter mode %s", init->job->qsv.ctx->vpp_scale_mode ? init->job->qsv.ctx->vpp_scale_mode : "default");
+        hb_log("qsv: scaling filter interpolation method %s", init->job->qsv.ctx->vpp_interpolation_method ? init->job->qsv.ctx->vpp_interpolation_method : "default");
+        hb_dict_set(avfilter, "scale_qsv", avsettings);
 
         AVHWFramesContext *frames_ctx;
         AVQSVFramesContext *frames_hwctx;
@@ -172,7 +190,21 @@ static int crop_scale_init(hb_filter_object_t * filter, hb_filter_init_t * init)
     if (!hb_qsv_hw_filters_are_enabled(init->job))
 #endif
     {
-        hb_dict_set(avsettings, "pix_fmts", hb_value_string(av_get_pix_fmt_name(init->pix_fmt)));
+        char * out_pix_fmt = NULL;
+
+        // "out_pix_fmt" is a private option used internally by
+        // handbrake for preview generation
+        hb_dict_extract_string(&out_pix_fmt, settings, "out_pix_fmt");
+        if (out_pix_fmt != NULL)
+        {
+            hb_dict_set_string(avsettings, "pix_fmts", out_pix_fmt);
+            free(out_pix_fmt);
+        }
+        else
+        {
+            hb_dict_set_string(avsettings, "pix_fmts",
+                av_get_pix_fmt_name(init->pix_fmt));
+        }
         hb_dict_set(avfilter, "format", avsettings);
         hb_value_array_append(avfilters, avfilter);
     }
@@ -181,8 +213,12 @@ static int crop_scale_init(hb_filter_object_t * filter, hb_filter_init_t * init)
     init->crop[1] = bottom;
     init->crop[2] = left;
     init->crop[3] = right;
+    hb_limit_rational(&init->geometry.par.num, &init->geometry.par.den,
+        (int64_t)init->geometry.par.num * height * cropped_width,
+        (int64_t)init->geometry.par.den * width  * cropped_height, 65535);
     init->geometry.width = width;
     init->geometry.height = height;
+
     pv->output = *init;
 
     pv->avfilters = avfilters;

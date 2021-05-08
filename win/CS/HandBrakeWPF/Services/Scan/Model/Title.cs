@@ -14,7 +14,9 @@ namespace HandBrakeWPF.Services.Scan.Model
     using System.IO;
     using System.Linq;
 
-    using HandBrake.Interop.Interop.Model;
+    using HandBrake.Interop.Interop.Interfaces.Model.Picture;
+
+    using Size = HandBrakeWPF.Model.Picture.Size;
 
     /// <summary>
     /// An object that represents a single Title of a DVD
@@ -76,11 +78,6 @@ namespace HandBrakeWPF.Services.Scan.Model
         /// Gets or sets the resolution (width/height) of this Title
         /// </summary>
         public Size Resolution { get; set; }
-
-        /// <summary>
-        /// Gets or sets the aspect ratio of this Title
-        /// </summary>
-        public decimal AspectRatio { get; set; }
 
         /// <summary>
         /// Gets or sets AngleCount.
@@ -189,7 +186,7 @@ namespace HandBrakeWPF.Services.Scan.Model
         #endregion
 
         /// <summary>
-        /// Calcuate the Duration
+        /// Calculate the Duration
         /// </summary>
         /// <param name="startPoint">The Start Point (Chapters)</param>
         /// <param name="endPoint">The End Point (Chapters)</param>

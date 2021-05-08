@@ -16,12 +16,15 @@ namespace HandBrakeWPF.ViewModels
     using System.Globalization;
     using System.IO;
     using System.Linq;
+    using System.Text.Json;
     using System.Threading;
+    using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Input;
 
     using Caliburn.Micro;
 
+    using HandBrake.Interop.Interop;
     using HandBrake.Interop.Utilities;
 
     using HandBrakeWPF.Commands;
@@ -49,8 +52,6 @@ namespace HandBrakeWPF.ViewModels
     using HandBrakeWPF.ViewModels.Interfaces;
     using HandBrakeWPF.Views;
 
-    using Newtonsoft.Json;
-
     using Ookii.Dialogs.Wpf;
 
     using Action = System.Action;
@@ -58,6 +59,7 @@ namespace HandBrakeWPF.ViewModels
     using DataFormats = System.Windows.DataFormats;
     using DragEventArgs = System.Windows.DragEventArgs;
     using Execute = Caliburn.Micro.Execute;
+    using ILog = Services.Logging.Interfaces.ILog;
     using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
     using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
 
@@ -69,6 +71,9 @@ namespace HandBrakeWPF.ViewModels
         private readonly IUpdateService updateService;
         private readonly IWindowManager windowManager;
         private readonly INotifyIconService notifyIconService;
+
+        private readonly ILog logService;
+
         private readonly IUserSettingService userSettingService;
         private readonly IScan scanService;
         private readonly Win7 windowsSeven = new Win7();
@@ -90,7 +95,6 @@ namespace HandBrakeWPF.ViewModels
         private string alertWindowText;
         private bool hasSource;
         private bool isSettingPreset;
-        private IPresetObject selectedPresetCategory;
         private bool isModifiedPreset;
         private bool updateAvailable;
 
@@ -114,7 +118,8 @@ namespace HandBrakeWPF.ViewModels
             IMetaDataViewModel metaDataViewModel,
             IPresetManagerViewModel presetManagerViewModel,
             INotifyIconService notifyIconService,
-            ISystemService systemService)
+            ISystemService systemService,
+            ILog logService)
             : base(userSettingService)
         {
             this.scanService = scanService;
@@ -123,6 +128,7 @@ namespace HandBrakeWPF.ViewModels
             this.updateService = updateService;
             this.windowManager = windowManager;
             this.notifyIconService = notifyIconService;
+            this.logService = logService;
             this.QueueViewModel = queueViewModel;
             this.userSettingService = userSettingService;
             this.queueProcessor = IoC.Get<IQueueService>();
@@ -217,10 +223,7 @@ namespace HandBrakeWPF.ViewModels
 
         public string WindowTitle
         {
-            get
-            {
-                return this.windowName;
-            }
+            get => this.windowName;
 
             set
             {
@@ -234,10 +237,7 @@ namespace HandBrakeWPF.ViewModels
 
         public string ProgramStatusLabel
         {
-            get
-            {
-                return string.IsNullOrEmpty(this.programStatusLabel) ? Resources.State_Ready : this.programStatusLabel;
-            }
+            get => string.IsNullOrEmpty(this.programStatusLabel) ? Resources.State_Ready : this.programStatusLabel;
 
             set
             {
@@ -251,10 +251,7 @@ namespace HandBrakeWPF.ViewModels
 
         public string StatusLabel
         {
-            get
-            {
-                return string.IsNullOrEmpty(this.statusLabel) ? Resources.State_Ready : this.statusLabel;
-            }
+            get => string.IsNullOrEmpty(this.statusLabel) ? Resources.State_Ready : this.statusLabel;
 
             set
             {
@@ -270,49 +267,9 @@ namespace HandBrakeWPF.ViewModels
 
         public IEnumerable<IPresetObject> PresetsCategories { get; set; }
 
-        public IPresetObject SelectedPresetCategory
-        {
-            get
-            {
-                return this.selectedPresetCategory;
-            }
-            set
-            {
-                if (!object.Equals(this.selectedPresetCategory, value))
-                {
-                    this.selectedPresetCategory = value;
-                    this.NotifyOfPropertyChange(() => this.SelectedPresetCategory);
-                    this.NotifyOfPropertyChange(() => this.CategoryPresets);
-                }
-            }
-        }
-
-        public IEnumerable<Preset> CategoryPresets
-        {
-            get
-            {
-                PresetDisplayCategory category = this.SelectedPresetCategory as PresetDisplayCategory;
-                if (category != null && category.Presets != null)
-                {
-                    if (!category.Presets.Contains(this.SelectedPreset))
-                    {
-                        this.SelectedPreset = category.Presets.FirstOrDefault();
-                    }
-
-                    return new BindingList<Preset>(category.Presets);
-                }
-
-                this.SelectedPreset = null;
-                return new BindingList<Preset>();
-            }
-        }
-
         public Preset SelectedPreset
         {
-            get
-            {
-                return this.selectedPreset;
-            }
+            get => this.selectedPreset;
 
             set
             {
@@ -336,14 +293,15 @@ namespace HandBrakeWPF.ViewModels
 
         public bool IsModifiedPreset
         {
-            get
-            {
-                return this.isModifiedPreset;
-            }
+            get => this.isModifiedPreset;
 
             set
             {
-                if (value == this.isModifiedPreset) return;
+                if (value == this.isModifiedPreset)
+                {
+                    return;
+                }
+
                 this.isModifiedPreset = value;
                 this.NotifyOfPropertyChange();
             }
@@ -366,10 +324,7 @@ namespace HandBrakeWPF.ViewModels
 
         public string SourceLabel
         {
-            get
-            {
-                return string.IsNullOrEmpty(this.sourceLabel) ? Resources.Main_SelectSource : this.sourceLabel;
-            }
+            get => string.IsNullOrEmpty(this.sourceLabel) ? Resources.Main_SelectSource : this.sourceLabel;
 
             set
             {
@@ -381,25 +336,13 @@ namespace HandBrakeWPF.ViewModels
             }
         }
 
-        public BindingList<PointToPointMode> RangeMode
-        {
-            get
-            {
-                return new BindingList<PointToPointMode>
-                    {
-                        PointToPointMode.Chapters, PointToPointMode.Seconds, PointToPointMode.Frames
-                    };
-            }
-        }
+        public BindingList<PointToPointMode> RangeMode { get; } = new BindingList<PointToPointMode> { PointToPointMode.Chapters, PointToPointMode.Seconds, PointToPointMode.Frames };
 
         public bool ShowTextEntryForPointToPointMode => this.SelectedPointToPoint != PointToPointMode.Chapters;
 
         public IEnumerable<int> StartEndRangeItems
         {
-            get
-            {
-                return this.SelectedTitle?.Chapters.Select(item => item.ChapterNumber).Select(dummy => dummy).ToList();
-            }
+            get => this.SelectedTitle?.Chapters.Select(item => item.ChapterNumber).Select(dummy => dummy).ToList();
         }
 
         public IEnumerable<int> Angles
@@ -416,16 +359,14 @@ namespace HandBrakeWPF.ViewModels
                 {
                     items.Add(i);
                 }
+
                 return items;
             }
         }
 
         public string Duration
         {
-            get
-            {
-                return string.IsNullOrEmpty(duration) ? "--:--:--" : duration;
-            }
+            get => string.IsNullOrEmpty(duration) ? "--:--:--" : duration;
             set
             {
                 duration = value;
@@ -433,20 +374,11 @@ namespace HandBrakeWPF.ViewModels
             }
         }
 
-        public bool IsEncoding
-        {
-            get
-            {
-                return this.queueProcessor.IsEncoding;
-            }
-        }
+        public bool IsEncoding => this.queueProcessor.IsEncoding;
 
         public bool ShowStatusWindow
         {
-            get
-            {
-                return this.showStatusWindow;
-            }
+            get => this.showStatusWindow;
 
             set
             {
@@ -459,10 +391,7 @@ namespace HandBrakeWPF.ViewModels
 
         public string Destination
         {
-            get
-            {
-                return this.CurrentTask.Destination;
-            }
+            get => this.CurrentTask.Destination;
             set
             {
                 if (!Equals(this.CurrentTask.Destination, value))
@@ -520,10 +449,7 @@ namespace HandBrakeWPF.ViewModels
 
         public Title SelectedTitle
         {
-            get
-            {
-                return this.selectedTitle;
-            }
+            get => this.selectedTitle;
 
             set
             {
@@ -575,10 +501,7 @@ namespace HandBrakeWPF.ViewModels
 
         public int SelectedAngle
         {
-            get
-            {
-                return this.CurrentTask.Angle;
-            }
+            get => this.CurrentTask.Angle;
 
             set
             {
@@ -591,10 +514,7 @@ namespace HandBrakeWPF.ViewModels
 
         public long SelectedStartPoint
         {
-            get
-            {
-                return this.CurrentTask.StartPoint;
-            }
+            get => this.CurrentTask.StartPoint;
 
             set
             {
@@ -620,10 +540,7 @@ namespace HandBrakeWPF.ViewModels
 
         public long SelectedEndPoint
         {
-            get
-            {
-                return this.CurrentTask.EndPoint;
-            }
+            get => this.CurrentTask.EndPoint;
 
             set
             {
@@ -646,10 +563,7 @@ namespace HandBrakeWPF.ViewModels
 
         public PointToPointMode SelectedPointToPoint
         {
-            get
-            {
-                return this.CurrentTask.PointToPointMode;
-            }
+            get => this.CurrentTask.PointToPointMode;
             set
             {
                 this.CurrentTask.PointToPointMode = value;
@@ -711,10 +625,7 @@ namespace HandBrakeWPF.ViewModels
 
         public bool ShowSourceSelection
         {
-            get
-            {
-                return this.showSourceSelection;
-            }
+            get => this.showSourceSelection;
             set
             {
                 if (value.Equals(this.showSourceSelection))
@@ -749,10 +660,7 @@ namespace HandBrakeWPF.ViewModels
 
         public BindingList<SourceMenuItem> Drives
         {
-            get
-            {
-                return this.drives;
-            }
+            get => this.drives;
             set
             {
                 if (Equals(value, this.drives))
@@ -771,10 +679,7 @@ namespace HandBrakeWPF.ViewModels
 
         public bool ShowAlertWindow
         {
-            get
-            {
-                return this.showAlertWindow;
-            }
+            get => this.showAlertWindow;
             set
             {
                 if (value.Equals(this.showAlertWindow))
@@ -788,16 +693,14 @@ namespace HandBrakeWPF.ViewModels
 
         public string AlertWindowHeader
         {
-            get
-            {
-                return this.alertWindowHeader;
-            }
+            get => this.alertWindowHeader;
             set
             {
                 if (value == this.alertWindowHeader)
                 {
                     return;
                 }
+
                 this.alertWindowHeader = value;
                 this.NotifyOfPropertyChange(() => this.AlertWindowHeader);
             }
@@ -805,16 +708,14 @@ namespace HandBrakeWPF.ViewModels
 
         public string AlertWindowText
         {
-            get
-            {
-                return this.alertWindowText;
-            }
+            get => this.alertWindowText;
             set
             {
                 if (value == this.alertWindowText)
                 {
                     return;
                 }
+
                 this.alertWindowText = value;
                 this.NotifyOfPropertyChange(() => this.AlertWindowText);
             }
@@ -839,10 +740,7 @@ namespace HandBrakeWPF.ViewModels
 
         public bool HasSource
         {
-            get
-            {
-                return this.hasSource;
-            }
+            get => this.hasSource;
 
             set
             {
@@ -855,8 +753,6 @@ namespace HandBrakeWPF.ViewModels
                 this.NotifyOfPropertyChange(() => this.HasSource);
             }
         }
-
-        public bool IsUWP { get; } = UwpDetect.IsUWP();
 
         public string SourceInfo
         {
@@ -899,7 +795,11 @@ namespace HandBrakeWPF.ViewModels
             get => this.updateAvailable;
             set
             {
-                if (value == this.updateAvailable) return;
+                if (value == this.updateAvailable)
+                {
+                    return;
+                }
+
                 this.updateAvailable = value;
                 this.NotifyOfPropertyChange(() => this.UpdateAvailable);
             }
@@ -907,7 +807,7 @@ namespace HandBrakeWPF.ViewModels
 
         public bool IsMultiProcess { get; set; }
 
-        public bool IsNightly => VersionHelper.IsNightly();
+        public bool IsNightly => HandBrakeVersionHelper.IsNightly();
 
         /* Commands */
 
@@ -1030,7 +930,7 @@ namespace HandBrakeWPF.ViewModels
             else
             {
                 ILogViewModel logvm = IoC.Get<ILogViewModel>();
-                this.windowManager.ShowWindow(logvm);
+                this.windowManager.ShowWindowAsync(logvm);
             }
         }
 
@@ -1048,7 +948,7 @@ namespace HandBrakeWPF.ViewModels
             }
             else
             {
-                this.windowManager.ShowWindow(IoC.Get<IQueueViewModel>());
+                this.windowManager.ShowWindowAsync(IoC.Get<IQueueViewModel>());
             }
         }
 
@@ -1058,7 +958,7 @@ namespace HandBrakeWPF.ViewModels
             {
                 this.StaticPreviewViewModel.IsOpen = true;
                 this.StaticPreviewViewModel.UpdatePreviewFrame(this.CurrentTask, this.ScannedSource);
-                this.windowManager.ShowWindow(this.StaticPreviewViewModel);
+                this.windowManager.ShowWindowAsync(this.StaticPreviewViewModel);
             }
             else if (this.StaticPreviewViewModel.IsOpen)
             {
@@ -1072,8 +972,8 @@ namespace HandBrakeWPF.ViewModels
             if (!this.PresetManagerViewModel.IsOpen)
             {
                 this.PresetManagerViewModel.IsOpen = true;
-                this.PresetManagerViewModel.SetupWindow();
-                this.windowManager.ShowWindow(this.PresetManagerViewModel);
+                this.PresetManagerViewModel.SetupWindow(() => this.NotifyOfPropertyChange(() => this.PresetsCategories));
+                this.windowManager.ShowWindowAsync(this.PresetManagerViewModel);
             }
             else if (this.PresetManagerViewModel.IsOpen)
             {
@@ -1081,12 +981,12 @@ namespace HandBrakeWPF.ViewModels
                 window?.Focus();
             }
         }
-
+        
         public void LaunchHelp()
         {
             try
             {
-                Process.Start("https://handbrake.fr/docs");
+                Process.Start("explorer.exe", "https://handbrake.fr/docs");
             }
             catch (Exception exc)
             {
@@ -1210,24 +1110,6 @@ namespace HandBrakeWPF.ViewModels
                 }
             }
 
-            if (this.CurrentTask != null && this.CurrentTask.SubtitleTracks != null && this.CurrentTask.SubtitleTracks.Count > 0)
-            {
-                if ((this.SubtitleViewModel.SubtitleBehaviours == null || this.SubtitleViewModel.SubtitleBehaviours.SelectedBehaviour == SubtitleBehaviourModes.None)
-                    && !(this.CurrentTask.SubtitleTracks.Count == 1 && this.CurrentTask.SubtitleTracks.First().SubtitleType == SubtitleType.ForeignAudioSearch))
-                {
-                    MessageBoxResult result = this.errorService.ShowMessageBox(
-                        Resources.Main_AutoAdd_AudioAndSubWarning,
-                        Resources.Warning,
-                        MessageBoxButton.YesNo,
-                        MessageBoxImage.Warning);
-
-                    if (result == MessageBoxResult.No)
-                    {
-                        return;
-                    }
-                }
-            }
-
             foreach (Title title in this.ScannedSource.Titles)
             {
                 this.SelectedTitle = title;
@@ -1267,6 +1149,20 @@ namespace HandBrakeWPF.ViewModels
                 }
             }
 
+            // Always use the current settings when adding to the queue as best as possible.
+            Preset temporaryPreset = this.selectedPreset;
+            if (this.IsModifiedPreset)
+            {
+                temporaryPreset = new Preset(this.SelectedPreset);
+                temporaryPreset.Name = string.Format(
+                    "{0} {1}",
+                    temporaryPreset.Name,
+                    Resources.MainView_ModifiedPreset);
+                temporaryPreset.Task = new EncodeTask(this.CurrentTask);
+                temporaryPreset.AudioTrackBehaviours = this.AudioViewModel.AudioBehaviours.Clone();
+                temporaryPreset.SubtitleTrackBehaviours = this.SubtitleViewModel.SubtitleBehaviours.Clone();
+            }
+
             Window window = Application.Current.Windows.Cast<Window>().FirstOrDefault(x => x.GetType() == typeof(QueueSelectionViewModel));
             IQueueSelectionViewModel viewModel = IoC.Get<IQueueSelectionViewModel>();
 
@@ -1288,8 +1184,8 @@ namespace HandBrakeWPF.ViewModels
                             }
                         }
                     }
-                }, 
-                this.selectedPreset);
+                },
+                temporaryPreset);
 
             if (window != null)
             {
@@ -1297,7 +1193,7 @@ namespace HandBrakeWPF.ViewModels
             }
             else
             {
-                this.windowManager.ShowWindow(viewModel);
+                this.windowManager.ShowWindowAsync(viewModel);
             }
         }
 
@@ -1321,9 +1217,24 @@ namespace HandBrakeWPF.ViewModels
             {
                 dialog.InitialDirectory = mruDir;
             }
-            
-            bool? dialogResult = dialog.ShowDialog();
 
+            bool? dialogResult = null;
+            try
+            {
+                dialogResult = dialog.ShowDialog();
+            }
+            catch (Exception e)
+            {
+                this.SetMru(Constants.FileScanMru, string.Empty); // RESET MRU in case it's the fault.
+                this.errorService.ShowMessageBox(
+                    Resources.MainViewModel_FilePathSelectError,
+                    Resources.Error,
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+                this.logService.LogMessage("Attempted to recover from an error fro the File Scan FileDialog: " + e);
+                return;
+            }
+            
             if (dialogResult.HasValue && dialogResult.Value)
             {
                 this.SetMru(Constants.FileScanMru, Path.GetDirectoryName(dialog.FileName));
@@ -1441,7 +1352,7 @@ namespace HandBrakeWPF.ViewModels
                 return; 
             }
 
-            string json = JsonConvert.SerializeObject(this.ScannedSource, Formatting.Indented);
+            string json = JsonSerializer.Serialize(this.ScannedSource, JsonSettings.Options);
 
             SaveFileDialog savefiledialog = new SaveFileDialog
                                             {
@@ -1476,7 +1387,7 @@ namespace HandBrakeWPF.ViewModels
                     string json = reader.ReadToEnd();
                     if (!string.IsNullOrEmpty(json))
                     {
-                       Source source = JsonConvert.DeserializeObject<Source>(json);
+                       Source source = JsonSerializer.Deserialize<Source>(json, JsonSettings.Options);
                        this.ScannedSource = source;
                        this.HasSource = true;
                        this.SelectedTitle = this.ScannedSource.Titles.FirstOrDefault(t => t.MainTitle) ?? this.ScannedSource.Titles.FirstOrDefault();
@@ -1607,7 +1518,7 @@ namespace HandBrakeWPF.ViewModels
                     string directory = Path.GetDirectoryName(this.Destination);
                     if (!string.IsNullOrEmpty(directory) && Directory.Exists(directory))
                     {
-                        Process.Start(directory);
+                        Process.Start("explorer.exe", directory);
                     }
                     else
                     {
@@ -1620,7 +1531,7 @@ namespace HandBrakeWPF.ViewModels
                         if (result == MessageBoxResult.Yes)
                         {
                             Directory.CreateDirectory(directory);
-                            Process.Start(directory);
+                            Process.Start("explorer.exe", directory);
                         }
                     }
                 }
@@ -1635,10 +1546,13 @@ namespace HandBrakeWPF.ViewModels
         {
             IAddPresetViewModel presetViewModel = IoC.Get<IAddPresetViewModel>();
             presetViewModel.Setup(this.CurrentTask, this.SelectedTitle, this.AudioViewModel.AudioBehaviours, this.SubtitleViewModel.SubtitleBehaviours);
-            this.windowManager.ShowDialog(presetViewModel);
+            Task<bool?> result = this.windowManager.ShowDialogAsync(presetViewModel);
 
-            this.NotifyOfPropertyChange(() => this.PresetsCategories);
-            this.NotifyOfPropertyChange(() => this.CategoryPresets);
+            if (result.Result.HasValue && result.Result.Value)
+            {
+                this.NotifyOfPropertyChange(() => this.PresetsCategories);
+                this.SelectedPreset = this.presetService.GetPreset(presetViewModel.PresetName);
+            }
         }
 
         public void PresetUpdate()
@@ -1688,10 +1602,10 @@ namespace HandBrakeWPF.ViewModels
 
             IManagePresetViewModel presetViewModel = IoC.Get<IManagePresetViewModel>();
             presetViewModel.Setup(this.selectedPreset);
-            this.windowManager.ShowDialog(presetViewModel);
+            this.windowManager.ShowDialogAsync(presetViewModel);
             Preset preset = presetViewModel.Preset;
 
-            this.NotifyOfPropertyChange(() => this.CategoryPresets);
+            this.NotifyOfPropertyChange(() => this.PresetsCategories);
             this.selectedPreset = preset; // Reselect the preset      
             this.NotifyOfPropertyChange(() => this.SelectedPreset);
         }
@@ -1724,7 +1638,7 @@ namespace HandBrakeWPF.ViewModels
                 }
 
                 this.presetService.Remove(this.selectedPreset);
-                this.NotifyOfPropertyChange(() => this.CategoryPresets);
+                this.NotifyOfPropertyChange(() => this.PresetsCategories);
                 this.SelectedPreset = this.presetService.DefaultPreset;
             }
             else
@@ -1753,7 +1667,7 @@ namespace HandBrakeWPF.ViewModels
             if (dialogResult.HasValue && dialogResult.Value)
             {
                 this.presetService.Import(dialog.FileName);
-                this.NotifyOfPropertyChange(() => this.CategoryPresets);
+                this.NotifyOfPropertyChange(() => this.PresetsCategories);
             }
         }
 
@@ -1790,7 +1704,6 @@ namespace HandBrakeWPF.ViewModels
             this.presetService.UpdateBuiltInPresets();
 
             this.NotifyOfPropertyChange(() => this.PresetsCategories);
-            this.NotifyOfPropertyChange(() => this.CategoryPresets);
 
             this.SetDefaultPreset();
 
@@ -1815,11 +1728,6 @@ namespace HandBrakeWPF.ViewModels
                         MessageBoxButton.OK,
                         MessageBoxImage.Warning);
                     return;
-                }
-
-                if (this.SelectedPresetCategory == null || this.SelectedPresetCategory.Category != preset.Category)
-                {
-                    this.SelectedPresetCategory = this.PresetsCategories.FirstOrDefault(c => c.Category == preset.Category);
                 }
 
                 this.selectedPreset = preset;
@@ -2078,7 +1986,6 @@ namespace HandBrakeWPF.ViewModels
                     (PresetDisplayCategory)this.PresetsCategories.FirstOrDefault(
                         p => p.Category == this.presetService.DefaultPreset.Category);
 
-                this.SelectedPresetCategory = category;
                 this.SelectedPreset = this.presetService.DefaultPreset;
             }
         }

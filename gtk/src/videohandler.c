@@ -1,7 +1,7 @@
 /* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*- */
 /*
  * videohandler.c
- * Copyright (C) John Stebbins 2008-2020 <stebbins@stebbins>
+ * Copyright (C) John Stebbins 2008-2021 <stebbins@stebbins>
  *
  * videohandler.c is free software.
  *
@@ -163,7 +163,7 @@ update_adv_settings_tooltip(signal_user_data_t *ud)
 
         if (w == 0 || h == 0)
         {
-            if (!ghb_dict_get_bool(ud->settings, "autoscale"))
+            if (!ghb_dict_get_bool(ud->settings, "PictureUseMaximumSize"))
             {
                 w = ghb_dict_get_int(ud->settings, "PictureWidth");
                 h = ghb_dict_get_int(ud->settings, "PictureHeight");

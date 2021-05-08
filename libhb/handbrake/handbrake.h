@@ -1,6 +1,6 @@
 /* handbrake.h
 
-   Copyright (c) 2003-2020 HandBrake Team
+   Copyright (c) 2003-2021 HandBrake Team
    This file is part of the HandBrake source code
    Homepage: <http://handbrake.fr/>.
    It may be used under the terms of the GNU General Public License v2.
@@ -77,9 +77,14 @@ hb_buffer_t * hb_read_preview( hb_handle_t * h, hb_title_t *title,
 
 hb_image_t  * hb_get_preview2(hb_handle_t * h, int title_idx, int picture,
                               hb_geometry_settings_t *geo, int deinterlace);
-void          hb_set_anamorphic_size2(hb_geometry_t *src_geo,
-                                      hb_geometry_settings_t *geo,
-                                      hb_geometry_t *result);
+hb_image_t  * hb_get_preview3(hb_handle_t * h, int picture,
+                              hb_dict_t * job_dict);
+void          hb_rotate_geometry( hb_geometry_crop_t * geo,
+                                  hb_geometry_crop_t * result,
+                                  int angle, int hflip);
+void          hb_set_anamorphic_size2(hb_geometry_t          * src_geo,
+                                      hb_geometry_settings_t * geo,
+                                      hb_geometry_t          * result);
 void          hb_add_filter_dict( hb_job_t * job, hb_filter_object_t * filter,
                                   const hb_dict_t * settings_in );
 void          hb_add_filter( hb_job_t * job, hb_filter_object_t * filter,

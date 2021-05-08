@@ -13,11 +13,11 @@ namespace HandBrakeWPF.Converters.Video
     using System.Globalization;
     using System.Windows.Data;
 
-    using HandBrake.Interop.Interop.Model.Encoding;
-
     using HandBrakeWPF.Utilities;
 
     using EncodeTask = HandBrakeWPF.Services.Encode.Model.EncodeTask;
+    using VideoEncoder = HandBrakeWPF.Model.Video.VideoEncoder;
+    using VideoEncodeRateType = HandBrakeWPF.Model.Video.VideoEncodeRateType;
 
     /// <summary>
     /// The x 264 queue tooltip converter.
@@ -51,6 +51,11 @@ namespace HandBrakeWPF.Converters.Video
                     || task.VideoEncoder == VideoEncoder.X265_10 || task.VideoEncoder == VideoEncoder.X265_12 ? "RF" : "QP";
 
                 if (task.VideoEncoder == VideoEncoder.NvencH264 || task.VideoEncoder == VideoEncoder.NvencH265)
+                {
+                    rfqp = "CQ";
+                }
+
+                if (task.VideoEncoder == VideoEncoder.MFH264 || task.VideoEncoder == VideoEncoder.MFH265)
                 {
                     rfqp = "CQ";
                 }

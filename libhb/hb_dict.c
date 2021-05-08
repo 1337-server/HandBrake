@@ -1,6 +1,6 @@
 /* hb_dict.c
 
-   Copyright (c) 2003-2020 HandBrake Team
+   Copyright (c) 2003-2021 HandBrake Team
    This file is part of the HandBrake source code
    Homepage: <http://handbrake.fr/>.
    It may be used under the terms of the GNU General Public License v2.
@@ -452,6 +452,12 @@ void hb_dict_free(hb_dict_t **_dict)
 hb_dict_t * hb_dict_init()
 {
     return json_object();
+}
+
+void
+hb_dict_clear(hb_dict_t *dict)
+{
+    json_object_clear(dict);
 }
 
 int hb_dict_elements(hb_dict_t * dict)

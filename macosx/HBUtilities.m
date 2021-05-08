@@ -35,6 +35,11 @@ static BOOL hb_resolveBookmarks = YES;
     return appSupportURL;
 }
 
++ (NSURL *)defaultDestinationURL
+{
+    return [[NSFileManager.defaultManager URLsForDirectory:NSMoviesDirectory inDomains:NSUserDomainMask] firstObject];
+}
+
 + (NSURL *)documentationURL
 {
     return [NSURL URLWithString:@"https://handbrake.fr/docs/en/1.3.0/"];
@@ -149,7 +154,7 @@ static BOOL hb_resolveBookmarks = YES;
             NSUInteger n = [[URL.path stringByAppendingString: @"/"]
                             completePathIntoString: &mpgname caseSensitive: YES
                             matchesIntoArray: nil
-                            filterTypes: @[@"mpg"]];
+                            filterTypes: @[@"mpg", @"ts"]];
             if (n > 0)
             {
                 // Found an mpeg inside the eyetv package, make it our scan path

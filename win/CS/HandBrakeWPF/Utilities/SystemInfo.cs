@@ -133,18 +133,21 @@ namespace HandBrakeWPF.Utilities
 
         public static bool IsWindows10()
         {
-            var reg = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion");
-
-            string productName = (string)reg.GetValue("ProductName");
-
-            if (productName.StartsWith("Windows 10"))
+            OperatingSystem os = Environment.OSVersion;
+            if (os.Version.Major >= 10)
             {
                 return true;
             }
 
-            if (productName.StartsWith("Windows Server 2019"))
+            return false;
+        }
+
+        public static bool IsAppsUsingDarkTheme()
+        {
+            object value = Registry.GetValue("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize", "AppsUseLightTheme", null);
+            if (value != null)
             {
-                return true;
+                return (int)value != 1;
             }
 
             return false;

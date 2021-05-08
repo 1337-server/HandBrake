@@ -11,12 +11,14 @@ namespace HandBrakeWPF.Converters
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Globalization;
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Data;
     using HandBrakeWPF.Commands;
+    using HandBrakeWPF.Properties;
     using HandBrakeWPF.Services.Presets.Interfaces;
     using HandBrakeWPF.Services.Presets.Model;
 
@@ -40,7 +42,20 @@ namespace HandBrakeWPF.Converters
                 return null;
             }
             
-            Dictionary<string, MenuItem> groupedMenu = new Dictionary<string, MenuItem>();
+            Dictionary<string, object> groupedMenu = new Dictionary<string, object>();
+
+            if (parameter != null && "true".Equals(parameter))
+            {
+                MenuItem presetManagerMenuItem = new MenuItem
+                                        {
+                                            Header = Resources.PresetManger_Title,
+                                            Tag = null,
+                                            Command = new OpenPresetManagerCommand()
+                                        };
+                groupedMenu.Add("hb_preset_manager", presetManagerMenuItem);
+                groupedMenu.Add("hb_menu_seperator", new Separator());
+            }
+
             foreach (IPresetObject item in presets)
             {
                 PresetDisplayCategory category = item as PresetDisplayCategory;
@@ -71,37 +86,50 @@ namespace HandBrakeWPF.Converters
             throw new NotImplementedException();
         }
 
-        private void ProcessPreset(Dictionary<string, MenuItem> groupedMenu, Preset preset)
+        private void ProcessPreset(Dictionary<string, object> groupedMenu, Preset preset)
         {
             if (groupedMenu.ContainsKey(preset.Category))
             {
-                MenuItem newMeuItem = new MenuItem { Header = preset.Name, Tag = preset, Command = new PresetMenuSelectCommand(preset) };
-                if (preset.IsDefault)
+                MenuItem newMenuItem = new MenuItem { Header = preset.Name, Tag = preset, Command = new PresetMenuSelectCommand(preset), IsEnabled = !preset.IsPresetDisabled, ToolTip = preset.Description };
+
+                if (preset.IsPresetDisabled)
                 {
-                    newMeuItem.FontStyle = FontStyles.Italic;
-                    newMeuItem.FontSize = 14;
+                    newMenuItem.Header = string.Format("{0} {1}", preset.Name, Resources.Preset_NotAvailable);
                 }
 
-                groupedMenu[preset.Category].Items.Add(newMeuItem);
+                if (preset.IsDefault)
+                {
+                    newMenuItem.FontStyle = FontStyles.Italic;
+                    newMenuItem.FontSize = 14;
+                }
+
+                MenuItem menu = groupedMenu[preset.Category] as MenuItem;
+                menu?.Items.Add(newMenuItem);
             }
             else
             {
                 MenuItem group = new MenuItem();
                 group.Header = preset.Category;
 
-                MenuItem newMeuItem = new MenuItem { Header = preset.Name, Tag = preset, Command = new PresetMenuSelectCommand(preset) };
-                if (preset.IsDefault)
+                MenuItem newMenuItem = new MenuItem { Header = preset.Name, Tag = preset, Command = new PresetMenuSelectCommand(preset), IsEnabled = !preset.IsPresetDisabled, ToolTip = preset.Description };
+
+                if (preset.IsPresetDisabled)
                 {
-                    newMeuItem.FontStyle = FontStyles.Italic;
-                    newMeuItem.FontSize = 14;
+                    newMenuItem.Header = string.Format("{0} {1}", preset.Name, Resources.Preset_NotAvailable);
                 }
 
-                group.Items.Add(newMeuItem);
+                if (preset.IsDefault)
+                {
+                    newMenuItem.FontStyle = FontStyles.Italic;
+                    newMenuItem.FontSize = 14;
+                }
+
+                group.Items.Add(newMenuItem);
                 groupedMenu[preset.Category] = group;
             }
         }
 
-        private void ProcessCategory(Dictionary<string, MenuItem> groupedMenu, PresetDisplayCategory category)
+        private void ProcessCategory(Dictionary<string, object> groupedMenu, PresetDisplayCategory category)
         {
             foreach (Preset preset in category.Presets)
             {

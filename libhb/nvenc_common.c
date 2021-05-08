@@ -1,6 +1,6 @@
 /* nvenc_common.c
  *
- * Copyright (c) 2003-2020 HandBrake Team
+ * Copyright (c) 2003-2021 HandBrake Team
  * This file is part of the HandBrake source code.
  * Homepage: <http://handbrake.fr/>.
  * It may be used under the terms of the GNU General Public License v2.
@@ -22,7 +22,7 @@ int hb_nvenc_h264_available()
     #if HB_PROJECT_FEATURE_NVENC
         return hb_check_nvenc_available();
     #else
-        return 0;
+        return is_nvenc_available;
     #endif
 }
 
@@ -31,7 +31,7 @@ int hb_nvenc_h265_available()
     #if HB_PROJECT_FEATURE_NVENC
         return hb_check_nvenc_available();
     #else
-        return 0;
+        return is_nvenc_available;
     #endif
 }
 
