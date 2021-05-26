@@ -850,9 +850,9 @@ int qsv_enc_init(hb_work_private_t *pv)
         {
             pv->sws_context_to_nv12 = hb_sws_get_context(
                                         job->width, job->height,
-                                        AV_PIX_FMT_YUV420P,
+                                        AV_PIX_FMT_YUV420P, job->color_range,
                                         job->width, job->height,
-                                        AV_PIX_FMT_P010LE,
+                                        AV_PIX_FMT_P010LE, job->color_range,
                                         SWS_LANCZOS|SWS_ACCURATE_RND,
                                         SWS_CS_DEFAULT);
         }
@@ -860,9 +860,9 @@ int qsv_enc_init(hb_work_private_t *pv)
         {
             pv->sws_context_to_nv12 = hb_sws_get_context(
                                         job->width, job->height,
-                                        AV_PIX_FMT_YUV420P,
+                                        AV_PIX_FMT_YUV420P, job->color_range,
                                         job->width, job->height,
-                                        AV_PIX_FMT_NV12,
+                                        AV_PIX_FMT_NV12, job->color_range,
                                         SWS_LANCZOS|SWS_ACCURATE_RND,
                                         SWS_CS_DEFAULT);
         }
@@ -1417,7 +1417,7 @@ int encqsvInit(hb_work_object_t *w, hb_job_t *job)
     if (pv->qsv_info->implementation & MFX_IMPL_HARDWARE_ANY)
     {
         // On linux, the handle to the VA display must be set.
-        // This code is essentiall a NOP other platforms.
+        // This code is essentially a NOP other platforms.
         pv->display = hb_qsv_display_init();
         if (pv->display != NULL)
         {
@@ -2312,7 +2312,7 @@ int encqsvWork(hb_work_object_t *w, hb_buffer_t **buf_in, hb_buffer_t **buf_out)
      *   the encoder to make sure the next frame is a keyframe
      *
      * The hard reset ensures encoding resumes with a clean state, avoiding
-     * miscellaneous hard-to-disagnose issues that may occur when resuming
+     * miscellaneous hard-to-diagnose issues that may occur when resuming
      * an encode after flushing the encoder or using MFXVideoENCODE_Reset.
      */
     if (in->s.new_chap > 0 && job->chapter_markers)

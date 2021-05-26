@@ -287,15 +287,15 @@ static int hb_qsv_filter_pre_init( hb_filter_object_t * filter,
     // PIX_FMT_NV12,      ///< planar YUV 4:2:0, 12bpp, 1 plane for Y and 1 plane for the UV components, which are interleaved (first byte U and the following byte V)
     pv->sws_context_from_nv12 = hb_sws_get_context(
         pv->job->title->geometry.width, pv->job->title->geometry.height,
-        AV_PIX_FMT_NV12,
+        AV_PIX_FMT_NV12, pv->job->color_range,
         pv->job->title->geometry.width, pv->job->title->geometry.height,
-        AV_PIX_FMT_YUV420P,
+        AV_PIX_FMT_YUV420P, pv->job->color_range,
         SWS_LANCZOS|SWS_ACCURATE_RND, SWS_CS_DEFAULT);
     pv->sws_context_to_nv12 = hb_sws_get_context(
         pv->job->title->geometry.width, pv->job->title->geometry.height,
-        AV_PIX_FMT_YUV420P,
+        AV_PIX_FMT_YUV420P, pv->job->color_range,
         pv->job->title->geometry.width, pv->job->title->geometry.height,
-        AV_PIX_FMT_NV12,
+        AV_PIX_FMT_NV12, pv->job->color_range,
         SWS_LANCZOS|SWS_ACCURATE_RND, SWS_CS_DEFAULT);
     return 0;
 }
@@ -519,7 +519,7 @@ static void hb_qsv_filter_pre_close( hb_filter_object_t * filter ){
         // closing local stuff
         qsv_filter_close(qsv,HB_QSV_VPP_USER);
 
-        // closing the commong stuff
+        // closing the common stuff
         hb_qsv_context_clean(qsv,hb_qsv_full_path_is_enabled(pv->job));
     }
     hb_cond_close(&pv->pre.frame_completed);

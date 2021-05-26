@@ -9,7 +9,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- *  A HBPreviewView is a sublcass of NSView that can be used to display an image
+ *  A HBPreviewView is a subclass of NSView that can be used to display an image
  *  plus a border.
  */
 @interface HBPreviewView : NSView
@@ -30,7 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) CGRect pictureFrame;
 
 /**
- *  Wheters the image will be scaled to fill the view
+ *  Whether the image will be scaled to fill the view
  *  or not.
  */
 @property (nonatomic, readwrite) BOOL fitToView;

@@ -233,7 +233,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.</
   <data name="Main_Presets" xml:space="preserve">
     <value>Ön ayarlar</value>
   </data>
-  <data name="Main_PresetUpdateConfrimation" xml:space="preserve">
+  <data name="Main_PresetUpdateConfirmation" xml:space="preserve">
     <value>Seçilen ön ayarı güncellemek istediğinizden emin misiniz?</value>
   </data>
   <data name="Main_PresetUpdated" xml:space="preserve">
@@ -256,7 +256,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.</
   <data name="Main_ScanFailed_NoReason" xml:space="preserve">
     <value>Tarama başarısız oldu: </value>
   </data>
-  <data name="Main_ScanFailled_CheckLog" xml:space="preserve">
+  <data name="Main_ScanFailed_CheckLog" xml:space="preserve">
     <value>Tarama Başarısız... Lütfen ayrıntılar için Etkinlik Günlüğüne bakınız.</value>
   </data>
   <data name="Main_ScanningPleaseWait" xml:space="preserve">
@@ -439,7 +439,7 @@ Faaliyet günlüğü daha fazla bilgi içerebilir.</value>
     <value>Aşağıdaki eylem '{0}'  {1} saniye içinde gerçekleşecek.</value>
   </data>
   <data name="ErrorViewModel_IfTheProblemPersists" xml:space="preserve">
-    <value>Sorun devam ederse, lütfen HandBrake'yi yeniden başlatmayı deneyin.</value>
+    <value>If the problem persists, please try restarting HandBrake.</value>
   </data>
   <data name="ErrorViewModel_NoFurtherInformation" xml:space="preserve">
     <value>Bu hata hakkında daha fazla bilgi mevcut değil.</value>
@@ -467,7 +467,7 @@ Faaliyet günlüğü daha fazla bilgi içerebilir.</value>
     <value>Güncelleme başarısız oldu. Güncelleştirmeyi https://handbrake.fr adresinden indirmeyi deneyebilirsiniz.</value>
   </data>
   <data name="PictureSettingsViewModel_StorageDisplayLabel" xml:space="preserve">
-    <value>Ekran Boyutu: {0}x{1},  PAR {2}x{3}</value>
+    <value>Storage Size: {0}x{1}</value>
   </data>
   <data name="QueueSelectionViewModel_AddToQueue" xml:space="preserve">
     <value>Sıraya ekle</value>
@@ -481,7 +481,7 @@ Faaliyet günlüğü daha fazla bilgi içerebilir.</value>
   <data name="QueueViewModel_Queue" xml:space="preserve">
     <value>Sıra</value>
   </data>
-  <data name="QueueViewModel_ClearQueueConfrimation" xml:space="preserve">
+  <data name="QueueViewModel_ClearQueueConfirmation" xml:space="preserve">
     <value>Sırayı temizlemek istediğine emin misin?</value>
   </data>
   <data name="Confirm" xml:space="preserve">
@@ -502,7 +502,7 @@ Faaliyet günlüğü daha fazla bilgi içerebilir.</value>
   <data name="QueueViewModel_NoPendingJobs" xml:space="preserve">
     <value>Bekleyen iş yok.</value>
   </data>
-  <data name="QueueViewModel_EditConfrimation" xml:space="preserve">
+  <data name="QueueViewModel_EditConfirmation" xml:space="preserve">
     <value>Bu işi düzenlemek istediğinize emin misiniz? Sıradan kaldırılacak ve ana pencereye gönderilecektir.</value>
   </data>
   <data name="QueueViewModel_QueueReady" xml:space="preserve">
@@ -631,7 +631,7 @@ Bölüm adlarını içe aktarmak istediğinizden emin misiniz?</value>
   <data name="SettingService_SaveErrorReset" xml:space="preserve">
     <value>Değiştirdiğiniz ayarların, bir sonraki HandBrake'yi başlattığında sıfırlanması gerekebilir.</value>
   </data>
-  <data name="UserSettings_AnErrorOccured" xml:space="preserve">
+  <data name="UserSettings_AnErrorOccurred" xml:space="preserve">
     <value>Tercihlerinizi kaydetmeye çalışırken bir sorun oluştu.</value>
   </data>
   <data name="UserSettings_YourSettingsHaveBeenReset" xml:space="preserve">
@@ -882,7 +882,7 @@ Devam etmek istiyor musunuz? </value>
     <value>Filtreler</value>
   </data>
   <data name="FiltersView_FlipVideo" xml:space="preserve">
-    <value>Çevirme</value>
+    <value>Horizontal</value>
   </data>
   <data name="FiltersView_Grayscale" xml:space="preserve">
     <value>Gri tonlama</value>
@@ -894,7 +894,7 @@ Devam etmek istiyor musunuz? </value>
     <value>Ön Ayar:</value>
   </data>
   <data name="FiltersView_Rotate" xml:space="preserve">
-    <value>Döndürmek:</value>
+    <value>Rotation:</value>
   </data>
   <data name="FiltersView_Sharpen" xml:space="preserve">
     <value>Keskinleştirmek:</value>
@@ -1323,26 +1323,23 @@ VLC ve MPC-HC desteklenmektedir. Diğer oyuncular da çalışabilir ancak onayla
   <data name="PictureSettingsView_Custom" xml:space="preserve">
     <value>Özel</value>
   </data>
-  <data name="PictureSettingsView_DisplayWitdh" xml:space="preserve">
-    <value>Ekran Genişliği:</value>
+  <data name="PictureSettingsView_DisplayWidth" xml:space="preserve">
+    <value>Display Size:</value>
   </data>
   <data name="PictureSettingsView_Height" xml:space="preserve">
     <value>Yükseklik:</value>
   </data>
   <data name="PictureSettingsView_KeepAR" xml:space="preserve">
-    <value>En Boy Oranını Koru</value>
+    <value>Otomatik</value>
   </data>
   <data name="PictureSettingsView_Left" xml:space="preserve">
     <value>Sol</value>
   </data>
-  <data name="PictureSettingsView_Modulus" xml:space="preserve">
-    <value>Elastiklik:</value>
-  </data>
   <data name="PictureSettingsView_Output" xml:space="preserve">
-    <value>Çıktı:</value>
+    <value>Final Dimensions:</value>
   </data>
   <data name="PictureSettingsView_PAR" xml:space="preserve">
-    <value>PAR:</value>
+    <value>Pixel Aspect:</value>
   </data>
   <data name="PictureSettingsView_Right" xml:space="preserve">
     <value>Sağ</value>
@@ -1350,14 +1347,11 @@ VLC ve MPC-HC desteklenmektedir. Diğer oyuncular da çalışabilir ancak onayla
   <data name="PictureSettingsView_Size" xml:space="preserve">
     <value>Boyut</value>
   </data>
-  <data name="PictureSettingsView_Source" xml:space="preserve">
-    <value>Kaynak:</value>
-  </data>
   <data name="PictureSettingsView_Top" xml:space="preserve">
     <value>Üst</value>
   </data>
   <data name="PictureSettingsView_Width" xml:space="preserve">
-    <value>Genişlik:</value>
+    <value>Scaled Size:</value>
   </data>
   <data name="Preset_Custom" xml:space="preserve">
     <value>Özel</value>
@@ -1518,7 +1512,7 @@ VLC ve MPC-HC desteklenmektedir. Diğer oyuncular da çalışabilir ancak onayla
   <data name="Shared_ChooseLanguages" xml:space="preserve">
     <value>Dilleri Seç:</value>
   </data>
-  <data name="Shared_ChosenLangages" xml:space="preserve">
+  <data name="Shared_ChosenLanguages" xml:space="preserve">
     <value>Seçilen Diller:</value>
   </data>
   <data name="Shared_ConfigureDefaultBehaviours" xml:space="preserve">
@@ -1833,7 +1827,7 @@ VLC ve MPC-HC desteklenmektedir. Diğer oyuncular da çalışabilir ancak onayla
   <data name="QueueView_PlayMediaFile" xml:space="preserve">
     <value>Dosyayı Oynat</value>
   </data>
-  <data name="Options_ApplicaitonToolbar" xml:space="preserve">
+  <data name="Options_ApplicationToolbar" xml:space="preserve">
     <value>Uygulama Araç Çubuğu</value>
   </data>
   <data name="Options_ShowToolbarAddAll" xml:space="preserve">
@@ -2022,9 +2016,6 @@ Desteklendiğinde, herhangi bir kullanıcı ön ayarı içe aktarılmış olacak
   </data>
   <data name="MetadataView_TitleTag" xml:space="preserve">
     <value>Başlık:</value>
-  </data>
-  <data name="StaticPreviewView_PreviewRotationFlip" xml:space="preserve">
-    <value>Döndürme ve Çevirme Önizlemesi</value>
   </data>
   <data name="LogViewModel_Title" xml:space="preserve">
     <value>Günlük Görüntüleyici</value>
@@ -2234,31 +2225,31 @@ Lütfen farklı bir ön ayar seçin.</value>
     <value>Özel (Sınırlı Değil)</value>
   </data>
   <data name="PaddingMode_Fill" xml:space="preserve">
-    <value>Dolgu (çözünürlük sınırına ped)</value>
+    <value>Fill (Surround)</value>
   </data>
   <data name="PaddingMode_Height" xml:space="preserve">
-    <value>Yükseklik (res sınırına kadar ped)</value>
+    <value>Height (Pillarbox)</value>
   </data>
   <data name="PaddingMode_None" xml:space="preserve">
     <value>Yok</value>
   </data>
   <data name="PaddingMode_Width" xml:space="preserve">
-    <value>Genişlik (res sınırına kadar ped)</value>
+    <value>Width (Letterbox)</value>
   </data>
   <data name="PictureSettingsView_Padding" xml:space="preserve">
-    <value>Dolgu:</value>
+    <value>Fill:</value>
   </data>
   <data name="PictureSettingsView_PaddingColour" xml:space="preserve">
-    <value>Dolgu Rengi:</value>
+    <value>Colour:</value>
   </data>
   <data name="PictureSettingsView_Borders" xml:space="preserve">
-    <value>Kenarlık</value>
+    <value>Borders:</value>
   </data>
   <data name="PictureSettingsView_ResAndScaling" xml:space="preserve">
     <value>Çözünürlük ve Ölçeklendirme:</value>
   </data>
   <data name="PictureSettingsView_RotateAndCrop" xml:space="preserve">
-    <value>Döndür ve Kırp:</value>
+    <value>Orientation and Cropping:</value>
   </data>
   <data name="OptionsView_Win10Only" xml:space="preserve">
     <value>( Sadece Windows 10! )</value>
@@ -2293,11 +2284,8 @@ Lütfen farklı bir ön ayar seçin.</value>
   <data name="PictureSettingsResLimitModes_custom" xml:space="preserve">
     <value>Özel</value>
   </data>
-  <data name="PictureSettingsView_MaxHeight" xml:space="preserve">
-    <value>Azami Yükseklik:</value>
-  </data>
-  <data name="PictureSettingsView_MaxWidth" xml:space="preserve">
-    <value>Azami Genişlik:</value>
+  <data name="PictureSettingsView_MaxSize" xml:space="preserve">
+    <value>Maximum Size:</value>
   </data>
   <data name="PictureSettingsView_ResLimit" xml:space="preserve">
     <value>Çözünürlük Sınırı:</value>
@@ -2334,26 +2322,6 @@ Lütfen farklı bir ön ayar seçin.</value>
   </data>
   <data name="QueueView_Stop" xml:space="preserve">
     <value>Durdur</value>
-  </data>
-  <data name="Options_Metadata" xml:space="preserve">
-    <value>Meta veri</value>
-  </data>
-  <data name="Options_PassthruMetadata" xml:space="preserve">
-    <value>Kaynaktan hedef dosyaya temel meta verileri geçirin (destekleniyorsa)</value>
-  </data>
-  <data name="Options_PassthruMetadataTooltip" xml:space="preserve">
-    <value>Bu seçenek, temel meta veri alanlarının kaynaktan hedef dosyaya aktarılmasına izin verir.
-Alanlar aşağıdakilerle sınırlıdır:
-- İsim
-- Sanatçı
-- Albüm Sanatçısı
-- Besteci
-- Yayın Tarihi
-- Yorum Yap
-- Albüm
-- Tür
-- Açıklama
-- Uzun Açıklama</value>
   </data>
   <data name="String1" xml:space="preserve">
     <value/>
@@ -2459,5 +2427,56 @@ Alanlar aşağıdakilerle sınırlıdır:
   </data>
   <data name="OptionsView_SafeMode" xml:space="preserve">
     <value>Uyarı: Lütfen bunun, donanım kodlayıcıları için destek içermeyen bir HandBrake "Güvenli Mod" yapısı olduğunu unutmayın. Donanım kodlayıcı desteğini kullanmak istiyorsanız, lütfen web sitesinden "Güvenli Mod" olmayan bir yapı indirin.</value>
+  </data>
+  <data name="OldOperatingSystem" xml:space="preserve">
+    <value>Lütfen HandBrake'in Windows 7 veya Windows 8'in hiçbir sürümünde desteklenmediğini unutmayın.
+
+Uygulamayı kendi sorumluluğunuzda kullanmaya devam edebilirsiniz, ancak lütfen bazı özelliklerin çalışmadığını ve bilinmeyen başka sorunlar olabileceğini unutmayın. Bu sorunlar ortaya çıktığında herhangi bir destek sunulmamaktadır.
+
+Windows 7 ve 8 desteği, 1.3 serisinde kullanımdan kaldırıldı. Bu, bu platformlardaki sorunları düzeltmek için başka güncelleme olmayacağı anlamına gelir.
+
+Bu uyarı yalnızca iki kez görüntülenecektir.</value>
+  </data>
+  <data name="PadColour_Black" xml:space="preserve">
+    <value>Black</value>
+  </data>
+  <data name="PadColour_Custom" xml:space="preserve">
+    <value>Özel</value>
+  </data>
+  <data name="PadColour_White" xml:space="preserve">
+    <value>White</value>
+  </data>
+  <data name="PictureSettingsView_PaddingCustomColour" xml:space="preserve">
+    <value>RGB Value:</value>
+  </data>
+  <data name="SummaryView_Padded" xml:space="preserve">
+    <value>(padded)</value>
+  </data>
+  <data name="FiltersView_Flip" xml:space="preserve">
+    <value>Flip:</value>
+  </data>
+  <data name="PictureSettingsView_SourceDimensions" xml:space="preserve">
+    <value>Source Dimensions:</value>
+  </data>
+  <data name="PictureSettingsViewModel_SourceInfo" xml:space="preserve">
+    <value>Storage Size: {0}x{1}     Display Size: {2}x{3}      Aspect Ratio: {4}</value>
+  </data>
+  <data name="MainViewModel_FilePathSelectError" xml:space="preserve">
+    <value>An error was detected in the File Browser Dialog. 
+
+- Please note, long file paths are not fully supported. Please keep file paths shorter than 255 characters. 
+- The last used directory for this window, has been reset to prevent errors the next time you try to scan a file.</value>
+  </data>
+  <data name="PictureSettingsView_MaxHeight" xml:space="preserve">
+    <value>Azami Yükseklik:</value>
+  </data>
+  <data name="PictureSettingsView_MaxWidth" xml:space="preserve">
+    <value>Azami Genişlik:</value>
+  </data>
+  <data name="PictureSettingsViewModel_AspectRatioLabel" xml:space="preserve">
+    <value>Aspect Ratio: {0}</value>
+  </data>
+  <data name="SummaryView_MetadataPassthru" xml:space="preserve">
+    <value>Passthru Common Metadata</value>
   </data>
 </root>
